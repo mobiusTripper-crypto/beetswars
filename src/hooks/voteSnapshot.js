@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { request } from "graphql-request";
 import { PROPOSAL_QUERY, VOTES_QUERY } from "hooks/queries";
 import lodash from "lodash";
@@ -77,7 +76,7 @@ export async function getResults() {
   console.log("votingResults1");
   const votingClass = new snapshot.utils.voting[proposal.type](
     proposal,
-    votes,
+    votes1,
     proposal.strategies
   );
   const votingResults = {
