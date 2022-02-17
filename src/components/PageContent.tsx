@@ -23,8 +23,9 @@ const PageContent: FC = () => {
         votesData.status === "loaded" &&
         service.payload.results.map((bribe, index: number) => (
           <div style={borderStyle} key={index}>
-            <strong>{bribe.poolname}</strong>
-            {votesData.payload.proposal.choices[bribe.voteindex]}
+            <strong>
+              {votesData.payload.proposal.choices[bribe.voteindex]}
+            </strong>
             <p>Reward: {bribe.rewarddescription}</p>
             <p>
               <span>Votes:</span>
