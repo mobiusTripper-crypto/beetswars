@@ -7,6 +7,13 @@ const PageContent: FC = () => {
   const service = useBribeDataService();
   const votesData = useSnapshotVotes();
 
+  const borderStyle = {
+    borderColor: "black",
+    borderWidth: "10px",
+    padding: "1.5em",
+    borderStyle: "solid",
+  };
+
   return (
     <div>
       {(service.status === "loading" || votesData.status === "loading") && (
@@ -15,28 +22,40 @@ const PageContent: FC = () => {
       {service.status === "loaded" &&
         votesData.status === "loaded" &&
         service.payload.results.map((bribe, index: number) => (
-          <div key={index}>
-            <strong>{bribe.poolName}</strong>
-            <p>Reward: {bribe.rewardValue}</p>
+          <div style={borderStyle} key={index}>
+            <strong>{bribe.poolname}</strong>
+            {votesData.payload.proposal.choices[bribe.voteindex]}
+            <p>Reward: {bribe.rewarddescription}</p>
             <p>
-              Votes:
-              {(
-                (votesData.payload.votingResults.resultsByVoteBalance[
-                  bribe.voteIndex
-                ] /
-                  votesData.payload.votingResults.sumOfResultsBalance) *
-                100
-              ).toFixed(2)}
-              {" %"}
+              <span>Votes:</span>
+              <span>
+                {votesData.payload.votingResults.resultsByVoteBalance[
+                  bribe.voteindex
+                ].toLocaleString(undefined, {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                })}
+              </span>{" "}
+              {" - "}
+              <span>
+                {(
+                  (votesData.payload.votingResults.resultsByVoteBalance[
+                    bribe.voteindex
+                  ] /
+                    votesData.payload.votingResults.sumOfResultsBalance) *
+                  100
+                ).toFixed(2)}
+                {" %"}
+              </span>
             </p>
             <p>
               $ / fBEETS:{" "}
               {(
-                bribe.rewardValue /
+                bribe.rewardamount /
                 votesData.payload.votingResults.resultsByVoteBalance[
-                  bribe.voteIndex
+                  bribe.voteindex
                 ]
-              ).toFixed(6)}
+              ).toFixed(8)}
             </p>
           </div>
         ))}

@@ -44,11 +44,16 @@ async function getProposalVotes(
 
 export async function getResults() {
   const proposal = await getProposal(
-    "0x8f28b88f32c80b3212afb0e850c6230023284fa33ccc2c14690c20195a086cb7"
+    "0xd00700ca5bf26078d979a55fbbb1f25651791afd1aff6f951422fa6903e3424c"
   );
-  //  "0xef17a8cb27e3d01538a20b90d2628379290376d15947238e8f19c99e1cb42d14"
-  //0x8f28b88f32c80b3212afb0e850c6230023284fa33ccc2c14690c20195a086cb7
+  //round 4 gauge proposal id
+  //0xd00700ca5bf26078d979a55fbbb1f25651791afd1aff6f951422fa6903e3424c
+  //round 3 guage propsal id
   //0x8f28b88f32c80b3212afb0e850c6230023284fa33ccc2c14690c20195a086cb
+
+  //  "0xef17a8cb27e3d01538a20b90d2628379290376d15947238e8f19c99e1cb42d14"
+  console.log("choices");
+  console.dir(proposal.choices);
   const votes = await getProposalVotes(proposal.id);
 
   const voters = votes.map((vote) => vote.voter);
