@@ -50,12 +50,9 @@ const useGetData = () => {
     };
 
     const normalizeDashboardData = (bribes: Bribes, voteData: VoteDataType) => {
-      console.log("build dashboard data");
       const list: DashboardType[] = [];
       console.dir(voteData);
 
-      console.log(bribes);
-      bribes.results.forEach((element) => console.log(element));
       bribes.results.map((bribe) => {
         const votePercentage =
           (voteData.votingResults.resultsByVoteBalance[bribe.voteindex] /

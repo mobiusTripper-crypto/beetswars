@@ -43,7 +43,6 @@ async function getProposalVotes(
 }
 
 export async function getResults() {
-  console.log("start get Results");
   const proposal = await getProposal(
     "0xd00700ca5bf26078d979a55fbbb1f25651791afd1aff6f951422fa6903e3424c"
   );

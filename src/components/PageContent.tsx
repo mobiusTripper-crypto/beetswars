@@ -18,7 +18,7 @@ const PageContent: FC = () => {
       {getData.status === "loading" && <div>Loading...</div>}
       {getData.status === "loaded" &&
         getData.payload.map((data, index: number) => (
-          <Card sx={{ maxWidth: 480, margin: 5 }}>
+          <Card sx={{ maxWidth: 480, margin: 5 }} key={index}>
             <CardHeader
               title={data.poolName}
               subheader={"$ / fBEETS: " + data.valuePerVote.toFixed(5)}
@@ -28,16 +28,43 @@ const PageContent: FC = () => {
                 <strong>Reward: </strong>
                 {data.rewardDescription}{" "}
               </p>
-              <p>Reward Value: {"$" + data.rewardValue.toFixed(2)}</p>
+              <p>
+                Reward Value:{" "}
+                {"$" +
+                  data.rewardValue.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+              </p>
               <p>
                 Percent Above Threshhold:{" "}
                 {data.percentAboveThreshold.toFixed(2) + "%"}
               </p>
-              <p>Percent Value: {"$" + data.percentValue.toFixed(2)}</p>
-              <p>Overall Value: {"$" + data.overallValue.toFixed(2)}</p>
+              <p>
+                Percent Value:{" "}
+                {"$" +
+                  data.percentValue.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+              </p>
+              <p>
+                Overall Value:{" "}
+                {"$" +
+                  data.overallValue.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+              </p>
               <p>
                 Vote Total:{" "}
-                {data.voteTotal + " (" + data.votePercentage.toFixed(2) + "% )"}
+                {data.voteTotal.toLocaleString(undefined, {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }) +
+                  " (" +
+                  data.votePercentage.toFixed(2) +
+                  "% )"}
               </p>
             </CardContent>
           </Card>

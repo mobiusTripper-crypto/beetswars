@@ -9,7 +9,6 @@ const useSnapshotVotes = () => {
   });
 
   useEffect(() => {
-    console.log("snapshot vote fetch");
     getResults()
       //      .then((response) => response.json())
       .then((response) => {

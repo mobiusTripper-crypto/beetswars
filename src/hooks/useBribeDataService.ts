@@ -14,7 +14,6 @@ const useBribeDataService = () => {
   const dataURL = "https://beetswars-data.vercel.app/bribe-data.json";
 
   useEffect(() => {
-    console.log("bribe data fetch");
     fetch(dataURL || "")
       .then((response) => response.json())
       .then((response) => {
