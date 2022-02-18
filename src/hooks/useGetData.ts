@@ -10,8 +10,9 @@ export interface Bribes {
   results: BribeDataType[];
 }
 
-export interface listType {
+export interface DashboardReturn {
   results: DashboardType[];
+  totalVotes: number;
 }
 
 const useGetData = () => {
@@ -19,16 +20,16 @@ const useGetData = () => {
 
   const dataURL = "https://beetswars-data.vercel.app/bribe-data.json";
 
-  const [bribeResult, setBribeResult] = useState<ServiceType<Bribes>>({
-    status: "loading",
-  });
+  // const [bribeResult, setBribeResult] = useState<ServiceType<Bribes>>({
+  //   status: "loading",
+  // });
 
-  const [voteResult, setVoteResult] = useState<ServiceType<VoteDataType>>({
-    status: "loading",
-  });
+  // const [voteResult, setVoteResult] = useState<ServiceType<VoteDataType>>({
+  //   status: "loading",
+  // });
 
   const [dashboardResult, setDashboardResult] = useState<
-    ServiceType<DashboardType[]>
+    ServiceType<DashboardReturn>
   >({ status: "loading" });
 
   useEffect(() => {
@@ -45,7 +46,10 @@ const useGetData = () => {
 
       setDashboardResult({
         status: "loaded",
-        payload: normalizeDashboardData(bribeData, voteData),
+        payload: {
+          results: normalizeDashboardData(bribeData, voteData),
+          totalVotes: voteData.votingResults.sumOfResultsBalance,
+        },
       });
     };
 
@@ -80,7 +84,7 @@ const useGetData = () => {
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
           votePercentage: votePercentage,
           valuePerVote:
-            bribe.rewardamount /
+            overallValue /
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
         };
 
