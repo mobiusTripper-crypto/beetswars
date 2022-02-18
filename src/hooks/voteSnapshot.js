@@ -43,6 +43,7 @@ async function getProposalVotes(
 }
 
 export async function getResults() {
+  console.log("start get Results");
   const proposal = await getProposal(
     "0xd00700ca5bf26078d979a55fbbb1f25651791afd1aff6f951422fa6903e3424c"
   );
@@ -52,8 +53,6 @@ export async function getResults() {
   //0x8f28b88f32c80b3212afb0e850c6230023284fa33ccc2c14690c20195a086cb
 
   //  "0xef17a8cb27e3d01538a20b90d2628379290376d15947238e8f19c99e1cb42d14"
-  console.log("choices");
-  console.dir(proposal.choices);
   const votes = await getProposalVotes(proposal.id);
 
   const voters = votes.map((vote) => vote.voter);
@@ -78,7 +77,6 @@ export async function getResults() {
     .sort((a, b) => b.balance - a.balance)
     .filter((vote) => vote.balance > 0);
 
-  console.log("votingResults1");
   const votingClass = new snapshot.utils.voting[proposal.type](
     proposal,
     votes1,
@@ -89,17 +87,8 @@ export async function getResults() {
     resultsByStrategyScore: votingClass.resultsByStrategyScore(),
     sumOfResultsBalance: votingClass.sumOfResultsBalance(),
   };
-  console.log("votingResults3");
-  console.log(votingResults);
 
   return { proposal, votingResults };
 }
 
 export default getProposal;
-
-// const votingClass = new voting[proposal.type](proposal, votes, strategies);
-// const results = {
-//   resultsByVoteBalance: votingClass.resultsByVoteBalance(),
-//   resultsByStrategyScore: votingClass.resultsByStrategyScore(),
-//   sumOfResultsBalance: votingClass.sumOfResultsBalance(),
-// };

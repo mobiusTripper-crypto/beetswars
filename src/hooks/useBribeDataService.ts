@@ -1,24 +1,23 @@
 import { useEffect, useState } from "react";
-import { BribeData } from "types/BribeData";
-import { Service } from "types/Service";
+import { BribeDataType } from "types/BribeData";
+import { ServiceType } from "types/Service";
 
 export interface Bribes {
-  results: BribeData[];
+  results: BribeDataType[];
 }
 
 const useBribeDataService = () => {
-  const [result, setResult] = useState<Service<Bribes>>({
+  const [result, setResult] = useState<ServiceType<Bribes>>({
     status: "loading",
   });
 
   const dataURL = "https://beetswars-data.vercel.app/bribe-data.json";
-  console.log({ dataURL });
 
   useEffect(() => {
+    console.log("bribe data fetch");
     fetch(dataURL || "")
       .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         setResult({ status: "loaded", payload: response });
       })
       .catch((error) => {
@@ -26,9 +25,6 @@ const useBribeDataService = () => {
         setResult({ status: "error", error });
       });
   }, [dataURL]);
-
-  console.log(result);
-
   return result;
 };
 

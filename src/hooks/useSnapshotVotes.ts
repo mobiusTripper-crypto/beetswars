@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { getResults } from "hooks/voteSnapshot";
-import { Service } from "types/Service";
-import { VoteData } from "types/VoteData";
+import { ServiceType } from "types/Service";
+import { VoteDataType } from "types/VoteData";
 
 const useSnapshotVotes = () => {
-  const [result, setResult] = useState<Service<VoteData>>({
+  const [result, setResult] = useState<ServiceType<VoteDataType>>({
     status: "loading",
   });
 
   useEffect(() => {
+    console.log("snapshot vote fetch");
     getResults()
       //      .then((response) => response.json())
       .then((response) => {
-        console.log(response);
         setResult({ status: "loaded", payload: response });
       })
       .catch((error) => {
@@ -24,9 +24,3 @@ const useSnapshotVotes = () => {
 };
 
 export default useSnapshotVotes;
-
-// (property) ServiceLoaded<VoteData>.payload: VoteData
-// Property 'Results' is missing in type
-// '{ proposal: any; votingResults:
-//   { resultsByVoteBalance: any; resultsByStrategyScore: any; sumOfResultsBalance: any; }; }'
-//   but required in type 'VoteData'.ts(2741)

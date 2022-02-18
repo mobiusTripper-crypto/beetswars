@@ -12,7 +12,7 @@ interface ServiceError {
   status: "error";
   error: Error;
 }
-export type Service<T> =
+export type ServiceType<T> =
   | ServiceInit
   | ServiceLoading
   | ServiceLoaded<T>

@@ -1,6 +1,6 @@
-import { boolean, number, string } from "yargs";
+//import { boolean, number, string } from "yargs";
 
-export interface BribeData {
+export interface BribeDataType {
   enabled: boolean;
   voteindex: number;
   poolname: string;
