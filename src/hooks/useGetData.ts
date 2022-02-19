@@ -63,6 +63,13 @@ const useGetData = () => {
             voteData.votingResults.sumOfResultsBalance) *
           100;
 
+        //special code for Stable Credit Sonata (CREDIT-etc
+        //Reward: 💳 3000$ in $Credit for each 1% (maximum of 10%) 💵 3000$ in USDC for every 1% above 10% (maximum of another 10%)
+        if (bribe.voteindex === 43 && votePercentage >= 10) {
+          bribe.rewardamount = 30000;
+          bribe.percentagethreshold = 10;
+        }
+
         const percentAboveThreshold = Math.max(
           0,
           votePercentage - bribe.percentagethreshold
@@ -70,7 +77,10 @@ const useGetData = () => {
         const percentValue =
           bribe.percentagerewardamount * percentAboveThreshold;
 
-        const overallValue = bribe.rewardamount + percentValue;
+        const overallValue = Math.min(
+          bribe.rewardamount + percentValue,
+          isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
+        );
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
