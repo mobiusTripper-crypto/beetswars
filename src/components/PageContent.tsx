@@ -43,7 +43,7 @@ const PageContent: FC = () => {
               display: "flex",
               justifyContent: "space-between",
               flexWrap: "wrap",
-              px: 5,
+              px: 1,
             }}
           >
             {getData.payload.results.map((data, index: number) => (
@@ -57,7 +57,7 @@ const PageContent: FC = () => {
                   },
                 }}
               >
-                <Card sx={{ margin: 5 }} key={index}>
+                <Card sx={{ margin: 1 }} key={index}>
                   <CardHeader
                     title={data.poolName}
                     subheader={"$ / fBEETS: " + data.valuePerVote.toFixed(5)}
