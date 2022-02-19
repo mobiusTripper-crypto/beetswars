@@ -7,6 +7,7 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const PageContent: FC = () => {
   // const service = useBribeDataService();
@@ -16,16 +17,27 @@ const PageContent: FC = () => {
 
   return (
     <div>
-      <Box>BEETS WARS ROI Dashboard</Box>
+      <Typography variant="h2" fontWeight="700" align="center">
+        <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
+        {" - "}
+        <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
+      </Typography>
+      <Typography variant="body1" align="center">
+        This website is in BETA TESTING. Assume all information given may be
+        incorrect, DYOR. This is not investment advice. This site is not
+        affiliated with BeethovenX.
+      </Typography>
 
       {getData.status === "loading" && <div>Loading...</div>}
       {getData.status === "loaded" && (
         <div>
-          Total Votes:{" "}
-          {getData.payload.totalVotes.toLocaleString(undefined, {
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          })}
+          <Typography variant="h4" align="center">
+            Total Votes:{" "}
+            {getData.payload.totalVotes.toLocaleString(undefined, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </Typography>
           <Box
             sx={{
               display: "flex",

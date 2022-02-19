@@ -1,9 +1,25 @@
 import React, { FC, useState, createContext, useContext } from "react";
 import {
+  ThemeOptions,
   createTheme,
   ThemeProvider as MuiThemeProvider,
+  responsiveFontSizes,
 } from "@mui/material/styles";
-//import theme from './theme'
+import { deepmerge } from "@mui/utils";
+
+// declare module "@mui/material/styles" {
+//   interface BreakpointOverrides {
+//     xs: false;
+//     sm: false;
+//     md: false;
+//     lg: false;
+//     xl: false;
+//     mobile: true;
+//     tablet: true;
+//     laptop: true;
+//     desktop: true;
+//   }
+// }
 
 type ThemeProviderType = {
   toggleTheme: () => void;
@@ -19,41 +35,65 @@ const ThemeContext = createContext<ThemeProviderType>(initialState);
 
 export const useTheme: () => ThemeProviderType = () => useContext(ThemeContext);
 
-const lightTheme = createTheme({
-  spacing: 4,
+const baseThemeOptions: ThemeOptions = {
+  spacing: 8,
   palette: {
-    mode: "light",
-    primary: {
-      main: "#7CC9A1",
-    },
     secondary: {
       main: "#673ab7",
     },
   },
   typography: {
+    fontFamily: `"Inter", "Helvetica", "Arial", sans-serif`,
+    fontSize: 14,
+    fontWeightLight: 100,
+    fontWeightRegular: 400,
+    fontWeightMedium: 600,
+    fontWeightBold: 900,
     button: {
       fontWeight: 600,
     },
   },
-});
+  // breakpoints: {
+  //   values: {
+  //     mobile: 0,
+  //     tablet: 640,
+  //     laptop: 1024,
+  //     desktop: 1200,
+  //   },
+  //},
+};
 
-const darkTheme = createTheme({
-  spacing: 4,
+const lightThemeOptions: ThemeOptions = {
   palette: {
-    mode: "dark",
+    primary: {
+      main: "#4c9872",
+      contrastText: "#DDD",
+    },
+    mode: "light",
+    background: {
+      paper: "#EEE",
+      default: "#EEE",
+    },
+  },
+};
+
+const darkThemeOptions: ThemeOptions = {
+  palette: {
     primary: {
       main: "#7CC9A1",
     },
-    secondary: {
-      main: "#673ab7",
+    mode: "dark",
+    background: {
+      default: "#141F63",
     },
   },
-  typography: {
-    button: {
-      fontWeight: 600,
-    },
-  },
-});
+};
+
+let lightTheme = createTheme(deepmerge(baseThemeOptions, lightThemeOptions));
+let darkTheme = createTheme(deepmerge(baseThemeOptions, darkThemeOptions));
+
+lightTheme = responsiveFontSizes(lightTheme);
+darkTheme = responsiveFontSizes(darkTheme);
 
 const ThemeProvider: FC = ({ children }) => {
   const [isDarkMode, toggleTheme1] = useState(true);
