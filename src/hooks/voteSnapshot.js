@@ -22,7 +22,7 @@ async function getProposal(id) {
 
 async function getProposalVotes(
   proposalId,
-  { first, voter, skip } = { first: 30000, voter: "", skip: 0 }
+  { first, voter, skip } = { first: 50000, voter: "", skip: 0 }
 ) {
   try {
     const response = await request(endpoint, VOTES_QUERY, {

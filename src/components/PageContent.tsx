@@ -5,9 +5,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import SvgIcon from "@mui/material/SvgIcon";
 import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
+import LabeledListItem from "components/LabeledListItem";
 
 const PageContent: FC = () => {
   // const service = useBribeDataService();
@@ -51,10 +51,10 @@ const PageContent: FC = () => {
                 key={index}
                 sx={{
                   flex: {
-                    xl: "0 1 calc(25% - 1em)",
-                    lg: "0 1 calc(33% - 1em)",
-                    md: "0 1 calc(50% - 1em)",
-                    sm: "0 1 100%",
+                    lg: "0 1 calc(25% - 1em)",
+                    md: "0 1 calc(33% - 1em)",
+                    sm: "0 1 calc(50% - 1em)",
+                    xs: "0 1 100%",
                   },
                 }}
               >
@@ -96,46 +96,60 @@ const PageContent: FC = () => {
                   <Divider variant="middle" />
                   <Box sx={{ m: 1 }}>
                     <List dense={true}>
-                      <ListItem>
-                        {"Reward Amount: $" +
+                      <LabeledListItem
+                        label="Reward Amount"
+                        value={
+                          "$" +
                           data.rewardValue.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
-                          })}
-                      </ListItem>
-                      <ListItem>
-                        {"Percent Above Threshhold: " +
-                          data.percentAboveThreshold.toFixed(2) +
-                          "%"}
-                      </ListItem>
-                      <ListItem>
-                        {"Percent Amount: $" +
+                          })
+                        }
+                      />
+                      <LabeledListItem
+                        label="Percent Above Threshhold"
+                        value={data.percentAboveThreshold.toFixed(2) + "%"}
+                      />
+
+                      <LabeledListItem
+                        label="Percent Amount"
+                        value={
+                          "$" +
                           data.percentValue.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
-                          })}
-                      </ListItem>
+                          })
+                        }
+                      />
 
-                      <ListItem>
-                        {"Overall Amount: $" +
+                      <LabeledListItem
+                        label="Overall Amount"
+                        value={
+                          "$" +
                           data.overallValue.toLocaleString(undefined, {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
-                          })}
-                      </ListItem>
-                      <ListItem>
-                        {"Vote Total: " +
+                          })
+                        }
+                      />
+
+                      <LabeledListItem
+                        label="Vote Total"
+                        value={
                           data.voteTotal.toLocaleString(undefined, {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0,
                           }) +
                           " (" +
                           data.votePercentage.toFixed(2) +
-                          "% )"}
-                      </ListItem>
-                      <ListItem>
-                        $ / fBEETS: {data.valuePerVote.toFixed(7)}
-                      </ListItem>
+                          "% )"
+                        }
+                      />
+
+                      <LabeledListItem
+                        label="$ / fBEETS"
+                        value={data.valuePerVote.toFixed(7)}
+                      />
                     </List>
                   </Box>
                 </Box>
