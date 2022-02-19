@@ -1,13 +1,13 @@
 import React, { FC } from "react";
 
-import useBribeDataService from "hooks/useBribeDataService";
-import useSnapshotVotes from "hooks/useSnapshotVotes";
 import useGetData from "hooks/useGetData";
-import Card from "@mui/material/Card";
-import CardHeader from "@mui/material/CardHeader";
-import CardContent from "@mui/material/CardContent";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import SvgIcon from "@mui/material/SvgIcon";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
 
 const PageContent: FC = () => {
   // const service = useBribeDataService();
@@ -51,62 +51,94 @@ const PageContent: FC = () => {
                 key={index}
                 sx={{
                   flex: {
+                    xl: "0 1 calc(25% - 1em)",
                     lg: "0 1 calc(33% - 1em)",
                     md: "0 1 calc(50% - 1em)",
                     sm: "0 1 100%",
                   },
                 }}
               >
-                <Card sx={{ margin: 1 }} key={index}>
-                  <CardHeader
-                    title={data.poolName}
-                    subheader={"$ / fBEETS: " + data.valuePerVote.toFixed(5)}
-                  />
-                  <CardContent>
-                    <p>
+                <Box
+                  sx={{
+                    width: "100%",
+                    bgcolor: "background.paper",
+                    borderRadius: 4,
+                  }}
+                >
+                  <Box sx={{ my: 3, mx: 2, pt: 1 }}>
+                    <Typography gutterBottom variant="h4" component="div">
+                      <Link href={data.poolUrl} underline="hover">
+                        {data.poolName}
+                      </Link>
+                    </Typography>
+                    <Typography
+                      variant="subtitle2"
+                      component="div"
+                      align="center"
+                    >
+                      Voting with 1000 fBEETS returns
+                    </Typography>
+                    <Typography
+                      gutterBottom
+                      variant="h5"
+                      component="div"
+                      align="center"
+                      sx={{ color: "#4BE39C" }}
+                    >
+                      {"$" + (data.valuePerVote * 1000).toFixed(2)}
+                    </Typography>
+
+                    <Typography color="text.secondary" variant="body2">
                       <strong>Reward: </strong>
                       {data.rewardDescription}{" "}
-                    </p>
-                    <p>
-                      Reward Value:{" "}
-                      {"$" +
-                        data.rewardValue.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                    </p>
-                    <p>
-                      Percent Above Threshhold:{" "}
-                      {data.percentAboveThreshold.toFixed(2) + "%"}
-                    </p>
-                    <p>
-                      Percent Value:{" "}
-                      {"$" +
-                        data.percentValue.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                    </p>
-                    <p>
-                      Overall Value:{" "}
-                      {"$" +
-                        data.overallValue.toLocaleString(undefined, {
-                          minimumFractionDigits: 2,
-                          maximumFractionDigits: 2,
-                        })}
-                    </p>
-                    <p>
-                      Vote Total:{" "}
-                      {data.voteTotal.toLocaleString(undefined, {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                      }) +
-                        " (" +
-                        data.votePercentage.toFixed(2) +
-                        "% )"}
-                    </p>
-                  </CardContent>
-                </Card>
+                    </Typography>
+                  </Box>
+                  <Divider variant="middle" />
+                  <Box sx={{ m: 1 }}>
+                    <List dense={true}>
+                      <ListItem>
+                        {"Reward Amount: $" +
+                          data.rewardValue.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                      </ListItem>
+                      <ListItem>
+                        {"Percent Above Threshhold: " +
+                          data.percentAboveThreshold.toFixed(2) +
+                          "%"}
+                      </ListItem>
+                      <ListItem>
+                        {"Percent Amount: $" +
+                          data.percentValue.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                      </ListItem>
+
+                      <ListItem>
+                        {"Overall Amount: $" +
+                          data.overallValue.toLocaleString(undefined, {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                      </ListItem>
+                      <ListItem>
+                        {"Vote Total: " +
+                          data.voteTotal.toLocaleString(undefined, {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
+                          }) +
+                          " (" +
+                          data.votePercentage.toFixed(2) +
+                          "% )"}
+                      </ListItem>
+                      <ListItem>
+                        $ / fBEETS: {data.valuePerVote.toFixed(7)}
+                      </ListItem>
+                    </List>
+                  </Box>
+                </Box>
               </Box>
             ))}
           </Box>
