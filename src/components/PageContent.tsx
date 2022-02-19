@@ -32,11 +32,16 @@ const PageContent: FC = () => {
       {getData.status === "loaded" && (
         <div>
           <Typography variant="h4" align="center">
-            Total Votes:{" "}
-            {getData.payload.totalVotes.toLocaleString(undefined, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
-            })}
+            {"Total Votes: " +
+              getData.payload.totalVotes.toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }) +
+              " Total Bribes - $" +
+              getData.payload.totalBribeAmount.toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              })}
           </Typography>
           <Box
             sx={{
@@ -67,8 +72,29 @@ const PageContent: FC = () => {
                 >
                   <Box sx={{ my: 3, mx: 2, pt: 1 }}>
                     <Typography gutterBottom variant="h4" component="div">
-                      <Link href={data.poolUrl} underline="hover">
+                      <Link
+                        href={data.poolUrl}
+                        underline="hover"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {data.poolName}
+                        <span>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <line x1="7" y1="17" x2="17" y2="7"></line>
+                            <polyline points="7 7 17 7 17 17"></polyline>
+                          </svg>
+                        </span>
                       </Link>
                     </Typography>
                     <Typography

@@ -13,6 +13,7 @@ export interface Bribes {
 export interface DashboardReturn {
   results: DashboardType[];
   totalVotes: number;
+  totalBribeAmount: number;
 }
 
 const useGetData = () => {
@@ -44,11 +45,16 @@ const useGetData = () => {
         return response;
       });
 
+      const dashboardData = normalizeDashboardData(bribeData, voteData);
+
       setDashboardResult({
         status: "loaded",
         payload: {
-          results: normalizeDashboardData(bribeData, voteData),
+          results: dashboardData,
           totalVotes: voteData.votingResults.sumOfResultsBalance,
+          totalBribeAmount: dashboardData
+            .map((item) => item.overallValue)
+            .reduce((prev, curr) => prev + curr, 0),
         },
       });
     };
