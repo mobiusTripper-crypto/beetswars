@@ -12,3 +12,10 @@ export interface BribeDataType {
   percentagerewardamount: number;
   rewardcap: number;
 }
+
+export interface Bribes {
+  version: string;
+  description: string;
+  round: number;
+  bribedata: BribeDataType[];
+}

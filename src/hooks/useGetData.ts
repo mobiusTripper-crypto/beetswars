@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { BribeDataType } from "types/BribeData";
+import { Bribes } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType } from "types/Dashboard";
 
 import { getResults } from "hooks/voteSnapshot";
 
-export interface Bribes {
-  results: BribeDataType[];
-}
+// export interface Bribes {
+//   results: BribeDataType[];
+// }
 
 export interface DashboardReturn {
   results: DashboardType[];
@@ -19,15 +19,11 @@ export interface DashboardReturn {
 const useGetData = () => {
   console.log("getData");
 
-  const dataURL = "https://beetswars-data.vercel.app/bribe-data.json";
+  //  const dataURL = "https://beetswars-data.vercel.app/bribe-data-4.json";
+  //  const dataURL = "http://localhost:4000/bribe-data-4.json";
 
-  // const [bribeResult, setBribeResult] = useState<ServiceType<Bribes>>({
-  //   status: "loading",
-  // });
-
-  // const [voteResult, setVoteResult] = useState<ServiceType<VoteDataType>>({
-  //   status: "loading",
-  // });
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-4.json";
+  console.log(dataUrl);
 
   const [dashboardResult, setDashboardResult] = useState<
     ServiceType<DashboardReturn>
@@ -35,7 +31,7 @@ const useGetData = () => {
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      const bribeData = await fetch(dataURL || "")
+      const bribeData = await fetch(dataUrl || "")
         .then((response) => response.json())
         .then((response: Bribes) => {
           return response;
@@ -62,8 +58,9 @@ const useGetData = () => {
     const normalizeDashboardData = (bribes: Bribes, voteData: VoteDataType) => {
       const list: DashboardType[] = [];
       console.dir(voteData);
+      console.dir(bribes);
 
-      bribes.results.map((bribe) => {
+      bribes.bribedata.map((bribe) => {
         const votePercentage =
           (voteData.votingResults.resultsByVoteBalance[bribe.voteindex] /
             voteData.votingResults.sumOfResultsBalance) *
@@ -109,7 +106,7 @@ const useGetData = () => {
       return list;
     };
     fetchDashboardData();
-  }, [dataURL]);
+  }, [dataUrl]);
 
   return dashboardResult;
 };
