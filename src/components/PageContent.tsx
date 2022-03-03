@@ -166,18 +166,18 @@ const PageContent: FC = () => {
                               })
                             }
                           />
+                          <LabeledListItem
+                            label="Overall Amount"
+                            value={
+                              "$" +
+                              data.overallValue.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })
+                            }
+                          />
                         </div>
                       )}
-                      <LabeledListItem
-                        label="Overall Amount"
-                        value={
-                          "$" +
-                          data.overallValue.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })
-                        }
-                      />
 
                       <LabeledListItem
                         label="Vote Total"
