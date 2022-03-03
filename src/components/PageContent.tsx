@@ -122,7 +122,11 @@ const PageContent: FC = () => {
                       align="center"
                       sx={{ color: "#4BE39C" }}
                     >
-                      {"$" + (data.valuePerVote * 1000).toFixed(2)}
+                      {"$" +
+                        Math.min(
+                          data.valuePerVote * 1000,
+                          data.overallValue
+                        ).toFixed(2)}
                     </Typography>
 
                     <Typography color="text.secondary" variant="body2">
@@ -140,7 +144,7 @@ const PageContent: FC = () => {
                   <Box sx={{ m: 1 }}>
                     <List dense={true}>
                       <LabeledListItem
-                        label="Reward Amount"
+                        label="Fixed Reward Amount"
                         value={
                           "$" +
                           data.rewardValue.toLocaleString(undefined, {
