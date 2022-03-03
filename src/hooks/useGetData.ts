@@ -69,32 +69,26 @@ const useGetData = () => {
             voteData.votingResults.sumOfResultsBalance) *
           100;
 
-        let percentAboveThreshold = 0;
-        let percentValue = 0;
-        let overallValue = 0;
-        let isQualified = false;
+        const isQualified = votePercentage > 0.15;
 
-        if (votePercentage > 0.15) {
-          // //special code for Stable Credit Sonata (CREDIT-etc
-          // //Reward: 💳 3000$ in $Credit for each 1% (maximum of 10%) 💵 3000$ in USDC for every 1% above 10% (maximum of another 10%)
-          // if (bribe.voteindex === 43 && votePercentage >= 10) {
-          //   bribe.rewardamount = 30000;
-          //   bribe.percentagethreshold = 10;
-          // }
+        // //special code for Stable Credit Sonata (CREDIT-etc
+        // //Reward: 💳 3000$ in $Credit for each 1% (maximum of 10%) 💵 3000$ in USDC for every 1% above 10% (maximum of another 10%)
+        // if (bribe.voteindex === 43 && votePercentage >= 10) {
+        //   bribe.rewardamount = 30000;
+        //   bribe.percentagethreshold = 10;
+        // }
 
-          percentAboveThreshold = Math.max(
-            0,
-            votePercentage - bribe.percentagethreshold
-          );
-          percentValue = bribe.percentagerewardamount * percentAboveThreshold;
+        const percentAboveThreshold = Math.max(
+          0,
+          votePercentage - bribe.percentagethreshold
+        );
+        const percentValue =
+          bribe.percentagerewardamount * percentAboveThreshold;
 
-          overallValue = Math.min(
-            bribe.rewardamount + percentValue,
-            isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
-          );
-
-          isQualified = true;
-        }
+        const overallValue = Math.min(
+          bribe.rewardamount + percentValue,
+          isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
+        );
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
