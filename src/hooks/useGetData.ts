@@ -14,16 +14,11 @@ export interface DashboardReturn {
   results: DashboardType[];
   totalVotes: number;
   totalBribeAmount: number;
+  version: string;
 }
 
 const useGetData = () => {
-  console.log("getData");
-
-  //  const dataURL = "https://beetswars-data.vercel.app/bribe-data-4.json";
-  //  const dataURL = "http://localhost:4000/bribe-data-4.json";
-
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-4.json";
-  console.log(dataUrl);
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-5.json";
 
   const [dashboardResult, setDashboardResult] = useState<
     ServiceType<DashboardReturn>
@@ -51,14 +46,15 @@ const useGetData = () => {
           totalBribeAmount: dashboardData
             .map((item) => item.overallValue)
             .reduce((prev, curr) => prev + curr, 0),
+          version: bribeData.version,
         },
       });
     };
 
     const normalizeDashboardData = (bribes: Bribes, voteData: VoteDataType) => {
       const list: DashboardType[] = [];
-      console.dir(voteData);
-      console.dir(bribes);
+      // console.dir(voteData);
+      // console.dir(bribes);
 
       bribes.bribedata.map((bribe) => {
         const votePercentage =

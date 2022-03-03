@@ -17,28 +17,19 @@ const PageContent: FC = () => {
 
   return (
     <div>
-      <Box
-        sx={{
-          display: "grid",
-          gridgap: 2,
-          gridTemplateColumns: "200px minmax(200px, 1fr) 200px",
-        }}
-      >
-        <div></div>
-        <Typography variant="h2" fontWeight="700" align="center">
-          <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
-          {" - "}
-          <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
+      <Box sx={{ display: "flex", justifyContent: "right" }}>
+        <Typography variant="caption" align="right">
+          App: v{process.env.REACT_APP_VERSION} &nbsp;
         </Typography>
-        <Box sx={{ display: "block", align: "right" }}>
-          <Typography variant="caption" align="right">
-            App:{process.env.REACT_APP_VERSION}
-          </Typography>
-          <Typography variant="caption" align="right">
-            B
-          </Typography>
-        </Box>
+        <Typography variant="caption" align="right">
+          Data: {getData.status === "loaded" && "v" + getData.payload.version}
+        </Typography>
       </Box>
+      <Typography variant="h2" fontWeight="700" align="center">
+        <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
+        {" - "}
+        <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
+      </Typography>
       <Typography variant="body1" align="center">
         This website is in BETA TESTING. This is 3rd party service independent
         of BeethovenX and please do your own research. This is not investment
