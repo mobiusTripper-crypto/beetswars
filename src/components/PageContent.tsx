@@ -18,19 +18,22 @@ const PageContent: FC = () => {
   return (
     <div>
       <Box sx={{ display: "flex", justifyContent: "right" }}>
-        <Typography variant="caption" align="right">
+        {/* <Typography variant="caption" align="right">
           App: v{process.env.REACT_APP_VERSION} &nbsp;
-        </Typography>
+        </Typography> */}
         <Typography variant="caption" align="right">
-          Data: {getData.status === "loaded" && "v" + getData.payload.version}
+          data: {getData.status === "loaded" && "v" + getData.payload.version}
         </Typography>
       </Box>
+      <Typography variant="h4" align="center">
+        Farming Incentive Gauge Vote (round 5)
+      </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
         {" - "}
         <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
       </Typography>
-      <Typography variant="body1" align="center">
+      <Typography variant="body2" align="center">
         This website is in BETA TESTING. This is 3rd party service independent
         of BeethovenX and please do your own research. This is not investment
         advice.
@@ -124,8 +127,14 @@ const PageContent: FC = () => {
 
                     <Typography color="text.secondary" variant="body2">
                       <strong>Reward: </strong>
-                      {data.rewardDescription}{" "}
+                      {data.rewardDescription}
                     </Typography>
+                    {data.assumption && (
+                      <Typography color="text.secondary" variant="body2">
+                        <strong>Assumptions: </strong>
+                        {data.assumption}
+                      </Typography>
+                    )}
                   </Box>
                   <Divider variant="middle" />
                   <Box sx={{ m: 1 }}>
@@ -135,8 +144,8 @@ const PageContent: FC = () => {
                         value={
                           "$" +
                           data.rewardValue.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 0,
                           })
                         }
                       />

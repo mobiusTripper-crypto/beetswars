@@ -85,6 +85,7 @@ const useGetData = () => {
           poolName: voteData.proposal.choices[bribe.voteindex],
           poolUrl: bribe.poolurl,
           rewardDescription: bribe.rewarddescription,
+          assumption: bribe.assumption,
           rewardValue: bribe.rewardamount,
           percentAboveThreshold: percentAboveThreshold,
           percentValue: percentValue,

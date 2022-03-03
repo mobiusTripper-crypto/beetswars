@@ -6,6 +6,7 @@ export interface BribeDataType {
   poolname: string;
   poolurl: string;
   rewarddescription: string;
+  assumption: string;
   rewardamount: number;
   percentage: boolean;
   percentagethreshold: number;
