@@ -3,6 +3,7 @@ export interface DashboardType {
   poolUrl: string;
   rewardDescription: string;
   assumption: string;
+  isQualified: boolean;
   rewardValue: number;
   ispercentage: boolean;
   percentAboveThreshold: number;

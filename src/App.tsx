@@ -2,13 +2,16 @@ import React from "react";
 import PageContent from "components/PageContent";
 import CssBaseline from "@mui/material/CssBaseline";
 import ThemeProvider from "theme/ThemeProvider";
+import { RefreshContextProvider } from "contexts/RefreshContext";
 
 function App() {
   return (
     <div>
       <ThemeProvider>
         <CssBaseline />
-        <PageContent />
+        <RefreshContextProvider>
+          <PageContent />
+        </RefreshContextProvider>
       </ThemeProvider>
     </div>
   );

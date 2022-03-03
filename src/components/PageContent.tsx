@@ -108,27 +108,35 @@ const PageContent: FC = () => {
                         </span>
                       </Link>
                     </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      component="div"
-                      align="center"
-                    >
-                      Voting with 1000 fBEETS returns
-                    </Typography>
-                    <Typography
-                      gutterBottom
-                      variant="h5"
-                      component="div"
-                      align="center"
-                      sx={{ color: "#4BE39C" }}
-                    >
-                      {"$" +
-                        Math.min(
-                          data.valuePerVote * 1000,
-                          data.overallValue
-                        ).toFixed(2)}
-                    </Typography>
-
+                    {data.isQualified ? (
+                      <div>
+                        <Typography
+                          variant="subtitle2"
+                          component="div"
+                          align="center"
+                        >
+                          Voting with 1000 fBEETS returns
+                        </Typography>
+                        <Typography
+                          gutterBottom
+                          variant="h5"
+                          component="div"
+                          align="center"
+                          sx={{ color: "#4BE39C" }}
+                        >
+                          {"$" + (data.valuePerVote * 1000).toFixed(2)}
+                        </Typography>
+                      </div>
+                    ) : (
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        component="div"
+                        align="center"
+                      >
+                        below .15% votes
+                      </Typography>
+                    )}
                     <Typography color="text.secondary" variant="body2">
                       <strong>Reward: </strong>
                       {data.rewardDescription}
