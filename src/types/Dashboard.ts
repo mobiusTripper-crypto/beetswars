@@ -4,6 +4,7 @@ export interface DashboardType {
   rewardDescription: string;
   assumption: string;
   rewardValue: number;
+  ispercentage: boolean;
   percentAboveThreshold: number;
   percentValue: number;
   overallValue: number;

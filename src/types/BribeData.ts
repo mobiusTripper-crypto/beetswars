@@ -8,7 +8,7 @@ export interface BribeDataType {
   rewarddescription: string;
   assumption: string;
   rewardamount: number;
-  percentage: boolean;
+  ispercentage: boolean;
   percentagethreshold: number;
   percentagerewardamount: number;
   rewardcap: number;

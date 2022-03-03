@@ -87,6 +87,7 @@ const useGetData = () => {
           rewardDescription: bribe.rewarddescription,
           assumption: bribe.assumption,
           rewardValue: bribe.rewardamount,
+          ispercentage: bribe.ispercentage,
           percentAboveThreshold: percentAboveThreshold,
           percentValue: percentValue,
           overallValue: overallValue,
@@ -97,6 +98,8 @@ const useGetData = () => {
             overallValue /
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
         };
+
+        console.log(bribe.ispercentage, data.ispercentage);
 
         list.push(data);
       });

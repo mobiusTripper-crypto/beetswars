@@ -149,22 +149,25 @@ const PageContent: FC = () => {
                           })
                         }
                       />
-                      <LabeledListItem
-                        label="Percent Above Threshhold"
-                        value={data.percentAboveThreshold.toFixed(2) + "%"}
-                      />
+                      {data.ispercentage && (
+                        <div>
+                          <LabeledListItem
+                            label="Percent Above Threshhold"
+                            value={data.percentAboveThreshold.toFixed(2) + "%"}
+                          />
 
-                      <LabeledListItem
-                        label="Percent Amount"
-                        value={
-                          "$" +
-                          data.percentValue.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })
-                        }
-                      />
-
+                          <LabeledListItem
+                            label="Percent Amount"
+                            value={
+                              "$" +
+                              data.percentValue.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })
+                            }
+                          />
+                        </div>
+                      )}
                       <LabeledListItem
                         label="Overall Amount"
                         value={
