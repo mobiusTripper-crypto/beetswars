@@ -57,9 +57,9 @@ const useGetData = () => {
       const supaPrice = await contract.calculateAssetPrice(
         "0x59D07a115fe3FFe5db3D52029D43Cc0ef5e9ba08"
       );
-      const fbeetsPrice = await contract.calculateAssetPrice(
-        "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
-      );
+      // const fbeetsPrice = await contract.calculateAssetPrice(
+      //   "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
+      // );
 
       const tokenPrices: TokenPrice[] = [
         {
@@ -76,7 +76,7 @@ const useGetData = () => {
         },
         {
           token: "FBEETS",
-          price: parseFloat(ethers.utils.formatEther(fbeetsPrice)),
+          price: parseFloat(ethers.utils.formatEther(beetsPrice)) * 1.0152,
         },
       ];
 
@@ -127,20 +127,15 @@ const useGetData = () => {
               rewardAmount += reward.amount;
             } else {
               const token = tokens.find((t) => t.token === reward.token);
-              // console.log(
-              //   reward.token,
-              //   token,
-              //   reward.amount * (token ? token.price : 0)
-              // );
+              console.log(reward.token, token ? token.price : 0, reward.amount);
               rewardAmount += reward.amount * (token ? token.price : 0);
             }
-            //            console.log(rewardAmount, reward.token);
+            //console.log(rewardAmount, reward.token);
           });
         }
 
         let percentAmount = 0;
         const isPerecentReward = bribe.percentreward.length !== 0;
-        console.log(isPerecentReward);
         if (isPerecentReward) {
           bribe.percentreward.map((reward) => {
             if (reward.isfixed) {
