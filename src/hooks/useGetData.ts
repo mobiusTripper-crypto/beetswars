@@ -40,14 +40,12 @@ const useGetData = () => {
       const provider = new ethers.providers.JsonRpcProvider(
         "https://rpc.ftm.tools"
       );
-      console.log("create contract");
       const contract = new ethers.Contract(
         contract_address,
         contract_abi,
         provider
       );
 
-      console.log("call contract");
       const beetsPrice = await contract.calculateAssetPrice(
         "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
       );
