@@ -7,10 +7,9 @@ export interface BribeDataType {
   poolurl: string;
   rewarddescription: string;
   assumption: string;
-  rewardamount: number;
-  ispercentage: boolean;
+  fixedreward: TokenData[];
+  percentreward: TokenData[];
   percentagethreshold: number;
-  percentagerewardamount: number;
   rewardcap: number;
 }
 
@@ -19,4 +18,15 @@ export interface Bribes {
   description: string;
   round: number;
   bribedata: BribeDataType[];
+}
+
+export interface TokenData {
+  token: string;
+  amount: number;
+  isfixed: boolean;
+}
+
+export interface TokenPrice {
+  token: string;
+  price: number;
 }

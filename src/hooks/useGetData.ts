@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { Bribes } from "types/BribeData";
+import { Bribes, TokenPrice } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType } from "types/Dashboard";
 import useRefresh from "hooks/useRefresh";
-
+import Web3 from "web3";
+import { AbiItem } from "web3-utils";
 import { getResults } from "hooks/voteSnapshot";
+import { contract_abi, contract_address } from "contracts/priceoracleconfig";
+import { ethers } from "ethers";
+import { BigNumber } from "@ethersproject/bignumber";
 
 // export interface Bribes {
 //   results: BribeDataType[];
@@ -20,7 +24,7 @@ export interface DashboardReturn {
 }
 
 const useGetData = () => {
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-5.json";
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-5a.json";
 
   //  const dispatch = useDispatch();
   const { slowRefresh } = useRefresh();
@@ -33,6 +37,49 @@ const useGetData = () => {
     const fetchDashboardData = async () => {
       console.log("get vote data " + new Date(Date.now()));
 
+      const provider = new ethers.providers.JsonRpcProvider(
+        "https://rpc.ftm.tools"
+      );
+      console.log("create contract");
+      const contract = new ethers.Contract(
+        contract_address,
+        contract_abi,
+        provider
+      );
+
+      console.log("call contract");
+      const beetsPrice = await contract.calculateAssetPrice(
+        "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
+      );
+      const ringPrice = await contract.calculateAssetPrice(
+        "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
+      );
+      const supaPrice = await contract.calculateAssetPrice(
+        "0x59D07a115fe3FFe5db3D52029D43Cc0ef5e9ba08"
+      );
+      const fbeetsPrice = await contract.calculateAssetPrice(
+        "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
+      );
+
+      const tokenPrices: TokenPrice[] = [
+        {
+          token: "BEETS",
+          price: parseFloat(ethers.utils.formatEther(beetsPrice)),
+        },
+        {
+          token: "RING",
+          price: parseFloat(ethers.utils.formatEther(ringPrice)),
+        },
+        {
+          token: "SUPA",
+          price: parseFloat(ethers.utils.formatEther(supaPrice)),
+        },
+        {
+          token: "FBEETS",
+          price: parseFloat(ethers.utils.formatEther(fbeetsPrice)),
+        },
+      ];
+
       const bribeData = await fetch(dataUrl || "")
         .then((response) => response.json())
         .then((response: Bribes) => {
@@ -43,7 +90,11 @@ const useGetData = () => {
         return response;
       });
 
-      const dashboardData = normalizeDashboardData(bribeData, voteData);
+      const dashboardData = normalizeDashboardData(
+        bribeData,
+        voteData,
+        tokenPrices
+      );
 
       setDashboardResult({
         status: "loaded",
@@ -58,12 +109,55 @@ const useGetData = () => {
       });
     };
 
-    const normalizeDashboardData = (bribes: Bribes, voteData: VoteDataType) => {
+    const normalizeDashboardData = (
+      bribes: Bribes,
+      voteData: VoteDataType,
+      tokens: TokenPrice[]
+    ) => {
       const list: DashboardType[] = [];
       // console.dir(voteData);
       // console.dir(bribes);
 
       bribes.bribedata.map((bribe) => {
+        let rewardAmount = 0;
+        const isFixedReward = bribe.fixedreward.length !== 0;
+        if (isFixedReward) {
+          bribe.fixedreward.map((reward) => {
+            if (reward.isfixed) {
+              rewardAmount += reward.amount;
+            } else {
+              const token = tokens.find((t) => t.token === reward.token);
+              // console.log(
+              //   reward.token,
+              //   token,
+              //   reward.amount * (token ? token.price : 0)
+              // );
+              rewardAmount += reward.amount * (token ? token.price : 0);
+            }
+            //            console.log(rewardAmount, reward.token);
+          });
+        }
+
+        let percentAmount = 0;
+        const isPerecentReward = bribe.percentreward.length !== 0;
+        console.log(isPerecentReward);
+        if (isPerecentReward) {
+          bribe.percentreward.map((reward) => {
+            if (reward.isfixed) {
+              percentAmount += reward.amount;
+            } else {
+              const token = tokens.find((t) => t.token === reward.token);
+              // console.log(
+              //   reward.token,
+              //   token,
+              //   reward.amount * (token ? token.price : 0)
+              // );
+              percentAmount += reward.amount * (token ? token.price : 0);
+            }
+            //            console.log(percentAmount, reward.token);
+          });
+        }
+
         const votePercentage =
           (voteData.votingResults.resultsByVoteBalance[bribe.voteindex] /
             voteData.votingResults.sumOfResultsBalance) *
@@ -71,22 +165,14 @@ const useGetData = () => {
 
         const isQualified = votePercentage > 0.15;
 
-        // //special code for Stable Credit Sonata (CREDIT-etc
-        // //Reward: 💳 3000$ in $Credit for each 1% (maximum of 10%) 💵 3000$ in USDC for every 1% above 10% (maximum of another 10%)
-        // if (bribe.voteindex === 43 && votePercentage >= 10) {
-        //   bribe.rewardamount = 30000;
-        //   bribe.percentagethreshold = 10;
-        // }
-
         const percentAboveThreshold = Math.max(
           0,
           votePercentage - bribe.percentagethreshold
         );
-        const percentValue =
-          bribe.percentagerewardamount * percentAboveThreshold;
+        const percentValue = percentAmount * percentAboveThreshold;
 
         const overallValue = Math.min(
-          bribe.rewardamount + percentValue,
+          rewardAmount + percentValue,
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
 
@@ -96,8 +182,8 @@ const useGetData = () => {
           isQualified: isQualified,
           rewardDescription: bribe.rewarddescription,
           assumption: bribe.assumption,
-          rewardValue: bribe.rewardamount,
-          ispercentage: bribe.ispercentage,
+          rewardValue: rewardAmount,
+          ispercentage: isPerecentReward,
           percentAboveThreshold: percentAboveThreshold,
           percentValue: percentValue,
           overallValue: overallValue,
