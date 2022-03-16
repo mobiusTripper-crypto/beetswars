@@ -3,7 +3,6 @@ import React, { FC } from "react";
 import useGetData from "hooks/useGetData";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import SvgIcon from "@mui/material/SvgIcon";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -26,7 +25,7 @@ const PageContent: FC = () => {
         </Typography>
       </Box>
       <Typography variant="h4" align="center">
-        Farming Incentive Gauge Vote (round 5)
+        Farming Incentive Gauge Vote (round 6)
       </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
