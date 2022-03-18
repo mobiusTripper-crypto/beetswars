@@ -46,9 +46,9 @@ const useGetData = () => {
         provider
       );
 
-      // const beetsPrice = await contract.calculateAssetPrice(
-      //   "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
-      // );
+      const beetsPrice = await contract.calculateAssetPrice(
+        "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
+      );
       const ringPrice = await contract.calculateAssetPrice(
         "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
       );
@@ -61,10 +61,10 @@ const useGetData = () => {
 
       //      set fixed prices from the end of gauge 5 votes, goto bottom of this file
       const tokenPrices: TokenPrice[] = [
-        // {
-        //   token: "BEETS",
-        //   price: parseFloat(ethers.utils.formatEther(beetsPrice)),
-        // },
+        {
+          token: "BEETS",
+          price: parseFloat(ethers.utils.formatEther(beetsPrice)),
+        },
         {
           token: "RING",
           price: parseFloat(ethers.utils.formatEther(ringPrice)),
