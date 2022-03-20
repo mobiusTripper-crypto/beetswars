@@ -46,12 +46,12 @@ const useGetData = () => {
         provider
       );
 
-      const beetsPrice = await contract.calculateAssetPrice(
-        "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
-      );
-      const ringPrice = await contract.calculateAssetPrice(
-        "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
-      );
+      // const beetsPrice = await contract.calculateAssetPrice(
+      //   "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
+      // );
+      // const ringPrice = await contract.calculateAssetPrice(
+      //   "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
+      // );
       // const supaPrice = await contract.calculateAssetPrice(
       //   "0x59D07a115fe3FFe5db3D52029D43Cc0ef5e9ba08"
       // );
@@ -59,15 +59,17 @@ const useGetData = () => {
       //   "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
       // );
 
-      //      set fixed prices from the end of gauge 5 votes, goto bottom of this file
+      //      fixed prices from the end of gauge, goto bottom of this file
       const tokenPrices: TokenPrice[] = [
         {
           token: "BEETS",
-          price: parseFloat(ethers.utils.formatEther(beetsPrice)),
+          price: 0.6342,
+          //price: parseFloat(ethers.utils.formatEther(beetsPrice)),
         },
         {
           token: "RING",
-          price: parseFloat(ethers.utils.formatEther(ringPrice)),
+          price: 0.801435,
+          //price: parseFloat(ethers.utils.formatEther(ringPrice)),
         },
         // {
         //   token: "SUPA",

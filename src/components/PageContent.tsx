@@ -33,8 +33,8 @@ const PageContent: FC = () => {
         <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
       </Typography>
       <Typography variant="body2" align="center">
-        This website is in BETA TESTING. This is 3rd party service independent
-        of BeethovenX and please do your own research. This is not investment
+        This website is still in BETA. This is 3rd party service independent of
+        BeethovenX and please do your own research. This is not investment
         advice.
       </Typography>
 
