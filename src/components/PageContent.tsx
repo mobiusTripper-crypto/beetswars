@@ -25,7 +25,7 @@ const PageContent: FC = () => {
         </Typography>
       </Box>
       <Typography variant="h4" align="center">
-        Farming Incentive Gauge Vote (round 6)
+        Farming Incentive Gauge Vote (round 7)
       </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>

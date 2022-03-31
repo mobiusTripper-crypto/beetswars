@@ -24,7 +24,7 @@ export interface DashboardReturn {
 }
 
 const useGetData = () => {
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-6.json";
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-7.json";
 
   //  const dispatch = useDispatch();
   const { slowRefresh } = useRefresh();
@@ -46,9 +46,13 @@ const useGetData = () => {
         provider
       );
 
-      // const beetsPrice = await contract.calculateAssetPrice(
-      //   "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
-      // );
+      const beetsPrice = await contract.calculateAssetPrice(
+        "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
+      );
+
+      const oathPrice = await contract.calculateAssetPrice(
+        "0x21ada0d2ac28c3a5fa3cd2ee30882da8812279b6"
+      );
       // const ringPrice = await contract.calculateAssetPrice(
       //   "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
       // );
@@ -63,13 +67,11 @@ const useGetData = () => {
       const tokenPrices: TokenPrice[] = [
         {
           token: "BEETS",
-          price: 0.6342,
-          //price: parseFloat(ethers.utils.formatEther(beetsPrice)),
+          price: parseFloat(ethers.utils.formatEther(beetsPrice)),
         },
         {
-          token: "RING",
-          price: 0.801435,
-          //price: parseFloat(ethers.utils.formatEther(ringPrice)),
+          token: "OATH",
+          price: parseFloat(ethers.utils.formatEther(oathPrice)),
         },
         // {
         //   token: "SUPA",
@@ -82,7 +84,9 @@ const useGetData = () => {
       ];
 
       const bribeData = await fetch(dataUrl || "")
-        .then((response) => response.json())
+        .then((response) => {
+          return response.json();
+        })
         .then((response: Bribes) => {
           return response;
         });
@@ -203,7 +207,7 @@ const useGetData = () => {
 
 export default useGetData;
 
-//end of gauge voting token price
+//end of gauge 5 voting token price
 // const tokenPrices: TokenPrice[] = [
 //   {
 //     token: "BEETS",
@@ -222,3 +226,15 @@ export default useGetData;
 //     price: 0.7761880532901334 * 1.0152,
 //   },
 // ];
+
+//end of gauge 6 voting token price
+// {
+//   token: "BEETS",
+//   price: 0.6342,
+//   //price: parseFloat(ethers.utils.formatEther(beetsPrice)),
+// },
+// {
+//   token: "RING",
+//   price: 0.801435,
+//   //price: parseFloat(ethers.utils.formatEther(ringPrice)),
+// },
