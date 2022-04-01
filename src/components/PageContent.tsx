@@ -150,23 +150,24 @@ const PageContent: FC = () => {
                   <Divider variant="middle" />
                   <Box sx={{ m: 1 }}>
                     <List dense={true}>
-                      <LabeledListItem
-                        label="Fixed Reward Amount"
-                        value={
-                          "$" +
-                          data.rewardValue.toLocaleString(undefined, {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          })
-                        }
-                      />
+                      {data.rewardValue > 0 && (
+                        <LabeledListItem
+                          label="Fixed Reward Amount"
+                          value={
+                            "$" +
+                            data.rewardValue.toLocaleString(undefined, {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 0,
+                            })
+                          }
+                        />
+                      )}
                       {data.ispercentage && (
                         <div>
-                          <LabeledListItem
+                          {/* <LabeledListItem
                             label="Percent Above Threshhold"
                             value={data.percentAboveThreshold.toFixed(2) + "%"}
-                          />
-
+                          /> */}
                           <LabeledListItem
                             label="Percent Amount"
                             value={
@@ -176,30 +177,31 @@ const PageContent: FC = () => {
                                 maximumFractionDigits: 2,
                               })
                             }
-                          />
-                          <LabeledListItem
-                            label="Overall Amount"
-                            value={
-                              "$" +
-                              data.overallValue.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })
-                            }
-                          />
+                          />{" "}
                         </div>
                       )}
-
+                      {data.ispercentage && data.rewardValue > 0 && (
+                        <LabeledListItem
+                          label="Overall Amount"
+                          value={
+                            "$" +
+                            data.overallValue.toLocaleString(undefined, {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })
+                          }
+                        />
+                      )}
                       <LabeledListItem
                         label="Vote Total"
                         value={
+                          data.votePercentage.toFixed(2) +
+                          "% - [ " +
                           data.voteTotal.toLocaleString(undefined, {
                             minimumFractionDigits: 0,
                             maximumFractionDigits: 0,
                           }) +
-                          " (" +
-                          data.votePercentage.toFixed(2) +
-                          "% )"
+                          " ]"
                         }
                       />
 
