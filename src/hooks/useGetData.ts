@@ -169,12 +169,17 @@ const useGetData = () => {
           0,
           votePercentage - bribe.percentagethreshold
         );
-        const percentValue = percentAmount * percentAboveThreshold;
+        const percentValue = Math.min(
+          percentAmount * percentAboveThreshold,
+          isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
+        );
 
         const overallValue = Math.min(
           rewardAmount + percentValue,
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
+
+        //     console.log(overallValue, rewardAmount, percentValue, bribe.rewardcap);
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
