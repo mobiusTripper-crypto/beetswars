@@ -2,7 +2,7 @@
 
 Beets Wars - this repository is designed to serve as a useful resource for $fBEETS holders and $BEETS holders on the BeethovenX DEX on Fantom. 
 
-The primary purpose is to give users a view of an estimated return on investment (ROI) of the voting insentives (bribes) during the gauge voting process.
+The primary purpose is to give users a view of an estimated return on investment (ROI) of the voting incentives (bribes) during the gauge voting process.
 
 Trade >>> **BeethovenX DEX** - https://beets.fi
 
