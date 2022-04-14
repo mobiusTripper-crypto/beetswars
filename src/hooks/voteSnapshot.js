@@ -44,7 +44,7 @@ async function getProposalVotes(
 
 export async function getResults() {
   const proposal = await getProposal(
-    "0x4ee939fff1325428d394bc78fba8d1a99b1413bcca3654a089cddf90cf9bd909"
+    "0x913940146e7d5ad7587d138348bc1a1f34c75e57f3a377cfbba862a084c0ed12"
   );
   //round 5 gauge
   //0x7b04419d3494e3bb120f32d448807cdfd545adafdfff0dd6d68aa44027f618a8
