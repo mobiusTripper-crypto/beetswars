@@ -50,9 +50,9 @@ const useGetData = () => {
       //   "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
       // );
 
-      // const oathPrice = await contract.calculateAssetPrice(
-      //   "0x21ada0d2ac28c3a5fa3cd2ee30882da8812279b6"
-      // );
+      const oathPrice = await contract.calculateAssetPrice(
+        "0x21ada0d2ac28c3a5fa3cd2ee30882da8812279b6"
+      );
       // const ringPrice = await contract.calculateAssetPrice(
       //   "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
       // );
@@ -70,11 +70,11 @@ const useGetData = () => {
         //   //          price: parseFloat(ethers.utils.formatEther(beetsPrice)),
         //   price: 0.754794,
         // },
-        // {
-        //   token: "OATH",
-        //   //          price: parseFloat(ethers.utils.formatEther(oathPrice)),
-        //   price: 0.296076,
-        // },
+        {
+          token: "OATH",
+          price: parseFloat(ethers.utils.formatEther(oathPrice)),
+          //price: 0.296076,
+        },
         // {
         //   token: "SCARAB",
         //   price: parseFloat(ethers.utils.formatEther(scarabPrice)),
