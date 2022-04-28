@@ -24,7 +24,7 @@ export interface DashboardReturn {
 }
 
 const useGetData = () => {
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-8.json";
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-9.json";
 
   //  const dispatch = useDispatch();
   const { slowRefresh } = useRefresh();
@@ -245,3 +245,13 @@ export default useGetData;
 //   price: 0.801435,
 //   //price: parseFloat(ethers.utils.formatEther(ringPrice)),
 // },
+
+// end of gaug vote 8
+// token: "BEETS",
+// //price: parseFloat(ethers.utils.formatEther(beetsPrice)),
+// price: 0.465,
+// },
+// {
+// token: "OATH",
+// //price: parseFloat(ethers.utils.formatEther(oathPrice)),
+// pr
