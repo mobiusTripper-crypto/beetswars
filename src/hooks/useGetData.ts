@@ -62,6 +62,9 @@ const useGetData = () => {
       // const fbeetsPrice = await contract.calculateAssetPrice(
       //   "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
       // );
+      const pillsPrice = await contract.calculateAssetPrice(
+        "0xB66b5D38E183De42F21e92aBcAF3c712dd5d6286"
+      );
 
       //      fixed prices from the end of gauge, goto bottom of this file
       const tokenPrices: TokenPrice[] = [
@@ -78,6 +81,10 @@ const useGetData = () => {
         {
           token: "FTM",
           price: parseFloat(ethers.utils.formatEther(ftmPrice)),
+        },
+        {
+          token: "PILLS",
+          price: parseFloat(ethers.utils.formatEther(pillsPrice)),
         },
         // {
         //   token: "FBEETS",
