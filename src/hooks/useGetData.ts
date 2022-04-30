@@ -46,9 +46,9 @@ const useGetData = () => {
         provider
       );
 
-      // const beetsPrice = await contract.calculateAssetPrice(
-      //   "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
-      // );
+      const beetsPrice = await contract.calculateAssetPrice(
+        "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
+      );
 
       // const oathPrice = await contract.calculateAssetPrice(
       //   "0x21ada0d2ac28c3a5fa3cd2ee30882da8812279b6"
@@ -67,8 +67,8 @@ const useGetData = () => {
       const tokenPrices: TokenPrice[] = [
         {
           token: "BEETS",
-          //price: parseFloat(ethers.utils.formatEther(beetsPrice)),
-          price: 0.465,
+          price: parseFloat(ethers.utils.formatEther(beetsPrice)),
+          //          price: 0.465,
         },
         {
           token: "OATH",
