@@ -35,16 +35,16 @@ const useGetData = () => {
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      // console.log("get vote data " + new Date(Date.now()));
+      console.log("get vote data " + new Date(Date.now()));
 
-      // const provider = new ethers.providers.JsonRpcProvider(
-      //   "https://rpc.ftm.tools"
-      // );
-      // const contract = new ethers.Contract(
-      //   contract_address,
-      //   contract_abi,
-      //   provider
-      // );
+      const provider = new ethers.providers.JsonRpcProvider(
+        "https://rpc.ftm.tools"
+      );
+      const contract = new ethers.Contract(
+        contract_address,
+        contract_abi,
+        provider
+      );
 
       // const beetsPrice = await contract.calculateAssetPrice(
       //   "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
@@ -56,9 +56,9 @@ const useGetData = () => {
       // const ringPrice = await contract.calculateAssetPrice(
       //   "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
       // );
-      // const scarabPrice = await contract.calculateAssetPrice(
-      //   "0x2e79205648B85485731CFE3025d66cF2d3B059c4"
-      // );
+      const ftmPrice = await contract.calculateAssetPrice(
+        "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"
+      );
       // const fbeetsPrice = await contract.calculateAssetPrice(
       //   "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
       // );
@@ -75,10 +75,10 @@ const useGetData = () => {
           //price: parseFloat(ethers.utils.formatEther(oathPrice)),
           price: 0.206,
         },
-        // {
-        //   token: "SCARAB",
-        //   price: parseFloat(ethers.utils.formatEther(scarabPrice)),
-        // },
+        {
+          token: "FTM",
+          price: parseFloat(ethers.utils.formatEther(ftmPrice)),
+        },
         // {
         //   token: "FBEETS",
         //   price: parseFloat(ethers.utils.formatEther(beetsPrice)) * 1.0152,
