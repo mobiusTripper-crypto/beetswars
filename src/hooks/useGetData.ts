@@ -21,6 +21,7 @@ export interface DashboardReturn {
   totalVotes: number;
   totalBribeAmount: number;
   version: string;
+  proposal: string;
 }
 
 const useGetData = () => {
@@ -119,6 +120,7 @@ const useGetData = () => {
             .map((item) => item.overallValue)
             .reduce((prev, curr) => prev + curr, 0),
           version: bribeData.version,
+          proposal: bribeData.proposal,
         },
       });
     };

@@ -7,15 +7,30 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
+import NavBar from "components/NavBar";
 
 const PageContent: FC = () => {
   // const service = useBribeDataService();
   // const votesData = useSnapshotVotes();
 
+  console.log("get bribe data ");
+
   const getData = useGetData();
+
+  var ver: string = ''
+  var proposal: string = ''
+
+  if (getData.status === "loaded") {
+    ver =  "v" + getData.payload.version
+    proposal =  getData.payload.proposal
+  }
 
   return (
     <div>
+      <NavBar
+        version={ver}
+        proposal={proposal}
+      />
       <Box sx={{ display: "flex", justifyContent: "right" }}>
         {/* <Typography variant="caption" align="right">
           App: v{process.env.REACT_APP_VERSION} &nbsp;
