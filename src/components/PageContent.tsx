@@ -8,6 +8,8 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
 import NavBar from "components/NavBar";
+import configData from "config.json";
+
 
 const PageContent: FC = () => {
   // const service = useBribeDataService();
@@ -15,18 +17,17 @@ const PageContent: FC = () => {
 
   const getData = useGetData();
 
-  var ver: string = ''
-  var proposal: string = ''
+  var version: string = ''
+  var proposal: string = configData.snapshot_hash
 
   if (getData.status === "loaded") {
-    ver =  "v" + getData.payload.version
-    proposal =  getData.payload.proposal
+    version =  "v" + getData.payload.version
   }
 
   return (
     <div>
       <NavBar
-        version={ver}
+        version={version}
         proposal={proposal}
       />
       <Typography variant="h4" align="center">
