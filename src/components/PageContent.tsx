@@ -13,8 +13,6 @@ const PageContent: FC = () => {
   // const service = useBribeDataService();
   // const votesData = useSnapshotVotes();
 
-  console.log("get bribe data ");
-
   const getData = useGetData();
 
   var ver: string = ''
@@ -31,14 +29,6 @@ const PageContent: FC = () => {
         version={ver}
         proposal={proposal}
       />
-      <Box sx={{ display: "flex", justifyContent: "right" }}>
-        {/* <Typography variant="caption" align="right">
-          App: v{process.env.REACT_APP_VERSION} &nbsp;
-        </Typography> */}
-        <Typography variant="caption" align="right">
-          data: {getData.status === "loaded" && "v" + getData.payload.version}
-        </Typography>
-      </Box>
       <Typography variant="h4" align="center">
         Farming Incentive Gauge Vote (round 9)
       </Typography>
