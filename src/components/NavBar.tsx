@@ -18,9 +18,9 @@ const NavBar: FC<Props> = ({ version, proposal }) => {
        <Link href="https://beets.fi/#/" 
           color="white" underline="hover">beethoven-x</Link> |&nbsp; 
        <Link href={plink}
-          color="white" underline="hover">proposal</Link> |&nbsp; 
+          color="white" underline="hover">snapshot</Link> |&nbsp; 
        <Link href="https://github.com/mobiusTripper-crypto/beetswars" 
-          color="white" underline="hover">source code</Link> |&nbsp; 
+          color="white" underline="hover">github</Link> |&nbsp; 
        data: {version}
      </Typography>
    </Box>
