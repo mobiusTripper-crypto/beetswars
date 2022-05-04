@@ -15,13 +15,19 @@ const NavBar: FC<Props> = ({ version, proposal }) => {
   return (
    <Box sx={{ display: "flex", justifyContent: "right", background: "black", color: "white", textDecoration: "none" }}>
      <Typography variant="caption" align="right">
+
        <Link href="https://beets.fi/#/" 
           color="white" underline="hover">beethoven-x</Link> |&nbsp; 
+
        <Link href={plink}
           color="white" underline="hover">snapshot</Link> |&nbsp; 
+
        <Link href="https://github.com/mobiusTripper-crypto/beetswars" 
           color="white" underline="hover">github</Link> |&nbsp; 
-       data: {version}
+
+       <Link href="https://github.com/mobiusTripper-crypto/beetswars-data" 
+          color="white" underline="hover">data:</Link> {version}
+
      </Typography>
    </Box>
   );
