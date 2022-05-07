@@ -15,6 +15,7 @@ export interface BribeDataType {
 
 export interface Bribes {
   version: string;
+  proposal: string;
   description: string;
   round: number;
   bribedata: BribeDataType[];

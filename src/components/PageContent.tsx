@@ -7,6 +7,9 @@ import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
+import NavBar from "components/NavBar";
+import configData from "config.json";
+
 
 const PageContent: FC = () => {
   // const service = useBribeDataService();
@@ -14,18 +17,21 @@ const PageContent: FC = () => {
 
   const getData = useGetData();
 
+  var version: string = ''
+  var proposal: string = configData.snapshot_hash
+
+  if (getData.status === "loaded") {
+    version =  "v" + getData.payload.version
+  }
+
   return (
     <div>
-      <Box sx={{ display: "flex", justifyContent: "right" }}>
-        {/* <Typography variant="caption" align="right">
-          App: v{process.env.REACT_APP_VERSION} &nbsp;
-        </Typography> */}
-        <Typography variant="caption" align="right">
-          data: {getData.status === "loaded" && "v" + getData.payload.version}
-        </Typography>
-      </Box>
+      <NavBar
+        version={version}
+        proposal={proposal}
+      />
       <Typography variant="h4" align="center">
-        Farming Incentive Gauge Vote (round 9)
+        {configData.page_header}
       </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>

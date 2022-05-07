@@ -11,6 +11,7 @@ import { getResults } from "hooks/voteSnapshot";
 import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 import { BigNumber } from "@ethersproject/bignumber";
+import configData from "config.json";
 
 // export interface Bribes {
 //   results: BribeDataType[];
@@ -21,10 +22,11 @@ export interface DashboardReturn {
   totalVotes: number;
   totalBribeAmount: number;
   version: string;
+  proposal: string;
 }
 
 const useGetData = () => {
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-9.json";
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + configData.bribe_file;
 
   //  const dispatch = useDispatch();
   const { slowRefresh } = useRefresh();
@@ -119,6 +121,7 @@ const useGetData = () => {
             .map((item) => item.overallValue)
             .reduce((prev, curr) => prev + curr, 0),
           version: bribeData.version,
+          proposal: bribeData.proposal,
         },
       });
     };

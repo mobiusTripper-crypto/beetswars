@@ -1,4 +1,4 @@
-<H1> Overview: <H1>
+<H1> Overview: </H1>
 
 Beets Wars - this repository is designed to serve as a useful resource for $fBEETS holders and $BEETS holders on the BeethovenX DEX on Fantom. 
 
