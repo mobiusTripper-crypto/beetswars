@@ -64,8 +64,8 @@ const useGetData = () => {
       // const fbeetsPrice = await contract.calculateAssetPrice(
       //   "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
       // );
-      const pillsPrice = await contract.calculateAssetPrice(
-        "0xB66b5D38E183De42F21e92aBcAF3c712dd5d6286"
+      const panicPrice = await contract.calculateAssetPrice(
+        "0xa882ceac81b22fc2bef8e1a82e823e3e9603310b"
       );
 
       //      fixed prices from the end of gauge, goto bottom of this file
@@ -85,8 +85,8 @@ const useGetData = () => {
           price: parseFloat(ethers.utils.formatEther(ftmPrice)),
         },
         {
-          token: "PILLS",
-          price: parseFloat(ethers.utils.formatEther(pillsPrice)),
+          token: "PANIC",
+          price: parseFloat(ethers.utils.formatEther(panicPrice)),
         },
         // {
         //   token: "FBEETS",
