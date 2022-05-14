@@ -12,4 +12,5 @@ export interface DashboardType {
   voteTotal: number;
   votePercentage: number;
   valuePerVote: number;
+  id: number;
 }
