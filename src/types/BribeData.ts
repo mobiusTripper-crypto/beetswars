@@ -11,6 +11,7 @@ export interface BribeDataType {
   percentreward: TokenData[];
   percentagethreshold: number;
   rewardcap: number;
+  additionalrewards: AdditionalRewards[];
 }
 
 export interface Bribes {
@@ -30,4 +31,9 @@ export interface TokenData {
 export interface TokenPrice {
   token: string;
   price: number;
+}
+
+export interface AdditionalRewards {
+  tier: string;
+  factor: number;
 }
