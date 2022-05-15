@@ -197,6 +197,7 @@ const useGetData = () => {
           isQualified: isQualified,
           rewardDescription: bribe.rewarddescription,
           assumption: bribe.assumption,
+          additionalrewards: bribe.additionalrewards,
           rewardValue: rewardAmount,
           ispercentage: isPerecentReward,
           percentAboveThreshold: percentAboveThreshold,
