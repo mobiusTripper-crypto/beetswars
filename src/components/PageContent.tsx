@@ -152,6 +152,16 @@ const PageContent: FC = () => {
                         {data.assumption}
                       </Typography>
                     )}
+                    {data.additionalrewards && (
+                      data.additionalrewards.map(item => {
+                        <Typography color="text.secondary" variant="body2">
+                          <strong>Tier {item.tier}: </strong>
+                        </Typography>
+                        <Typography color="#4BE39C">
+                          {"$" + (data.valuePerVote * 1000 * item.factor).toFixed(2)}
+                        </Typography>
+                      }
+                    )}
                   </Box>
                   <Divider variant="middle" />
                   <Box sx={{ m: 1 }}>
