@@ -203,14 +203,14 @@ const PageContent: FC = () => {
                     )}
                     {data.additionalrewards && (
                       data.additionalrewards.map(item => (
-                       <>
-                        <Typography color="text.secondary" variant="body2">
+                       <Box>
+                        <Typography style={{display: 'inline-block'}} color="text.secondary" variant="body2">
                           <strong>Tier {item.tier}: </strong>
                         </Typography>
-                        <Typography color="#4BE39C">
+                        <Typography style={{display: 'inline-block', float: 'inline-end'}} color="#4BE39C">
                           {"$" + (data.valuePerVote * 1000 * item.factor).toFixed(2)}
                         </Typography>
-                       </>
+                       </Box>
                       ))
                     )}
                   </Box>
