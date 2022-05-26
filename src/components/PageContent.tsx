@@ -111,7 +111,7 @@ const PageContent: FC = () => {
           <Box
             sx={{
               display: "flex",
-              justifyContent: "space-between",
+              justifyContent: "space-around",
               flexWrap: "wrap",
               px: 1,
             }}
