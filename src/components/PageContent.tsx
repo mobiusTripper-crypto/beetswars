@@ -29,8 +29,16 @@ const dpbdec3: GridColTypeDef = {
 };
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: 'voteindex', flex: 0.3, hide: true },
-  { field: 'poolName', headerName: 'Pool', flex: 1.5, 
+  { 
+    field: 'id', 
+    headerName: 'voteindex', 
+    flex: 0.3, 
+    hide: true 
+  },
+  { 
+    field: 'poolName', 
+    headerName: 'Pool', 
+    flex: 1.5, 
     renderCell: (cellValues) => {
       return <Link 
                href=
@@ -41,12 +49,52 @@ const columns: GridColDef[] = [
              </Link>;
     }
   },
-  { field: 'rewardDescription', headerName: 'Description', flex: 3, hide: true  },
-  { field: 'overallValue', headerName: 'Overall Value', type: 'number', flex: 0.8, ...dec2 },
-  { field: 'voteTotal', headerName: 'Vote total', type: 'number', flex: 0.8, ...dec0 },
-  { field: 'votePercentage', headerName: '% Vote', type: 'number', flex: 0.8, ...dec2 },
-  { field: 'percentAboveThreshold', headerName: '% above', type: 'number', flex: 0.8,hide: true },
-  { field: 'valuePerVote', headerName: '$/1000 fBEETs', type: 'number', flex: 0.8, ...dpbdec3 },
+  { 
+    field: 'rewardDescription', 
+    headerName: 'Description', 
+    flex: 3, 
+    hide: true  
+  },
+  { 
+    field: 'overallValue', 
+    headerName: 'Overall Value', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec2 
+  },
+  { 
+    field: 'voteTotal', 
+    headerName: 'Vote total', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec0 
+  },
+  { 
+    field: 'votePercentage', 
+    headerName: '% Vote', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec2 
+  },
+  { 
+    field: 'percentAboveThreshold', 
+    headerName: '% above', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8,
+    hide: true 
+  },
+  { 
+    field: 'valuePerVote', 
+    headerName: '$/1000 fBEETs', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dpbdec3 
+  },
 ];
 
 const PageContent: FC = () => {
@@ -290,6 +338,9 @@ const PageContent: FC = () => {
             margin: '7px', 
             '& .underthreshold': {
               color: '#FF0000FF',
+            },
+            '& .cell-mono': {
+              fontFamily: 'monospace',
             },
           }}>
             <DataGrid
