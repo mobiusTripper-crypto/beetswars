@@ -25,7 +25,8 @@ export interface DashboardReturn {
 }
 
 const useGetData = () => {
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + configData.bribe_file;
+  //const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + configData.bribe_file;
+  const dataUrl = configData.bribe_api + configData.bribe_round;
 
   //  const dispatch = useDispatch();
   const { slowRefresh } = useRefresh();

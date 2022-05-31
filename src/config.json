@@ -1,5 +1,7 @@
 {
   "snapshot_hash": "0xe7a33f8691c0087999a21a6129f5f87ff01ca7ae952ee6304aac44e20c0b82db",
   "bribe_file": "bribe-data-11.json",
-  "page_header": "Farming Incentive Gauge Vote (round 11)"
+  "page_header": "Farming Incentive Gauge Vote (round 11)",
+  "bribe_api": "https://nextjs-1-rnz3.vercel.app/api/bribedata?round=",
+  "bribe_round": "11"
 }
