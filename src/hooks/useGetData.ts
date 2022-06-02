@@ -120,6 +120,8 @@ const useGetData = () => {
             .map((item) => item.overallValue)
             .reduce((prev, curr) => prev + curr, 0),
           version: bribeData.version,
+          proposalStart: voteData.proposal.start,
+          proposalEnd: voteData.proposal.end,
         },
       });
     };
@@ -190,6 +192,7 @@ const useGetData = () => {
         );
 
         //     console.log(overallValue, rewardAmount, percentValue, bribe.rewardcap);
+        //     console.log(voteData.proposal.start, voteData.proposal.end, voteData.proposal.state);
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
