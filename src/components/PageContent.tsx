@@ -8,8 +8,8 @@ import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
 import NavBar from "components/NavBar";
 import configData from "config.json";
-import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridColumns, GridCellParams} from '@mui/x-data-grid';
-import { useState, useEffect } from 'react'
+import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
+import { useState } from 'react'
 
 
 const dec0: GridColTypeDef = {

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+//import { useDispatch } from "react-redux";
 import { Bribes, TokenPrice } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType } from "types/Dashboard";
 import useRefresh from "hooks/useRefresh";
-import Web3 from "web3";
-import { AbiItem } from "web3-utils";
+//import Web3 from "web3";
+//import { AbiItem } from "web3-utils";
 import { getResults } from "hooks/voteSnapshot";
 import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
-import { BigNumber } from "@ethersproject/bignumber";
+//import { BigNumber } from "@ethersproject/bignumber";
 import configData from "config.json";
 
 // export interface Bribes {
@@ -135,11 +135,11 @@ const useGetData = () => {
       // console.dir(voteData);
       // console.dir(bribes);
 
-      bribes.bribedata.map((bribe) => {
+      bribes.bribedata.forEach((bribe) => {
         let rewardAmount = 0;
         const isFixedReward = bribe.fixedreward.length !== 0;
         if (isFixedReward) {
-          bribe.fixedreward.map((reward) => {
+          bribe.fixedreward.forEach((reward) => {
             if (reward.isfixed) {
               rewardAmount += reward.amount;
             } else {
@@ -154,7 +154,7 @@ const useGetData = () => {
         let percentAmount = 0;
         const isPerecentReward = bribe.percentreward.length !== 0;
         if (isPerecentReward) {
-          bribe.percentreward.map((reward) => {
+          bribe.percentreward.forEach((reward) => {
             if (reward.isfixed) {
               percentAmount += reward.amount;
             } else {
