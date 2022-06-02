@@ -104,13 +104,23 @@ const PageContent: FC = () => {
   const getData = useGetData();
   var rows: GridRowsProp = []
   var version: string = ''
+  var voteStart: number = ''
+  var voteEnd: number = ''
   var proposal: string = configData.snapshot_hash
 
   if (getData.status === "loaded") {
     version =  "v" + getData.payload.version
     rows = getData.payload.results
+		voteStart = getData.payload.proposalStart
+		voteEnd = getData.payload.proposalEnd
     console.log(getData)
   }
+
+  const tsNow = Math.floor(Date.now() / 1000)
+  var secAgo = (tsNow - voteEnd)
+  var voteActive = false
+
+  if (tsNow > voteStart && tsNow < voteEnd) { voteActive = true }
 
   return (
     <div>
@@ -131,6 +141,9 @@ const PageContent: FC = () => {
         BeethovenX and please do your own research. This is not investment
         advice!
       </Typography>
+      <Box sx={{ justifyContent: "center", display: "flex", color: "yellow", fontFamily: "monospace", padding: "5px" }}>
+         Vote start: {voteStart} Vote end: {voteEnd} now: {tsNow} ago: {secAgo}s Vote active: {voteActive ? "YES" : "NO"}
+      </Box>
 
       {getData.status === "loading" && <div>Loading...</div>}
       {getData.status === "loaded" && (
