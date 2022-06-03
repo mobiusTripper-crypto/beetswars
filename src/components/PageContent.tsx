@@ -116,10 +116,15 @@ const PageContent: FC = () => {
     console.log(getData)
   }
 
-  const tsNow = Math.floor(Date.now() / 1000)
-  var secAgo = (tsNow - voteEnd)
-  var voteActive = false
+	// debug timestamps
+	voteStart = 1654278079
+	voteEnd = 1654279179
 
+  const tsNow = Math.floor(Date.now() / 1000)
+  var minTogo = ((voteEnd - tsNow) / 60).toFixed(0)
+  var voteActive = false
+	var dateStart = new Date(voteStart*1000).toUTCString()
+	var dateEnd = new Date(voteEnd*1000).toUTCString()
   if (tsNow > voteStart && tsNow < voteEnd) { voteActive = true }
 
   return (
@@ -131,6 +136,9 @@ const PageContent: FC = () => {
       <Typography variant="h4" align="center">
         {configData.page_header}
       </Typography>
+      <Box sx={{ fontSize: "0.9rem", justifyContent: "center", display: "flex", color: "grey",  padding: "5px" }}>
+         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? minTogo + " min. to go" : "closed"})
+      </Box>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
         {" - "}
@@ -141,9 +149,6 @@ const PageContent: FC = () => {
         BeethovenX and please do your own research. This is not investment
         advice!
       </Typography>
-      <Box sx={{ justifyContent: "center", display: "flex", color: "yellow", fontFamily: "monospace", padding: "5px" }}>
-         Vote start: {voteStart} Vote end: {voteEnd} now: {tsNow} ago: {secAgo}s Vote active: {voteActive ? "YES" : "NO"}
-      </Box>
 
       {getData.status === "loading" && <div>Loading...</div>}
       {getData.status === "loaded" && (
