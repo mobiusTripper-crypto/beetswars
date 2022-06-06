@@ -106,26 +106,31 @@ const PageContent: FC = () => {
   var version: string = ''
   var voteStart: number = ''
   var voteEnd: number = ''
-  var proposal: string = configData.snapshot_hash
+  const proposal: string = configData.snapshot_hash
 
   if (getData.status === "loaded") {
     version =  "v" + getData.payload.version
     rows = getData.payload.results
-		voteStart = getData.payload.proposalStart
-		voteEnd = getData.payload.proposalEnd
-    console.log(getData)
+    voteStart = getData.payload.proposalStart
+    voteEnd = getData.payload.proposalEnd
+    //console.log(getData)
   }
 
-	// debug timestamps
-	voteStart = 1654278079
-	voteEnd = 1654279179
+  // debug timestamps
+  // voteStart = 1654168079
+  // voteEnd = 1654279200
 
   const tsNow = Math.floor(Date.now() / 1000)
-  var minTogo = ((voteEnd - tsNow) / 60).toFixed(0)
+  const minTogo = ((voteEnd - tsNow) / 60).toFixed(0)
   var voteActive = false
-	var dateStart = new Date(voteStart*1000).toUTCString()
-	var dateEnd = new Date(voteEnd*1000).toUTCString()
+  var dateStart = new Date(voteStart*1000).toUTCString()
+  var dateEnd = new Date(voteEnd*1000).toUTCString()
   if (tsNow > voteStart && tsNow < voteEnd) { voteActive = true }
+
+  /*
+  TODO
+  toggle page refresh and token price provider based on voteActive
+  */
 
   return (
     <div>
@@ -136,9 +141,9 @@ const PageContent: FC = () => {
       <Typography variant="h4" align="center">
         {configData.page_header}
       </Typography>
-      <Box sx={{ fontSize: "0.9rem", justifyContent: "center", display: "flex", color: "grey",  padding: "5px" }}>
+      <Typography variant="body2" align="center">
          Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? minTogo + " min. to go" : "closed"})
-      </Box>
+      </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
         {" - "}
