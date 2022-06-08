@@ -10,7 +10,7 @@ import NavBar from "components/NavBar";
 import configData from "config.json";
 import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
 import { useState } from 'react'
-
+import TimeFormatter from "utils/TimeFormatter"
 
 const dec0: GridColTypeDef = {
   type: 'number',
@@ -117,14 +117,14 @@ const PageContent: FC = () => {
   }
 
   // debug timestamps
-  // voteStart = 1654168079
-  // voteEnd = 1654279200
+  // voteStart = 1654690000
+  // voteEnd =   1654706000
 
   const tsNow = Math.floor(Date.now() / 1000)
-  const minTogo = ((voteEnd - tsNow) / 60).toFixed(0)
   var voteActive = false
   var dateStart = new Date(voteStart*1000).toUTCString()
   var dateEnd = new Date(voteEnd*1000).toUTCString()
+  const timeTogo:string = TimeFormatter((voteEnd - tsNow))
   if (tsNow > voteStart && tsNow < voteEnd) { voteActive = true }
 
   /*
@@ -142,7 +142,7 @@ const PageContent: FC = () => {
         {configData.page_header}
       </Typography>
       <Typography variant="body2" align="center">
-         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? minTogo + " min. to go" : "closed"})
+         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : "closed"})
       </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
