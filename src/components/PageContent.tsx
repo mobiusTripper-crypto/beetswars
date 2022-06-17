@@ -273,8 +273,8 @@ const PageContent: FC = () => {
                       </Typography>
                     )}
                     {data.additionalrewards && (
-                      data.additionalrewards.map(item => (
-                       <Box>
+                      data.additionalrewards.map((item, index:number) => (
+                       <Box key={index}>
                         <Typography style={{display: 'inline-block'}} color="text.secondary" variant="body2">
                           <strong>Tier {item.tier}: </strong>
                         </Typography>
