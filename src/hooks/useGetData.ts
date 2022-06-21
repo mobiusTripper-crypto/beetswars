@@ -4,7 +4,7 @@ import { Bribes, TokenPrice } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType, DashboardReturn } from "types/Dashboard";
-import useRefresh from "hooks/useRefresh";
+//import useRefresh from "hooks/useRefresh";
 //import Web3 from "web3";
 //import { AbiItem } from "web3-utils";
 import { getResults } from "hooks/voteSnapshot";
@@ -12,12 +12,15 @@ import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 //import { BigNumber } from "@ethersproject/bignumber";
 import configData from "config.json";
+import useTimer from "hooks/useTimer"
+
+
+var refreshInterval:(number|null) = 60000  // ms or null
 
 const useGetData = () => {
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + configData.bribe_file;
 
-  //  const dispatch = useDispatch();
-  const { slowRefresh } = useRefresh();
+  const refresh = useTimer(refreshInterval)
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + configData.bribe_file;
 
   const [dashboardResult, setDashboardResult] = useState<
     ServiceType<DashboardReturn>
@@ -209,7 +212,7 @@ const useGetData = () => {
       return list;
     };
     fetchDashboardData();
-  }, [dataUrl, slowRefresh, setDashboardResult]);
+  }, [dataUrl, refresh, setDashboardResult]);
 
   return dashboardResult;
 };
