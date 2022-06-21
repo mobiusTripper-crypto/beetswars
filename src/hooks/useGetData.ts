@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Bribes, TokenPrice } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
-import { DashboardType } from "types/Dashboard";
+import { DashboardType, DashboardReturn } from "types/Dashboard";
 import useRefresh from "hooks/useRefresh";
 //import Web3 from "web3";
 //import { AbiItem } from "web3-utils";
@@ -12,17 +12,6 @@ import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 //import { BigNumber } from "@ethersproject/bignumber";
 import configData from "config.json";
-
-// export interface Bribes {
-//   results: BribeDataType[];
-// }
-
-export interface DashboardReturn {
-  results: DashboardType[];
-  totalVotes: number;
-  totalBribeAmount: number;
-  version: string;
-}
 
 const useGetData = () => {
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + configData.bribe_file;

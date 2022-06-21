@@ -14,3 +14,10 @@ export interface DashboardType {
   valuePerVote: number;
   id: number;
 }
+
+export interface DashboardReturn {
+  results: DashboardType[];
+  totalVotes: number;
+  totalBribeAmount: number;
+  version: string;
+}
