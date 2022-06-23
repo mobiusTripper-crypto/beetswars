@@ -11,33 +11,93 @@ import { getResults } from "hooks/voteSnapshot";
 import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 //import { BigNumber } from "@ethersproject/bignumber";
-import configData from "config.json";
+//import configData from "config.json";
 import useTimer from "hooks/useTimer"
+//import { useLivePrices } from "hooks/useLivePrices"
 
 
-var refreshInterval:(number|null) = 60000  // ms or null
+const useGetData = (voteActive:boolean) => {
 
-const useGetData = () => {
+  const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
+  const priceProvider:(string) = voteActive ? "activeFeed" : "historicFeed"
+
+  console.log("act/refr:", voteActive, refreshInterval)
 
   const refresh = useTimer(refreshInterval)
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + configData.bribe_file;
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-latest.json"
 
   const [dashboardResult, setDashboardResult] = useState<
     ServiceType<DashboardReturn>
   >({ status: "loading" });
 
+
+
   useEffect(() => {
     const fetchDashboardData = async () => {
-      console.log("get vote data " + new Date(Date.now()));
 
-      const provider = new ethers.providers.JsonRpcProvider(
-        "https://rpc.ftm.tools"
-      );
-      const contract = new ethers.Contract(
-        contract_address,
-        contract_abi,
-        provider
-      );
+      const bribeData = await fetch(dataUrl || "")
+        .then((response) => {
+          return response.json();
+        })
+        .then((response: Bribes) => {
+          return response;
+        });
+
+
+      var tokenPriceData:[] = []
+
+      bribeData.bribedata.forEach((bribe) => {
+        bribe.reward.forEach((rw) => {
+          if (!rw.isfixed) {
+            if(!tokenPriceData.find((tpf) =>  tpf.token === rw.token)) {
+              const data:[] = { token: rw.token, address: rw.tokenaddress, cgid: rw.coingeckoid }
+              tokenPriceData.push(data)
+            } else {
+              console.log("dup:",rw.token)
+            }
+          }
+        })
+      })
+
+      var tokenPrices: TokenPrice[] = []
+
+      if (voteActive) {
+        const provider = new ethers.providers.JsonRpcProvider(
+          "https://rpc.ftm.tools"
+        );
+        const contract = new ethers.Contract(
+          contract_address,
+          contract_abi,
+          provider
+        );
+        tokenPriceData.forEach(async (tkn) => {
+          const priceobj = await contract.calculateAssetPrice(tkn.address)
+          const price = parseFloat(ethers.utils.formatEther(priceobj))
+          const data:[] = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
+          tokenPrices.push(data)
+          console.log("tkn:",tkn.token,price)
+        })
+      } else {
+        // https://api.coingecko.com/api/v3/coins/beethoven-x/history?date=12-06-2022&localization=false
+        const dateobj = "12-06-2022"
+        tokenPriceData.forEach(async (tkn) => {
+          const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.cgid + "/history?date=" + dateobj + "&localization=false"
+          const priceobj = await fetch(tknUrl || "")
+          .then((response) => {
+            return response.json();
+          })
+          const price = priceobj.market_data.current_price.usd
+          const data:[] = { token: tkn.token, price: priceobj.market_data.current_price.usd  }
+          tokenPrices.push(data)
+          console.log("tkn:",tkn.token,price)
+        })
+      }
+
+
+//      console.log(tokenPrices)
+
+
+/*
 
       const beetsPrice = await contract.calculateAssetPrice(
         "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
@@ -49,53 +109,48 @@ const useGetData = () => {
       // const ringPrice = await contract.calculateAssetPrice(
       //   "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
       // );
-      const ftmPrice = await contract.calculateAssetPrice(
-        "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"
-      );
+//      const ftmPrice = await contract.calculateAssetPrice(
+//        "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"
+//      );
       // const fbeetsPrice = await contract.calculateAssetPrice(
       //   "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
       // );
-      const panicPrice = await contract.calculateAssetPrice(
-        "0xa882ceac81b22fc2bef8e1a82e823e3e9603310b"
-      );
+//      const panicPrice = await contract.calculateAssetPrice(
+//        "0xa882ceac81b22fc2bef8e1a82e823e3e9603310b"
+//      );
 
       //      fixed prices from the end of gauge, goto bottom of this file
-      const tokenPrices: TokenPrice[] = [
+      const tokenPricesL: TokenPrice[] = [
         {
           token: "BEETS",
           price: parseFloat(ethers.utils.formatEther(beetsPrice)),
           //          price: 0.465,
         },
-        {
-          token: "OATH",
-          //price: parseFloat(ethers.utils.formatEther(oathPrice)),
-          price: 0.206,
-        },
-        {
-          token: "FTM",
-          price: parseFloat(ethers.utils.formatEther(ftmPrice)),
-        },
-        {
-          token: "PANIC",
-          price: parseFloat(ethers.utils.formatEther(panicPrice)),
-        },
+//        {
+//          token: "OATH",
+//          //price: parseFloat(ethers.utils.formatEther(oathPrice)),
+//          price: 0.206,
+//        },
+//        {
+//          token: "FTM",
+//          price: parseFloat(ethers.utils.formatEther(ftmPrice)),
+//        },
+//        {
+//          token: "PANIC",
+//          price: parseFloat(ethers.utils.formatEther(panicPrice)),
+//        },
         // {
         //   token: "FBEETS",
         //   price: parseFloat(ethers.utils.formatEther(beetsPrice)) * 1.0152,
         // },
       ];
-
-      const bribeData = await fetch(dataUrl || "")
-        .then((response) => {
-          return response.json();
-        })
-        .then((response: Bribes) => {
-          return response;
-        });
-
-      const voteData = await getResults().then((response: VoteDataType) => {
+*/
+      const voteData = await getResults(bribeData.snapshot).then((response: VoteDataType) => {
         return response;
       });
+
+console.log(voteData.proposal.start,voteData.proposal.end,voteData.proposal.title,bribeData.snapshot)
+
 
       const dashboardData = normalizeDashboardData(
         bribeData,
@@ -114,6 +169,8 @@ const useGetData = () => {
           version: bribeData.version,
           proposalStart: voteData.proposal.start,
           proposalEnd: voteData.proposal.end,
+          proposalTitle: voteData.proposal.title,
+          proposalId: bribeData.snapshot,
         },
       });
     };
@@ -136,7 +193,7 @@ const useGetData = () => {
               rewardAmount += reward.amount;
             } else {
               const token = tokens.find((t) => t.token === reward.token);
-              console.log(reward.token, token ? token.price : 0, reward.amount);
+              // console.log(reward.token, token ? token.price : 0, reward.amount);
               rewardAmount += reward.amount * (token ? token.price : 0);
             }
             //console.log(rewardAmount, reward.token);

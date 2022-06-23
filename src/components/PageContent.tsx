@@ -97,23 +97,31 @@ const columns: GridColDef[] = [
   },
 ];
 
+
 const PageContent: FC = () => {
   // const service = useBribeDataService();
   // const votesData = useSnapshotVotes();
+
+//var refreshInterval:(number|null) = null  // ms or null
+
   const [toggle, setToggle] = useState(true)
-  const getData = useGetData();
+  const [voteActive, setVoteActive] = useState(false)
+  const getData = useGetData(voteActive);
   var rows: GridRowsProp = []
   var version: string = ''
   var voteStart: number = ''
   var voteEnd: number = ''
-  const proposal: string = configData.snapshot_hash
+  var voteTitle: string = ''
+  var proposal: string = ""
 
   if (getData.status === "loaded") {
     version =  "v" + getData.payload.version
     rows = getData.payload.results
     voteStart = getData.payload.proposalStart
     voteEnd = getData.payload.proposalEnd
-    //console.log(getData)
+    voteTitle = getData.payload.proposalTitle
+    proposal = getData.payload.proposalId
+    console.log(getData)
   }
 
   // debug timestamps
@@ -121,11 +129,12 @@ const PageContent: FC = () => {
   // voteEnd =   1654706000
 
   const tsNow = Math.floor(Date.now() / 1000)
-  var voteActive = false
   var dateStart = new Date(voteStart*1000).toUTCString()
   var dateEnd = new Date(voteEnd*1000).toUTCString()
   const timeTogo:string = TimeFormatter((voteEnd - tsNow))
-  if (tsNow > voteStart && tsNow < voteEnd) { voteActive = true }
+  if (tsNow > voteStart && tsNow < voteEnd) { setVoteActive = true }
+
+console.log("proposal:", proposal)
 
   /*
   TODO
@@ -139,7 +148,7 @@ const PageContent: FC = () => {
         proposal={proposal}
       />
       <Typography variant="h4" align="center">
-        {configData.page_header}
+        {voteTitle}
       </Typography>
       <Typography variant="body2" align="center">
          Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : "closed"})
