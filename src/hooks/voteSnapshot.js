@@ -43,12 +43,13 @@ async function getProposalVotes(
   }
 }
 
-export async function getResults(props) {
+export async function getResults(snapshotId) {
 
-console.log(props)
 
 //  const proposal = await getProposal(configData.snapshot_hash);
-  const proposal = await getProposal(props);
+  const proposal = await getProposal(snapshotId);
+
+//console.log(snapshotId, proposal.id, proposal.state)
 
   const votes = await getProposalVotes(proposal.id);
 

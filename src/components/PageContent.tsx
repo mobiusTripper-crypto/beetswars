@@ -99,20 +99,18 @@ const columns: GridColDef[] = [
 
 
 const PageContent: FC = () => {
-  // const service = useBribeDataService();
-  // const votesData = useSnapshotVotes();
 
-//var refreshInterval:(number|null) = null  // ms or null
 
-  const [toggle, setToggle] = useState(true)
-  const [voteActive, setVoteActive] = useState(false)
-  const getData = useGetData(voteActive);
+  const [tableCards, changeTableCards] = useState(true)
+  const getData = useGetData();
   var rows: GridRowsProp = []
   var version: string = ''
   var voteStart: number = ''
   var voteEnd: number = ''
   var voteTitle: string = ''
+  var voteState: string = ''
   var proposal: string = ""
+  var voteActive = false
 
   if (getData.status === "loaded") {
     version =  "v" + getData.payload.version
@@ -121,25 +119,22 @@ const PageContent: FC = () => {
     voteEnd = getData.payload.proposalEnd
     voteTitle = getData.payload.proposalTitle
     proposal = getData.payload.proposalId
-    console.log(getData)
+    voteState = getData.payload.proposalState
+    //console.log(getData)
   }
 
   // debug timestamps
   // voteStart = 1654690000
-  // voteEnd =   1654706000
+  // voteEnd =   1656082854
 
   const tsNow = Math.floor(Date.now() / 1000)
-  var dateStart = new Date(voteStart*1000).toUTCString()
-  var dateEnd = new Date(voteEnd*1000).toUTCString()
+  const dateStart = new Date(voteStart*1000).toUTCString()
+  const dateEnd = new Date(voteEnd*1000).toUTCString()
   const timeTogo:string = TimeFormatter((voteEnd - tsNow))
-  if (tsNow > voteStart && tsNow < voteEnd) { setVoteActive = true }
 
-console.log("proposal:", proposal)
+  if (voteState === "active" ) { voteActive = true } else { voteActive = false }
 
-  /*
-  TODO
-  toggle page refresh and token price provider based on voteActive
-  */
+  voteActive = (voteState === "active" ) ? true : false
 
   return (
     <div>
@@ -181,12 +176,12 @@ console.log("proposal:", proposal)
               })}
           </Typography>
           <div style={{display: 'flex', marginRight: '9px', justifyContent: "flex-end"}}>
-            <button onClick={() => setToggle(!toggle)}>
-              {toggle ? ( <small> Table </small>):( <small> Cards </small>)}
+            <button onClick={() => changeTableCards(!tableCards)}>
+              {tableCards ? ( <small> Table </small>):( <small> Cards </small>)}
             </button>
           </div>
 
-          {toggle ? (
+          {tableCards ? (
 
           <Box
             sx={{

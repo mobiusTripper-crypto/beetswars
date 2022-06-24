@@ -10,5 +10,6 @@ export interface VoteDataType {
   proposalEnd: number;
   proposalTitle: string;
   proposalId: string;
+  proposalState: string;
   votingResults: ResultsData;
 }
