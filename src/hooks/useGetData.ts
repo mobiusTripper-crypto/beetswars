@@ -1,17 +1,11 @@
 import { useEffect, useState } from "react";
-//import { useDispatch } from "react-redux";
 import { Bribes, TokenPrice } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType, DashboardReturn } from "types/Dashboard";
-//import useRefresh from "hooks/useRefresh";
-//import Web3 from "web3";
-//import { AbiItem } from "web3-utils";
 import { getResults } from "hooks/voteSnapshot";
 import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
-//import { BigNumber } from "@ethersproject/bignumber";
-//import configData from "config.json";
 import useTimer from "hooks/useTimer"
 
 
@@ -19,65 +13,55 @@ const useGetData = () => {
 
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-latest.json"
   const [voteActive, setActive] = useState(false)
-  const [tknReady, setTknReady] = useState(false)
   const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
-//  const priceProvider:(string) = voteActive ? "activeFeed" : "historicFeed"
   const refresh = useTimer(refreshInterval)
   const [dashboardResult, setDashboardResult] = useState<
     ServiceType<DashboardReturn>
   >({ status: "loading" });
 
+  var tokenPriceData: [] = []
+  var tokenPrices: TokenPrice [] = [{token: "BLA", price: 0}]
 
-    var tokenPriceData: [] = []
-    var tokenPrices: TokenPrice [] = [{token: "BLA", price: 0}]
-
-function sleep(time){
-      return new Promise((resolve)=>setTimeout(resolve,time)
-    )
-}
+  function sleep(time){ return new Promise((resolve)=>setTimeout(resolve,time)) }
 
   useEffect(() => {
-
     const fetchDashboardData = async () => {
-
       const bribeData = await fetch(dataUrl || "")
         .then((response) => {
           return response.json();
         })
         .then((response: Bribes) => {
-console.log("return bribes")
+          console.log("return bribes")
           return response;
         });
 
       const voteData = await getResults(bribeData.snapshot).then((response: VoteDataType) => {
-console.log("return vote")
+        console.log("return vote")
         return response;
       });
 
       setActive(voteData.proposal.state === "active" ?  true : false)
 
-console.log("state:",voteActive, voteData.proposal.state, refreshInterval, 
+      console.log("state:",voteActive, voteData.proposal.state, refreshInterval, 
             new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-'))
 
       const endTime = new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-')
 
-
       bribeData.bribedata.forEach((bribe) => {
-if (bribe.reward) {
-        bribe.reward.forEach((rw) => {
-          if (!rw.isfixed) {
-            if(!tokenPriceData.find((tpf) =>  tpf.token === rw.token)) {
-              const data:[] = { token: rw.token, address: rw.tokenaddress, cgid: rw.coingeckoid }
-              tokenPriceData.push(data)
-              console.log("return token data",rw.token)
-            } else {
-              console.log("return dup:",rw.token)
+        if (bribe.reward) {
+          bribe.reward.forEach((rw) => {
+            if (!rw.isfixed) {
+              if(!tokenPriceData.find((tpf) =>  tpf.token === rw.token)) {
+                const data:[] = { token: rw.token, address: rw.tokenaddress, cgid: rw.coingeckoid }
+                tokenPriceData.push(data)
+                console.log("return token",rw.token)
+              } else {
+                console.log("return dup",rw.token)
+              }
             }
-          }
-        })
-}
+          })
+        }     
       })
-
 
       if (voteActive) {    // realtime prices
         const provider = new ethers.providers.JsonRpcProvider(
@@ -113,7 +97,7 @@ if (bribe.reward) {
       tokenPrices.push(dataBlub)
       console.log(tokenPrices);
 
-await sleep(2000).then(() => {
+await sleep(3000).then(() => {
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
@@ -138,7 +122,6 @@ await sleep(2000).then(() => {
       });
 })
     };
-
 
     const normalizeDashboardData = (
       bribes: Bribes,
@@ -232,7 +215,7 @@ await sleep(2000).then(() => {
 
         list.push(data);
       });
-console.log("return list")
+      console.log("return list")
       return list;
     };
     fetchDashboardData();
