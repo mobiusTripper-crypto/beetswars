@@ -19,6 +19,7 @@ const useGetData = () => {
 
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-latest.json"
   const [voteActive, setActive] = useState(true)
+  const [tknReady, setTknReady] = useState(false)
   const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
 //  const priceProvider:(string) = voteActive ? "activeFeed" : "historicFeed"
   const refresh = useTimer(refreshInterval)
@@ -26,9 +27,9 @@ const useGetData = () => {
     ServiceType<DashboardReturn>
   >({ status: "loading" });
 
+
     var tokenPriceData: [] = []
     var tokenPrices: TokenPrice [] = [{token: "BLA", price: 0}]
-
 
   useEffect(() => {
 
@@ -39,10 +40,12 @@ const useGetData = () => {
           return response.json();
         })
         .then((response: Bribes) => {
+console.log("return bribes")
           return response;
         });
 
       const voteData = await getResults(bribeData.snapshot).then((response: VoteDataType) => {
+console.log("return vote")
         return response;
       });
 
@@ -61,8 +64,9 @@ if (bribe.reward) {
             if(!tokenPriceData.find((tpf) =>  tpf.token === rw.token)) {
               const data:[] = { token: rw.token, address: rw.tokenaddress, cgid: rw.coingeckoid }
               tokenPriceData.push(data)
+              console.log("return token data",rw.token)
             } else {
-              console.log("dup:",rw.token)
+              console.log("return dup:",rw.token)
             }
           }
         })
@@ -84,8 +88,9 @@ if (bribe.reward) {
           const price = parseFloat(ethers.utils.formatEther(priceobj))
           const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
           tokenPrices.push(data)
-          console.log("l tkn:",tkn.token,price, data)
+          console.log("return l tkn:",tkn.token,price)
         })
+setTknReady(true)
       } else {    // historical prices
         tokenPriceData.forEach(async (tkn) => {
           const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.cgid + "/history?date=" + endTime + "&localization=false"
@@ -96,18 +101,21 @@ if (bribe.reward) {
           const price = priceobj.market_data.current_price.usd
           const data:TokenPrice = { token: tkn.token, price: priceobj.market_data.current_price.usd  }
           tokenPrices.push(data)
-          console.log("h tkn:",tkn.token,price, tokenPrices.length)
+          console.log("return h tkn:",tkn.token,price)
         })
+setTknReady(true)
       }
 
-      console.log(tokenPrices);
+//      const dataBlub:TokenPrice = { token: "BLUB", price: 0.000001  }
+//      tokenPrices.push(dataBlub)
+//      console.log(tokenPrices);
 
+if(tknReady) {
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
         tokenPrices
       );
-
       setDashboardResult({
         status: "loaded",
         payload: {
@@ -125,6 +133,7 @@ if (bribe.reward) {
         },
       });
     };
+}
 
     const normalizeDashboardData = (
       bribes: Bribes,
@@ -133,7 +142,12 @@ if (bribe.reward) {
     ) => {
       const list: DashboardType[] = [];
       // console.dir(voteData);
+
       console.log(tokken);
+
+      tokken.forEach( (tkk) => {
+        console.log(tkk.token,tkk.price,tokken.length)
+      })
 
       bribes.bribedata.forEach((bribe) => {
         let rewardAmount = 0;
@@ -144,7 +158,7 @@ if (bribe.reward) {
               rewardAmount += reward.amount;
             } else {
               const token = tokken.find((t) => t.token === reward.token);
-              console.log(reward.token, token ? token.price : 0, reward.amount);
+              console.log("muh ",reward.token, token ? token.price : 0, reward.amount);
               rewardAmount += reward.amount * (token ? token.price : 0);
             }
             //console.log(rewardAmount, reward.token);
@@ -159,8 +173,7 @@ if (bribe.reward) {
               percentAmount += reward.amount;
             } else {
               const token = tokken.find((t) => t.token === reward.token);
-               console.log(typeof tokken, typeof reward)
-               console.log(
+               console.log("mäh ",
                  reward.token,
                  token,
                  reward.amount * (token ? token.price : 0)
@@ -218,10 +231,11 @@ if (bribe.reward) {
 
         list.push(data);
       });
+console.log("return list")
       return list;
     };
     fetchDashboardData();
-  }, [dataUrl, refresh, setDashboardResult, refreshInterval, voteActive]);
+  }, [ dataUrl, refresh, setDashboardResult, refreshInterval, voteActive, ]);
 
   return dashboardResult;
 };
