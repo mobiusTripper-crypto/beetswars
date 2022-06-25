@@ -90,7 +90,6 @@ if (bribe.reward) {
           tokenPrices.push(data)
           console.log("return l tkn:",tkn.token,price)
         })
-setTknReady(true)
       } else {    // historical prices
         tokenPriceData.forEach(async (tkn) => {
           const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.cgid + "/history?date=" + endTime + "&localization=false"
@@ -103,14 +102,12 @@ setTknReady(true)
           tokenPrices.push(data)
           console.log("return h tkn:",tkn.token,price)
         })
-setTknReady(true)
       }
 
 //      const dataBlub:TokenPrice = { token: "BLUB", price: 0.000001  }
 //      tokenPrices.push(dataBlub)
 //      console.log(tokenPrices);
 
-if(tknReady) {
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
@@ -133,7 +130,6 @@ if(tknReady) {
         },
       });
     };
-}
 
     const normalizeDashboardData = (
       bribes: Bribes,
