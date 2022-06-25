@@ -18,7 +18,7 @@ import useTimer from "hooks/useTimer"
 const useGetData = () => {
 
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-latest.json"
-  const [voteActive, setActive] = useState(true)
+  const [voteActive, setActive] = useState(false)
   const [tknReady, setTknReady] = useState(false)
   const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
 //  const priceProvider:(string) = voteActive ? "activeFeed" : "historicFeed"
@@ -30,6 +30,11 @@ const useGetData = () => {
 
     var tokenPriceData: [] = []
     var tokenPrices: TokenPrice [] = [{token: "BLA", price: 0}]
+
+function sleep(time){
+      return new Promise((resolve)=>setTimeout(resolve,time)
+    )
+}
 
   useEffect(() => {
 
@@ -104,15 +109,17 @@ if (bribe.reward) {
         })
       }
 
-//      const dataBlub:TokenPrice = { token: "BLUB", price: 0.000001  }
-//      tokenPrices.push(dataBlub)
-//      console.log(tokenPrices);
+      const dataBlub:TokenPrice = { token: "BLUB", price: 0.000001  }
+      tokenPrices.push(dataBlub)
+      console.log(tokenPrices);
 
+await sleep(2000).then(() => {
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
         tokenPrices
       );
+
       setDashboardResult({
         status: "loaded",
         payload: {
@@ -129,7 +136,9 @@ if (bribe.reward) {
           proposalState: voteData.proposal.state,
         },
       });
+})
     };
+
 
     const normalizeDashboardData = (
       bribes: Bribes,
@@ -145,7 +154,7 @@ if (bribe.reward) {
         console.log(tkk.token,tkk.price,tokken.length)
       })
 
-      bribes.bribedata.forEach((bribe) => {
+      bribes.bribedata.forEach( (bribe) => {
         let rewardAmount = 0;
         const isFixedReward = bribe.fixedreward.length !== 0;
         if (isFixedReward) {
@@ -154,8 +163,8 @@ if (bribe.reward) {
               rewardAmount += reward.amount;
             } else {
               const token = tokken.find((t) => t.token === reward.token);
-              console.log("muh ",reward.token, token ? token.price : 0, reward.amount);
               rewardAmount += reward.amount * (token ? token.price : 0);
+              console.log("fixed ",token, rewardAmount);
             }
             //console.log(rewardAmount, reward.token);
           });
@@ -169,12 +178,8 @@ if (bribe.reward) {
               percentAmount += reward.amount;
             } else {
               const token = tokken.find((t) => t.token === reward.token);
-               console.log("mäh ",
-                 reward.token,
-                 token,
-                 reward.amount * (token ? token.price : 0)
-               );
               percentAmount += reward.amount * (token ? token.price : 0);
+              console.log("percent ",token, percentAmount)
             }
             //            console.log(percentAmount, reward.token);
           });
