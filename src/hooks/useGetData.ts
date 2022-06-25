@@ -26,8 +26,8 @@ const useGetData = () => {
     ServiceType<DashboardReturn>
   >({ status: "loading" });
 
-    var tokenPriceData:[] = []
-    var tokenPrices: TokenPrice[] = []
+    var tokenPriceData: [] = []
+    var tokenPrices: TokenPrice [] = [{token: "BLA", price: 0}]
 
 
   useEffect(() => {
@@ -82,9 +82,9 @@ if (bribe.reward) {
         tokenPriceData.forEach(async (tkn) => {
           const priceobj = await contract.calculateAssetPrice(tkn.address)
           const price = parseFloat(ethers.utils.formatEther(priceobj))
-          const data:[] = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
+          const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
           tokenPrices.push(data)
-          console.log("l tkn:",tkn.token,price)
+          console.log("l tkn:",tkn.token,price, data)
         })
       } else {    // historical prices
         tokenPriceData.forEach(async (tkn) => {
@@ -94,19 +94,19 @@ if (bribe.reward) {
             return response.json();
           })
           const price = priceobj.market_data.current_price.usd
-          const data:[] = { token: tkn.token, price: priceobj.market_data.current_price.usd  }
+          const data:TokenPrice = { token: tkn.token, price: priceobj.market_data.current_price.usd  }
           tokenPrices.push(data)
-          console.log("h tkn:",tkn.token,price, tokenPrices)
+          console.log("h tkn:",tkn.token,price, tokenPrices.length)
         })
       }
 
+      console.log(tokenPrices);
 
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
         tokenPrices
       );
-      console.log(tokenPrices)
 
       setDashboardResult({
         status: "loaded",
@@ -159,7 +159,7 @@ if (bribe.reward) {
               percentAmount += reward.amount;
             } else {
               const token = tokken.find((t) => t.token === reward.token);
-               console.log(tokken)
+               console.log(typeof tokken, typeof reward)
                console.log(
                  reward.token,
                  token,
@@ -221,7 +221,7 @@ if (bribe.reward) {
       return list;
     };
     fetchDashboardData();
-  }, [dataUrl, refresh, setDashboardResult]);
+  }, [dataUrl, refresh, setDashboardResult, refreshInterval, voteActive]);
 
   return dashboardResult;
 };
