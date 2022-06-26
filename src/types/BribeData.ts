@@ -1,5 +1,15 @@
 //import { boolean, number, string } from "yargs";
 
+interface RewardType {
+  type: string;
+  percentagethreshold: number;
+  token: string;
+  amount: number;
+  isfixed: boolean;
+  tokenaddress: string;
+  coingeckoid: string;
+}
+
 export interface BribeDataType {
   enabled: boolean;
   voteindex: number;
@@ -11,6 +21,7 @@ export interface BribeDataType {
   percentreward: TokenData[];
   percentagethreshold: number;
   rewardcap: number;
+  reward: RewardType[];
   additionalrewards: AdditionalRewards[];
 }
 
@@ -19,6 +30,7 @@ export interface Bribes {
   proposal: string;
   description: string;
   round: number;
+  snapshot: string;
   bribedata: BribeDataType[];
 }
 
@@ -31,6 +43,12 @@ export interface TokenData {
 export interface TokenPrice {
   token: string;
   price: number;
+}
+
+export interface TokenPriceData {
+  token: string;
+  address: string;
+  cgid: string;
 }
 
 export interface AdditionalRewards {

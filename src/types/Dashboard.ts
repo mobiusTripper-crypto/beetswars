@@ -1,3 +1,8 @@
+interface AdditionalRewards {
+  tier: string;
+  factor: number;
+}
+
 export interface DashboardType {
   poolName: string;
   poolUrl: string;
@@ -13,6 +18,7 @@ export interface DashboardType {
   votePercentage: number;
   valuePerVote: number;
   id: number;
+  additionalrewards: AdditionalRewards[];
 }
 
 export interface DashboardReturn {
@@ -20,4 +26,9 @@ export interface DashboardReturn {
   totalVotes: number;
   totalBribeAmount: number;
   version: string;
+  proposalState: string;
+  proposalStart: number;
+  proposalEnd: number;
+  proposalTitle: string;
+  proposalId: string;
 }

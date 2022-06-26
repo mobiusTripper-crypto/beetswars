@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bribes, TokenPrice } from "types/BribeData";
+import { Bribes, TokenPrice, TokenPriceData } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType, DashboardReturn } from "types/Dashboard";
@@ -19,10 +19,10 @@ const useGetData = () => {
     ServiceType<DashboardReturn>
   >({ status: "loading" });
 
-  var tokenPriceData: [] = []
-  var tokenPrices: TokenPrice [] = [{token: "BLA", price: 0}]
+  var tokenPriceData: TokenPriceData[] = []
+  var tokenPrices: TokenPrice[] = [{token: "BLA", price: 0}]
 
-  function sleep(time){ return new Promise((resolve)=>setTimeout(resolve,time)) }
+  function sleep(time:number){ return new Promise((resolve)=>setTimeout(resolve,time)) }
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -52,7 +52,7 @@ const useGetData = () => {
           bribe.reward.forEach((rw) => {
             if (!rw.isfixed) {
               if(!tokenPriceData.find((tpf) =>  tpf.token === rw.token)) {
-                const data:[] = { token: rw.token, address: rw.tokenaddress, cgid: rw.coingeckoid }
+                const data:TokenPriceData = { token: rw.token, address: rw.tokenaddress, cgid: rw.coingeckoid }
                 tokenPriceData.push(data)
                 console.log("return token",rw.token)
               } else {

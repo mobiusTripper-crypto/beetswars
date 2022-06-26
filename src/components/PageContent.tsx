@@ -189,7 +189,7 @@ const PageContent: FC = () => {
                       </Typography>
                     )}
                     {data.additionalrewards && (
-                      data.additionalrewards.map((item, index:number) => (
+                      data.additionalrewards.forEach((item, index:number) => (
                        <Box key={index}>
                         <Typography style={{display: 'inline-block'}} color="text.secondary" variant="body2">
                           <strong>Tier {item.tier}: </strong>
@@ -299,9 +299,9 @@ const PageContent: FC = () => {
               autoHeight={true}
               hideFooter={true}
               getCellClassName={(params: GridCellParams<number>) => {
-                if (params.field === 'votePercentage' && params.value <= 0.15 ) {
-                  return 'underthreshold';
-                }
+               // if (params.field === 'votePercentage' && params.value <== 0.15 ) {
+               //   return 'underthreshold';
+               // }
                 return '';
               }}
             />
