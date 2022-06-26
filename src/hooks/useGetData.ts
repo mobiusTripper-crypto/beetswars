@@ -97,7 +97,10 @@ const useGetData = () => {
       tokenPrices.push(dataBlub)
       console.log(tokenPrices);
 
-await sleep(3000).then(() => {
+console.log("sleep start")
+sleep(3000).then(() => {
+console.log("sleep done")
+
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
@@ -120,7 +123,7 @@ await sleep(3000).then(() => {
           proposalState: voteData.proposal.state,
         },
       });
-})
+}) // sleep
     };
 
     const normalizeDashboardData = (

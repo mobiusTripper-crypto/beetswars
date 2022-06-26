@@ -12,101 +12,15 @@ import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} fro
 import { useState } from 'react'
 import TimeFormatter from "utils/TimeFormatter"
 
-const dec0: GridColTypeDef = {
-  type: 'number',
-  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})
-};
-
-const dec2: GridColTypeDef = {
-  type: 'number',
-  //  valueFormatter: ({ value }) => (value).toFixed(2),
-  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
-};
-
-const dpbdec3: GridColTypeDef = {
-  type: 'number',
-  valueFormatter: ({ value }) => (value * 1000).toFixed(3),
-};
-
-const columns: GridColDef[] = [
-  { 
-    field: 'id', 
-    headerName: 'voteindex', 
-    flex: 0.3, 
-    hide: true 
-  },
-  { 
-    field: 'poolName', 
-    headerName: 'Pool', 
-    flex: 1.5, 
-    renderCell: (cellValues) => {
-      return <Link 
-               href=
-               {cellValues.row.poolUrl} 
-               underline="hover" 
-               sx={{ fontWeight: '600', fontSize: '1.2rem'}}>
-               {cellValues.row.poolName}
-             </Link>;
-    }
-  },
-  { 
-    field: 'rewardDescription', 
-    headerName: 'Description', 
-    flex: 3, 
-    hide: true  
-  },
-  { 
-    field: 'overallValue', 
-    headerName: 'Overall Value', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dec2 
-  },
-  { 
-    field: 'voteTotal', 
-    headerName: 'Vote total', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dec0 
-  },
-  { 
-    field: 'votePercentage', 
-    headerName: '% Vote', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dec2 
-  },
-  { 
-    field: 'percentAboveThreshold', 
-    headerName: '% above', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8,
-    hide: true 
-  },
-  { 
-    field: 'valuePerVote', 
-    headerName: '$/1000 fBEETs', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dpbdec3 
-  },
-];
-
 
 const PageContent: FC = () => {
-
 
   const [tableCards, changeTableCards] = useState(true)
   const getData = useGetData();
   var rows: GridRowsProp = []
   var version: string = ''
-  var voteStart: number = ''
-  var voteEnd: number = ''
+  var voteStart: number = 0
+  var voteEnd: number = 0
   var voteTitle: string = ''
   var voteState: string = ''
   var proposal: string = ""
@@ -131,8 +45,6 @@ const PageContent: FC = () => {
   const dateStart = new Date(voteStart*1000).toUTCString()
   const dateEnd = new Date(voteEnd*1000).toUTCString()
   const timeTogo:string = TimeFormatter((voteEnd - tsNow))
-
-  if (voteState === "active" ) { voteActive = true } else { voteActive = false }
 
   voteActive = (voteState === "active" ) ? true : false
 
@@ -402,4 +314,90 @@ const PageContent: FC = () => {
 };
 
 export default PageContent;
+
+
+const dec0: GridColTypeDef = {
+  type: 'number',
+  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})
+};
+
+const dec2: GridColTypeDef = {
+  type: 'number',
+  //  valueFormatter: ({ value }) => (value).toFixed(2),
+  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+};
+
+const dpbdec3: GridColTypeDef = {
+  type: 'number',
+  valueFormatter: ({ value }) => (value * 1000).toFixed(3),
+};
+
+const columns: GridColDef[] = [
+  { 
+    field: 'id', 
+    headerName: 'voteindex', 
+    flex: 0.3, 
+    hide: true 
+  },
+  { 
+    field: 'poolName', 
+    headerName: 'Pool', 
+    flex: 1.5, 
+    renderCell: (cellValues) => {
+      return <Link 
+               href=
+               {cellValues.row.poolUrl} 
+               underline="hover" 
+               sx={{ fontWeight: '600', fontSize: '1.2rem'}}>
+               {cellValues.row.poolName}
+             </Link>;
+    }
+  },
+  { 
+    field: 'rewardDescription', 
+    headerName: 'Description', 
+    flex: 3, 
+    hide: true  
+  },
+  { 
+    field: 'overallValue', 
+    headerName: 'Overall Value', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec2 
+  },
+  { 
+    field: 'voteTotal', 
+    headerName: 'Vote total', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec0 
+  },
+  { 
+    field: 'votePercentage', 
+    headerName: '% Vote', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec2 
+  },
+  { 
+    field: 'percentAboveThreshold', 
+    headerName: '% above', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8,
+    hide: true 
+  },
+  { 
+    field: 'valuePerVote', 
+    headerName: '$/1000 fBEETs', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dpbdec3 
+  },
+];
 
