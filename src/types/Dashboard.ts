@@ -3,6 +3,11 @@ interface AdditionalRewards {
   factor: number;
 }
 
+export interface BribeFiles {
+  filename: string;
+  url: string;
+}
+
 export interface DashboardType {
   poolName: string;
   poolUrl: string;
@@ -31,4 +36,5 @@ export interface DashboardReturn {
   proposalEnd: number;
   proposalTitle: string;
   proposalId: string;
+  bribeFiles: BribeFiles[];
 }

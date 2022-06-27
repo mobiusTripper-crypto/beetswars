@@ -7,16 +7,17 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
 import NavBar from "components/NavBar";
-import configData from "config.json";
 import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
 import { useState } from 'react'
 import TimeFormatter from "utils/TimeFormatter"
+import { BribeFiles } from "types/Dashboard";
 
 
 const PageContent: FC = () => {
 
+  const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
   const [tableCards, changeTableCards] = useState(true)
-  const getData = useGetData();
+  const getData = useGetData(bribeFile);
   var rows: GridRowsProp = []
   var version: string = ''
   var voteStart: number = 0
@@ -24,7 +25,8 @@ const PageContent: FC = () => {
   var voteTitle: string = ''
   var voteState: string = ''
   var proposal: string = ""
-  var voteActive = false
+  var voteActive: boolean = false
+  var bribeFiles: BribeFiles[] = []
 
   if (getData.status === "loaded") {
     version =  "v" + getData.payload.version
@@ -34,6 +36,7 @@ const PageContent: FC = () => {
     voteTitle = getData.payload.proposalTitle
     proposal = getData.payload.proposalId
     voteState = getData.payload.proposalState
+    bribeFiles = getData.payload.bribeFiles
     //console.log(getData)
   }
 
@@ -47,6 +50,14 @@ const PageContent: FC = () => {
   const timeTogo:string = TimeFormatter((voteEnd - tsNow))
 
   voteActive = (voteState === "active" ) ? true : false
+
+  const roundNumber = /[0-9]*/g
+//  console.log(bribeFile)
+
+  const handleChange = (e:any) => {
+    console.log(e.target.value);
+    changeBribeFile(e.target.value);
+  };
 
   return (
     <div>
@@ -87,11 +98,20 @@ const PageContent: FC = () => {
                 maximumFractionDigits: 0,
               })}
           </Typography>
-          <div style={{display: 'flex', marginRight: '9px', justifyContent: "flex-end"}}>
+          <Box sx={{  padding: "2px", display: 'flex', justifyContent: 'flex-end', marginTop: "10px" }}> 
+            <div style={{ marginRight: '9px'}}>
+              <select onChange={handleChange} value={bribeFile}>
+                {bribeFiles.map((bf,index:number) =>
+                  <option key={index} value={bf.filename}>Round {bf.filename.match(new RegExp(roundNumber)) }</option>
+                )}
+              </select>
+          </div>
+          <div style={{ marginRight: '9px'}}>
             <button onClick={() => changeTableCards(!tableCards)}>
-              {tableCards ? ( <small> Table </small>):( <small> Cards </small>)}
+              {tableCards ? ("Table"):("Cards")}
             </button>
           </div>
+        </Box>
 
           {tableCards ? (
 

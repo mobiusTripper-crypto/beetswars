@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import { Bribes, TokenPrice, TokenPriceData } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
-import { DashboardType, DashboardReturn } from "types/Dashboard";
+import { DashboardType, DashboardReturn, BribeFiles } from "types/Dashboard";
 import { getResults } from "hooks/voteSnapshot";
 import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 import useTimer from "hooks/useTimer"
 
 
-const useGetData = () => {
+const useGetData = (bribeFile:string) => {
 
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + "bribe-data-latest.json"
+console.log(bribeFile)
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile
+  const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main?recursive=1"
   const [voteActive, setActive] = useState(false)
   const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
   const refresh = useTimer(refreshInterval)
@@ -21,11 +23,33 @@ const useGetData = () => {
 
   var tokenPriceData: TokenPriceData[] = []
   var tokenPrices: TokenPrice[] = [{token: "BLA", price: 0}]
+  var bribeFiles: BribeFiles[] = []
 
   function sleep(time:number){ return new Promise((resolve)=>setTimeout(resolve,time)) }
 
   useEffect(() => {
+
     const fetchDashboardData = async () => {
+
+      const historyData = await fetch(historyUrl || "")
+        .then((response) => {
+          return response.json();
+        })
+        .then((response) => {
+          console.log("return dirlist")
+          return response;
+        });
+
+// TODO
+const regex_bribefile = new RegExp('bribe-data-[0-9a]*.json');
+historyData.tree.map((item:any) => {
+  if(regex_bribefile.test(item.path)) {
+    const entry = { filename: item.path, url: item.url }
+    bribeFiles.push(entry)
+  }
+})
+//console.log(bribeFiles)
+
       const bribeData = await fetch(dataUrl || "")
         .then((response) => {
           return response.json();
@@ -95,8 +119,9 @@ const useGetData = () => {
 
       const dataBlub:TokenPrice = { token: "BLUB", price: 0.000001  }
       tokenPrices.push(dataBlub)
-      console.log(tokenPrices);
+      //console.log(tokenPrices);
 
+// TODO
 console.log("sleep start")
 sleep(3000).then(() => {
 console.log("sleep done")
@@ -121,6 +146,7 @@ console.log("sleep done")
           proposalTitle: voteData.proposal.title,
           proposalId: bribeData.snapshot,
           proposalState: voteData.proposal.state,
+          bribeFiles: bribeFiles
         },
       });
 }) // sleep
@@ -136,9 +162,9 @@ console.log("sleep done")
 
       console.log(tokken);
 
-      tokken.forEach( (tkk) => {
-        console.log(tkk.token,tkk.price,tokken.length)
-      })
+//      tokken.forEach( (tkk) => {
+//        console.log(tkk.token,tkk.price,tokken.length)
+//      })
 
       bribes.bribedata.forEach( (bribe) => {
         let rewardAmount = 0;
