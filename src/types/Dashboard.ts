@@ -5,7 +5,6 @@ interface AdditionalRewards {
 
 export interface BribeFiles {
   filename: string;
-  url: string;
 }
 
 export interface DashboardType {

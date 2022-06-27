@@ -51,8 +51,9 @@ const PageContent: FC = () => {
 
   voteActive = (voteState === "active" ) ? true : false
 
-  const roundNumber = /[0-9]*/g
-//  console.log(bribeFile)
+  const roundNumber = /[0-9]a*/g
+  const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
+  console.log(bribeFilesRev)
 
   const handleChange = (e:any) => {
     console.log(e.target.value);
@@ -101,7 +102,7 @@ const PageContent: FC = () => {
           <Box sx={{  padding: "2px", display: 'flex', justifyContent: 'flex-end', marginTop: "10px" }}> 
             <div style={{ marginRight: '9px'}}>
               <select onChange={handleChange} value={bribeFile}>
-                {bribeFiles.map((bf,index:number) =>
+                {bribeFilesRev.map((bf:any,index:number) =>
                   <option key={index} value={bf.filename}>Round {bf.filename.match(new RegExp(roundNumber)) }</option>
                 )}
               </select>

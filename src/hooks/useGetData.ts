@@ -13,7 +13,7 @@ const useGetData = (bribeFile:string) => {
 
 console.log(bribeFile)
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile
-  const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main?recursive=1"
+  const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main"
   const [voteActive, setActive] = useState(false)
   const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
   const refresh = useTimer(refreshInterval)
@@ -44,7 +44,7 @@ console.log(bribeFile)
 const regex_bribefile = new RegExp('bribe-data-[0-9a]*.json');
 historyData.tree.map((item:any) => {
   if(regex_bribefile.test(item.path)) {
-    const entry = { filename: item.path, url: item.url }
+    const entry = { filename: item.path }
     bribeFiles.push(entry)
   }
 })
@@ -86,8 +86,8 @@ historyData.tree.map((item:any) => {
           })
         }     
       })
-
-      if (voteActive) {    // realtime prices
+// TODO find real filename of symlink for conditional
+      if ((voteActive) && (bribeFile === "bribe-data-latest.json")) {    // realtime prices
         const provider = new ethers.providers.JsonRpcProvider(
           "https://rpc.ftm.tools"
         );
@@ -121,7 +121,7 @@ historyData.tree.map((item:any) => {
       tokenPrices.push(dataBlub)
       //console.log(tokenPrices);
 
-// TODO
+// TODO make this async somehow
 console.log("sleep start")
 sleep(3000).then(() => {
 console.log("sleep done")
