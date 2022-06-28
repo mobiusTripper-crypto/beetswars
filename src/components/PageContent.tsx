@@ -37,7 +37,7 @@ const PageContent: FC = () => {
     proposal = getData.payload.proposalId
     voteState = getData.payload.proposalState
     bribeFiles = getData.payload.bribeFiles
-    //console.log(getData)
+    //console.log(getData.payload)
   }
 
   // debug timestamps
@@ -60,6 +60,7 @@ const PageContent: FC = () => {
     console.log(e.target.value);
     changeBribeFile(e.target.value);
   };
+
 
   return (
     <div>
@@ -206,7 +207,7 @@ const PageContent: FC = () => {
                       </Typography>
                     )}
                     {data.additionalrewards && (
-                      data.additionalrewards.forEach((item, index:number) => (
+                      data.additionalrewards.map((item, index:number) => (
                        <Box key={index}>
                         <Typography style={{display: 'inline-block'}} color="text.secondary" variant="body2">
                           <strong>Tier {item.tier}: </strong>
