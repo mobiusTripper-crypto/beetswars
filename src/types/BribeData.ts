@@ -31,6 +31,7 @@ export interface Bribes {
   description: string;
   round: number;
   snapshot: string;
+  tokendata: TokenPriceData[];
   bribedata: BribeDataType[];
 }
 
@@ -47,8 +48,8 @@ export interface TokenPrice {
 
 export interface TokenPriceData {
   token: string;
-  address: string;
-  cgid: string;
+  tokenaddress: string;
+  coingeckoid: string;
 }
 
 export interface AdditionalRewards {

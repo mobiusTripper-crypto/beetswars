@@ -53,7 +53,8 @@ const PageContent: FC = () => {
 
   const roundNumber = /[0-9]a*/g
   const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
-  console.log(bribeFilesRev)
+
+//  console.log(bribeFilesRev)
 
   const handleChange = (e:any) => {
     console.log(e.target.value);

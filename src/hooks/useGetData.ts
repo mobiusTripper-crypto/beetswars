@@ -13,7 +13,8 @@ const useGetData = (bribeFile:string) => {
 
 console.log(bribeFile)
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile
-  const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main"
+  //const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main"
+  const historyUrl = "https://api.github.com/repos/RnZ3/beetswars-data/git/trees/rebuild"
   const [voteActive, setActive] = useState(false)
   const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
   const refresh = useTimer(refreshInterval)
@@ -22,7 +23,7 @@ console.log(bribeFile)
   >({ status: "loading" });
 
   var tokenPriceData: TokenPriceData[] = []
-  var tokenPrices: TokenPrice[] = [{token: "BLA", price: 0}]
+  var tokenPrices: TokenPrice[] = []
   var bribeFiles: BribeFiles[] = []
 
   function sleep(time:number){ return new Promise((resolve)=>setTimeout(resolve,time)) }
@@ -40,15 +41,15 @@ console.log(bribeFile)
           return response;
         });
 
-// TODO
-const regex_bribefile = new RegExp('bribe-data-[0-9a]*.json');
-historyData.tree.map((item:any) => {
-  if(regex_bribefile.test(item.path)) {
-    const entry = { filename: item.path }
-    bribeFiles.push(entry)
-  }
-})
-//console.log(bribeFiles)
+      // TODO
+      const regex_bribefile = new RegExp('bribe-data-[0-9a]*.json');
+      historyData.tree.map((item:any) => {
+        if(regex_bribefile.test(item.path)) {
+          const entry = { filename: item.path }
+          bribeFiles.push(entry)
+        }
+      })
+      //console.log(bribeFiles)
 
       const bribeData = await fetch(dataUrl || "")
         .then((response) => {
@@ -66,17 +67,16 @@ historyData.tree.map((item:any) => {
 
       setActive(voteData.proposal.state === "active" ?  true : false)
 
-      console.log("state:",voteActive, voteData.proposal.state, refreshInterval, 
-            new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-'))
-
       const endTime = new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-')
+      console.log("state:",voteActive, voteData.proposal.state, refreshInterval, endTime)
 
+/*
       bribeData.bribedata.forEach((bribe) => {
         if (bribe.reward) {
           bribe.reward.forEach((rw) => {
             if (!rw.isfixed) {
               if(!tokenPriceData.find((tpf) =>  tpf.token === rw.token)) {
-                const data:TokenPriceData = { token: rw.token, address: rw.tokenaddress, cgid: rw.coingeckoid }
+                const data:TokenPriceData = { token: rw.token, tokenaddress: rw.tokenaddress, coingeckoid: rw.coingeckoid }
                 tokenPriceData.push(data)
                 console.log("return token",rw.token)
               } else {
@@ -86,8 +86,17 @@ historyData.tree.map((item:any) => {
           })
         }     
       })
-// TODO find real filename of symlink for conditional
-      if ((voteActive) && (bribeFile === "bribe-data-latest.json")) {    // realtime prices
+*/
+      if(bribeData.tokendata) {
+        //console.log(bribeData.tokendata)
+        bribeData.tokendata.map((td) => {
+          //console.log(td)
+          const data:TokenPriceData = { token: td.token, tokenaddress: td.tokenaddress, coingeckoid: td.coingeckoid }
+          tokenPriceData.push(data)
+        })
+      }
+
+      if (voteActive) {    // realtime prices
         const provider = new ethers.providers.JsonRpcProvider(
           "https://rpc.ftm.tools"
         );
@@ -97,7 +106,7 @@ historyData.tree.map((item:any) => {
           provider
         );
         tokenPriceData.forEach(async (tkn) => {
-          const priceobj = await contract.calculateAssetPrice(tkn.address)
+          const priceobj = await contract.calculateAssetPrice(tkn.tokenaddress)
           const price = parseFloat(ethers.utils.formatEther(priceobj))
           const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
           tokenPrices.push(data)
@@ -105,7 +114,7 @@ historyData.tree.map((item:any) => {
         })
       } else {    // historical prices
         tokenPriceData.forEach(async (tkn) => {
-          const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.cgid + "/history?date=" + endTime + "&localization=false"
+          const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.coingeckoid + "/history?date=" + endTime + "&localization=false"
           const priceobj = await fetch(tknUrl || "")
           .then((response) => {
             return response.json();
@@ -155,16 +164,14 @@ console.log("sleep done")
     const normalizeDashboardData = (
       bribes: Bribes,
       voteData: VoteDataType,
-      tokken: TokenPrice[]
+      tokenprice: TokenPrice[]
     ) => {
       const list: DashboardType[] = [];
       // console.dir(voteData);
+      // tokenprice.forEach( (tkk) => {
+      //   console.log(tkk.token,tkk.price,tokenprice.length)
+      // })
 
-      console.log(tokken);
-
-//      tokken.forEach( (tkk) => {
-//        console.log(tkk.token,tkk.price,tokken.length)
-//      })
 
       bribes.bribedata.forEach( (bribe) => {
         let rewardAmount = 0;
@@ -174,7 +181,7 @@ console.log("sleep done")
             if (reward.isfixed) {
               rewardAmount += reward.amount;
             } else {
-              const token = tokken.find((t) => t.token === reward.token);
+              const token = tokenprice.find((t) => t.token === reward.token);
               rewardAmount += reward.amount * (token ? token.price : 0);
               console.log("fixed ",token, rewardAmount);
             }
@@ -189,14 +196,13 @@ console.log("sleep done")
             if (reward.isfixed) {
               percentAmount += reward.amount;
             } else {
-              const token = tokken.find((t) => t.token === reward.token);
+              const token = tokenprice.find((t) => t.token === reward.token);
               percentAmount += reward.amount * (token ? token.price : 0);
               console.log("percent ",token, percentAmount)
             }
             //            console.log(percentAmount, reward.token);
           });
         }
-
         const votePercentage =
           (voteData.votingResults.resultsByVoteBalance[bribe.voteindex] /
             voteData.votingResults.sumOfResultsBalance) *
