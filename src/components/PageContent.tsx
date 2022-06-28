@@ -67,27 +67,22 @@ const PageContent: FC = () => {
         version={version}
         proposal={proposal}
       />
+      <Typography variant="h2" fontWeight="700" align="center">
+        <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
+        {" - "}
+        <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
+      </Typography>
+
+      {getData.status === "loading" && <Typography variant="h4" align="center">Loading...</Typography>}
+      {getData.status === "loaded" && (
+
+        <div>
       <Typography variant="h4" align="center">
         {voteTitle}
       </Typography>
       <Typography variant="body2" align="center">
          Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : "closed"})
       </Typography>
-      <Typography variant="h2" fontWeight="700" align="center">
-        <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
-        {" - "}
-        <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
-      </Typography>
-      <Typography variant="body2" align="center">
-        This website is still in BETA. This is 3rd party service independent of
-        BeethovenX and please do your own research. This is not investment
-        advice!
-      </Typography>
-
-      {getData.status === "loading" && <div>Loading...</div>}
-      {getData.status === "loaded" && (
-
-        <div>
           <Typography variant="h4" align="center">
             {"Total Votes: " +
               getData.payload.totalVotes.toLocaleString(undefined, {
@@ -331,6 +326,11 @@ const PageContent: FC = () => {
           )}
         </div>
       )}
+      <Typography variant="body2" align="center">
+        This website is still in BETA. This is 3rd party service independent of
+        BeethovenX and please do your own research. This is not investment
+        advice!
+      </Typography>
     </div>
   );
 };
