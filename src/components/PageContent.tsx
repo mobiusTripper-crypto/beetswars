@@ -11,12 +11,13 @@ import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} fro
 import { useState } from 'react'
 import TimeFormatter from "utils/TimeFormatter"
 import { BribeFiles } from "types/Dashboard";
-
+import MyBackdrop from 'components/MyBackdrop';
 
 const PageContent: FC = () => {
 
   const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
   const [tableCards, changeTableCards] = useState(true)
+  const [oldproposal, setOldproposal] = useState("nix")
   const getData = useGetData(bribeFile);
   var rows: GridRowsProp = []
   var version: string = ''
@@ -37,7 +38,7 @@ const PageContent: FC = () => {
     proposal = getData.payload.proposalId
     voteState = getData.payload.proposalState
     bribeFiles = getData.payload.bribeFiles
-    //console.log(getData.payload)
+    console.log(getData.status)
   }
 
   // debug timestamps
@@ -54,13 +55,11 @@ const PageContent: FC = () => {
   const roundNumber = /[0-9]a*/g
   const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
 
-//  console.log(bribeFilesRev)
-
   const handleChange = (e:any) => {
     console.log(e.target.value);
+    setOldproposal(proposal)
     changeBribeFile(e.target.value);
   };
-
 
   return (
     <div>
@@ -332,6 +331,7 @@ const PageContent: FC = () => {
         BeethovenX and please do your own research. This is not investment
         advice!
       </Typography>
+      {proposal === oldproposal && <MyBackdrop/>}
     </div>
   );
 };

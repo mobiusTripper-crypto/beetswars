@@ -110,7 +110,7 @@ console.log(bribeFile)
           const price = parseFloat(ethers.utils.formatEther(priceobj))
           const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
           tokenPrices.push(data)
-          console.log("return l tkn:",tkn.token,price)
+          //console.log("return l tkn:",tkn.token,price)
         })
       } else {    // historical prices
         tokenPriceData.forEach(async (tkn) => {
@@ -122,7 +122,7 @@ console.log(bribeFile)
           const price = priceobj.market_data.current_price.usd
           const data:TokenPrice = { token: tkn.token, price: priceobj.market_data.current_price.usd  }
           tokenPrices.push(data)
-          console.log("return h tkn:",tkn.token,price)
+          //console.log("return h tkn:",tkn.token,price)
         })
       }
 
@@ -183,7 +183,7 @@ console.log("sleep done")
             } else {
               const token = tokenprice.find((t) => t.token === reward.token);
               rewardAmount += reward.amount * (token ? token.price : 0);
-              console.log("fixed ",token, rewardAmount);
+              //console.log("fixed ",token, rewardAmount);
             }
             //console.log(rewardAmount, reward.token);
           });
@@ -198,7 +198,7 @@ console.log("sleep done")
             } else {
               const token = tokenprice.find((t) => t.token === reward.token);
               percentAmount += reward.amount * (token ? token.price : 0);
-              console.log("percent ",token, percentAmount)
+              //console.log("percent ",token, percentAmount)
             }
             //            console.log(percentAmount, reward.token);
           });
