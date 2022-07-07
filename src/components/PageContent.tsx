@@ -8,9 +8,9 @@ import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
 import NavBar from "components/NavBar";
 import configData from "config.json";
-import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridColumns, GridCellParams} from '@mui/x-data-grid';
-import { useState, useEffect } from 'react'
-
+import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
+import { useState } from 'react'
+import TimeFormatter from "utils/TimeFormatter"
 
 const dec0: GridColTypeDef = {
   type: 'number',
@@ -104,13 +104,33 @@ const PageContent: FC = () => {
   const getData = useGetData();
   var rows: GridRowsProp = []
   var version: string = ''
-  var proposal: string = configData.snapshot_hash
+  var voteStart: number = ''
+  var voteEnd: number = ''
+  const proposal: string = configData.snapshot_hash
 
   if (getData.status === "loaded") {
     version =  "v" + getData.payload.version
     rows = getData.payload.results
-    console.log(getData)
+    voteStart = getData.payload.proposalStart
+    voteEnd = getData.payload.proposalEnd
+    //console.log(getData)
   }
+
+  // debug timestamps
+  // voteStart = 1654690000
+  // voteEnd =   1654706000
+
+  const tsNow = Math.floor(Date.now() / 1000)
+  var voteActive = false
+  var dateStart = new Date(voteStart*1000).toUTCString()
+  var dateEnd = new Date(voteEnd*1000).toUTCString()
+  const timeTogo:string = TimeFormatter((voteEnd - tsNow))
+  if (tsNow > voteStart && tsNow < voteEnd) { voteActive = true }
+
+  /*
+  TODO
+  toggle page refresh and token price provider based on voteActive
+  */
 
   return (
     <div>
@@ -120,6 +140,9 @@ const PageContent: FC = () => {
       />
       <Typography variant="h4" align="center">
         {configData.page_header}
+      </Typography>
+      <Typography variant="body2" align="center">
+         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : "closed"})
       </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
@@ -250,8 +273,8 @@ const PageContent: FC = () => {
                       </Typography>
                     )}
                     {data.additionalrewards && (
-                      data.additionalrewards.map(item => (
-                       <Box>
+                      data.additionalrewards.map((item, index:number) => (
+                       <Box key={index}>
                         <Typography style={{display: 'inline-block'}} color="text.secondary" variant="body2">
                           <strong>Tier {item.tier}: </strong>
                         </Typography>
