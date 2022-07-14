@@ -1,3 +1,12 @@
+interface AdditionalRewards {
+  tier: string;
+  factor: number;
+}
+
+export interface BribeFiles {
+  filename: string;
+}
+
 export interface DashboardType {
   poolName: string;
   poolUrl: string;
@@ -13,4 +22,18 @@ export interface DashboardType {
   votePercentage: number;
   valuePerVote: number;
   id: number;
+  additionalrewards: AdditionalRewards[];
+}
+
+export interface DashboardReturn {
+  results: DashboardType[];
+  totalVotes: number;
+  totalBribeAmount: number;
+  version: string;
+  proposalState: string;
+  proposalStart: number;
+  proposalEnd: number;
+  proposalTitle: string;
+  proposalId: string;
+  bribeFiles: BribeFiles[];
 }

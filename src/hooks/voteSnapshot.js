@@ -1,7 +1,7 @@
 import { request } from "graphql-request";
 import { PROPOSAL_QUERY, VOTES_QUERY } from "hooks/queries";
 import lodash from "lodash";
-import configData from "config.json";
+//import configData from "config.json";
 
 import snapshot from "@snapshot-labs/snapshot.js";
 
@@ -43,9 +43,13 @@ async function getProposalVotes(
   }
 }
 
-export async function getResults() {
+export async function getResults(snapshotId) {
 
-  const proposal = await getProposal(configData.snapshot_hash);
+
+//  const proposal = await getProposal(configData.snapshot_hash);
+  const proposal = await getProposal(snapshotId);
+
+//console.log(snapshotId, proposal.id, proposal.state)
 
   const votes = await getProposalVotes(proposal.id);
 

@@ -7,130 +7,59 @@ import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
 import NavBar from "components/NavBar";
-import configData from "config.json";
 import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
 import { useState } from 'react'
 import TimeFormatter from "utils/TimeFormatter"
-
-const dec0: GridColTypeDef = {
-  type: 'number',
-  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})
-};
-
-const dec2: GridColTypeDef = {
-  type: 'number',
-  //  valueFormatter: ({ value }) => (value).toFixed(2),
-  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
-};
-
-const dpbdec3: GridColTypeDef = {
-  type: 'number',
-  valueFormatter: ({ value }) => (value * 1000).toFixed(3),
-};
-
-const columns: GridColDef[] = [
-  { 
-    field: 'id', 
-    headerName: 'voteindex', 
-    flex: 0.3, 
-    hide: true 
-  },
-  { 
-    field: 'poolName', 
-    headerName: 'Pool', 
-    flex: 1.5, 
-    renderCell: (cellValues) => {
-      return <Link 
-               href=
-               {cellValues.row.poolUrl} 
-               underline="hover" 
-               sx={{ fontWeight: '600', fontSize: '1.2rem'}}>
-               {cellValues.row.poolName}
-             </Link>;
-    }
-  },
-  { 
-    field: 'rewardDescription', 
-    headerName: 'Description', 
-    flex: 3, 
-    hide: true  
-  },
-  { 
-    field: 'overallValue', 
-    headerName: 'Overall Value', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dec2 
-  },
-  { 
-    field: 'voteTotal', 
-    headerName: 'Vote total', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dec0 
-  },
-  { 
-    field: 'votePercentage', 
-    headerName: '% Vote', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dec2 
-  },
-  { 
-    field: 'percentAboveThreshold', 
-    headerName: '% above', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8,
-    hide: true 
-  },
-  { 
-    field: 'valuePerVote', 
-    headerName: '$/1000 fBEETs', 
-    type: 'number', 
-    cellClassName: 'cell-mono',
-    flex: 0.8, 
-    ...dpbdec3 
-  },
-];
+import { BribeFiles } from "types/Dashboard";
+import MyBackdrop from 'components/MyBackdrop';
 
 const PageContent: FC = () => {
-  // const service = useBribeDataService();
-  // const votesData = useSnapshotVotes();
-  const [toggle, setToggle] = useState(true)
-  const getData = useGetData();
+
+  const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
+  const [tableCards, changeTableCards] = useState(true)
+  const [oldproposal, setOldproposal] = useState("nix")
+  const getData = useGetData(bribeFile);
   var rows: GridRowsProp = []
   var version: string = ''
-  var voteStart: number = ''
-  var voteEnd: number = ''
-  const proposal: string = configData.snapshot_hash
+  var voteStart: number = 0
+  var voteEnd: number = 0
+  var voteTitle: string = ''
+  var voteState: string = ''
+  var proposal: string = ""
+  var voteActive: boolean = false
+  var bribeFiles: BribeFiles[] = []
 
   if (getData.status === "loaded") {
     version =  "v" + getData.payload.version
     rows = getData.payload.results
     voteStart = getData.payload.proposalStart
     voteEnd = getData.payload.proposalEnd
-    //console.log(getData)
+    voteTitle = getData.payload.proposalTitle
+    proposal = getData.payload.proposalId
+    voteState = getData.payload.proposalState
+    bribeFiles = getData.payload.bribeFiles
+    console.log(getData.status)
   }
 
   // debug timestamps
   // voteStart = 1654690000
-  // voteEnd =   1654706000
+  // voteEnd =   1656082854
 
   const tsNow = Math.floor(Date.now() / 1000)
-  var voteActive = false
-  var dateStart = new Date(voteStart*1000).toUTCString()
-  var dateEnd = new Date(voteEnd*1000).toUTCString()
+  const dateStart = new Date(voteStart*1000).toUTCString()
+  const dateEnd = new Date(voteEnd*1000).toUTCString()
   const timeTogo:string = TimeFormatter((voteEnd - tsNow))
-  if (tsNow > voteStart && tsNow < voteEnd) { voteActive = true }
 
-  /*
-  TODO
-  toggle page refresh and token price provider based on voteActive
-  */
+  voteActive = (voteState === "active" ) ? true : false
+
+  const roundNumber = /[0-9]a*/g
+  const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
+
+  const handleChange = (e:any) => {
+    console.log(e.target.value);
+    setOldproposal(proposal)
+    changeBribeFile(e.target.value);
+  };
 
   return (
     <div>
@@ -138,27 +67,22 @@ const PageContent: FC = () => {
         version={version}
         proposal={proposal}
       />
-      <Typography variant="h4" align="center">
-        {configData.page_header}
-      </Typography>
-      <Typography variant="body2" align="center">
-         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : "closed"})
-      </Typography>
       <Typography variant="h2" fontWeight="700" align="center">
         <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
         {" - "}
         <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
       </Typography>
-      <Typography variant="body2" align="center">
-        This website is still in BETA. This is 3rd party service independent of
-        BeethovenX and please do your own research. This is not investment
-        advice!
-      </Typography>
 
-      {getData.status === "loading" && <div>Loading...</div>}
+      {getData.status === "loading" && <Typography variant="h4" align="center">Loading...</Typography>}
       {getData.status === "loaded" && (
 
         <div>
+      <Typography variant="h4" align="center">
+        {voteTitle}
+      </Typography>
+      <Typography variant="body2" align="center">
+         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : "closed"})
+      </Typography>
           <Typography variant="h4" align="center">
             {"Total Votes: " +
               getData.payload.totalVotes.toLocaleString(undefined, {
@@ -171,13 +95,22 @@ const PageContent: FC = () => {
                 maximumFractionDigits: 0,
               })}
           </Typography>
-          <div style={{display: 'flex', marginRight: '9px', justifyContent: "flex-end"}}>
-            <button onClick={() => setToggle(!toggle)}>
-              {toggle ? ( <small> Table </small>):( <small> Cards </small>)}
+          <Box sx={{  padding: "2px", display: 'flex', justifyContent: 'flex-end', marginTop: "10px" }}> 
+            <div style={{ marginRight: '9px'}}>
+              <select onChange={handleChange} value={bribeFile}>
+                {bribeFilesRev.map((bf:any,index:number) =>
+                  <option key={index} value={bf.filename}>Round {bf.filename.match(new RegExp(roundNumber)) }</option>
+                )}
+              </select>
+          </div>
+          <div style={{ marginRight: '9px'}}>
+            <button onClick={() => changeTableCards(!tableCards)}>
+              {tableCards ? ("Table"):("Cards")}
             </button>
           </div>
+        </Box>
 
-          {toggle ? (
+          {tableCards ? (
 
           <Box
             sx={{
@@ -383,9 +316,9 @@ const PageContent: FC = () => {
               autoHeight={true}
               hideFooter={true}
               getCellClassName={(params: GridCellParams<number>) => {
-                if (params.field === 'votePercentage' && params.value <= 0.15 ) {
-                  return 'underthreshold';
-                }
+               // if (params.field === 'votePercentage' && params.value <== 0.15 ) {
+               //   return 'underthreshold';
+               // }
                 return '';
               }}
             />
@@ -393,9 +326,101 @@ const PageContent: FC = () => {
           )}
         </div>
       )}
+      <Typography variant="body2" align="center">
+        This website is still in BETA. This is 3rd party service independent of
+        BeethovenX and please do your own research. This is not investment
+        advice!
+      </Typography>
+      {proposal === oldproposal && <MyBackdrop/>}
     </div>
   );
 };
 
 export default PageContent;
+
+
+const dec0: GridColTypeDef = {
+  type: 'number',
+  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})
+};
+
+const dec2: GridColTypeDef = {
+  type: 'number',
+  //  valueFormatter: ({ value }) => (value).toFixed(2),
+  valueFormatter: ({ value }) => (value).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+};
+
+const dpbdec3: GridColTypeDef = {
+  type: 'number',
+  valueFormatter: ({ value }) => (value * 1000).toFixed(3),
+};
+
+const columns: GridColDef[] = [
+  { 
+    field: 'id', 
+    headerName: 'voteindex', 
+    flex: 0.3, 
+    hide: true 
+  },
+  { 
+    field: 'poolName', 
+    headerName: 'Pool', 
+    flex: 1.5, 
+    renderCell: (cellValues) => {
+      return <Link 
+               href=
+               {cellValues.row.poolUrl} 
+               underline="hover" 
+               sx={{ fontWeight: '600', fontSize: '1.2rem'}}>
+               {cellValues.row.poolName}
+             </Link>;
+    }
+  },
+  { 
+    field: 'rewardDescription', 
+    headerName: 'Description', 
+    flex: 3, 
+    hide: true  
+  },
+  { 
+    field: 'overallValue', 
+    headerName: 'Overall Value', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec2 
+  },
+  { 
+    field: 'voteTotal', 
+    headerName: 'Vote total', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec0 
+  },
+  { 
+    field: 'votePercentage', 
+    headerName: '% Vote', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dec2 
+  },
+  { 
+    field: 'percentAboveThreshold', 
+    headerName: '% above', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8,
+    hide: true 
+  },
+  { 
+    field: 'valuePerVote', 
+    headerName: '$/1000 fBEETs', 
+    type: 'number', 
+    cellClassName: 'cell-mono',
+    flex: 0.8, 
+    ...dpbdec3 
+  },
+];
 

@@ -1,7 +1,7 @@
 
 type Props = { ts: number };
 
-const TimeFormatter: FC<Props> = ( ts ) => {
+const TimeFormatter: FC<Props> = ( ts:number ) => {
   const days: number  = Math.floor(ts/86400);
   ts -= days * 86400;
   const hours = Math.floor(ts/3600) % 24;

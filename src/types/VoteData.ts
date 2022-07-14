@@ -6,7 +6,5 @@ interface ResultsData {
 
 export interface VoteDataType {
   proposal: any;
-  proposalStart: number;
-  proposalEnd: number;
   votingResults: ResultsData;
 }
