@@ -8,7 +8,6 @@ import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 import useTimer from "hooks/useTimer"
 
-
 const useGetData = (bribeFile:string) => {
 
 console.log(bribeFile)
@@ -26,8 +25,6 @@ console.log(bribeFile)
   var tokenPrices: TokenPrice[] = []
   var bribeFiles: BribeFiles[] = []
 
-  function sleep(time:number){ return new Promise((resolve)=>setTimeout(resolve,time)) }
-
   useEffect(() => {
 
     const fetchDashboardData = async () => {
@@ -41,15 +38,13 @@ console.log(bribeFile)
           return response;
         });
 
-      // TODO
       const regex_bribefile = new RegExp('bribe-data-[0-9a]*.json');
-      historyData.tree.map((item:any) => {
+      historyData.tree.forEach((item:any) => {
         if(regex_bribefile.test(item.path)) {
           const entry = { filename: item.path }
           bribeFiles.push(entry)
         }
       })
-      //console.log(bribeFiles)
 
       const bribeData = await fetch(dataUrl || "")
         .then((response) => {
@@ -70,27 +65,8 @@ console.log(bribeFile)
       const endTime = new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-')
       console.log("state:",voteActive, voteData.proposal.state, refreshInterval, endTime)
 
-/*
-      bribeData.bribedata.forEach((bribe) => {
-        if (bribe.reward) {
-          bribe.reward.forEach((rw) => {
-            if (!rw.isfixed) {
-              if(!tokenPriceData.find((tpf) =>  tpf.token === rw.token)) {
-                const data:TokenPriceData = { token: rw.token, tokenaddress: rw.tokenaddress, coingeckoid: rw.coingeckoid }
-                tokenPriceData.push(data)
-                console.log("return token",rw.token)
-              } else {
-                console.log("return dup",rw.token)
-              }
-            }
-          })
-        }     
-      })
-*/
       if(bribeData.tokendata) {
-        //console.log(bribeData.tokendata)
-        bribeData.tokendata.map((td) => {
-          //console.log(td)
+        bribeData.tokendata.forEach((td) => {
           const data:TokenPriceData = { token: td.token, tokenaddress: td.tokenaddress, coingeckoid: td.coingeckoid }
           tokenPriceData.push(data)
         })
@@ -110,30 +86,24 @@ console.log(bribeFile)
           const price = parseFloat(ethers.utils.formatEther(priceobj))
           const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
           tokenPrices.push(data)
-          //console.log("return l tkn:",tkn.token,price)
+          console.log("return l tkn:",tkn.token,price)
         })
       } else {    // historical prices
-        tokenPriceData.forEach(async (tkn) => {
-          const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.coingeckoid + "/history?date=" + endTime + "&localization=false"
-          const priceobj = await fetch(tknUrl || "")
-          .then((response) => {
-            return response.json();
+        await Promise.all(
+          tokenPriceData.map(async (tkn) => {
+            const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.coingeckoid + "/history?date=" + endTime + "&localization=false"
+            await fetch(tknUrl || "")
+            .then((response) => {
+              return response.json();
+            })
+            .then((response) => {
+            const data:TokenPrice = { token: tkn.token, price: response.market_data.current_price.usd  }
+            tokenPrices.push(data)
+            })
+          console.log("return h tkn:",tkn.token,tokenPrices)
           })
-          const price = priceobj.market_data.current_price.usd
-          const data:TokenPrice = { token: tkn.token, price: priceobj.market_data.current_price.usd  }
-          tokenPrices.push(data)
-          //console.log("return h tkn:",tkn.token,price)
-        })
+        )
       }
-
-      const dataBlub:TokenPrice = { token: "BLUB", price: 0.000001  }
-      tokenPrices.push(dataBlub)
-      //console.log(tokenPrices);
-
-// TODO make this async somehow
-console.log("sleep start")
-sleep(3000).then(() => {
-console.log("sleep done")
 
       const dashboardData = normalizeDashboardData(
         bribeData,
@@ -158,7 +128,6 @@ console.log("sleep done")
           bribeFiles: bribeFiles
         },
       });
-}) // sleep
     };
 
     const normalizeDashboardData = (
@@ -166,12 +135,8 @@ console.log("sleep done")
       voteData: VoteDataType,
       tokenprice: TokenPrice[]
     ) => {
-      const list: DashboardType[] = [];
-      // console.dir(voteData);
-      // tokenprice.forEach( (tkk) => {
-      //   console.log(tkk.token,tkk.price,tokenprice.length)
-      // })
 
+      const list: DashboardType[] = [];
 
       bribes.bribedata.forEach( (bribe) => {
         let rewardAmount = 0;
@@ -183,9 +148,7 @@ console.log("sleep done")
             } else {
               const token = tokenprice.find((t) => t.token === reward.token);
               rewardAmount += reward.amount * (token ? token.price : 0);
-              //console.log("fixed ",token, rewardAmount);
             }
-            //console.log(rewardAmount, reward.token);
           });
         }
 
@@ -198,9 +161,7 @@ console.log("sleep done")
             } else {
               const token = tokenprice.find((t) => t.token === reward.token);
               percentAmount += reward.amount * (token ? token.price : 0);
-              //console.log("percent ",token, percentAmount)
             }
-            //            console.log(percentAmount, reward.token);
           });
         }
         const votePercentage =
@@ -223,9 +184,6 @@ console.log("sleep done")
           rewardAmount + percentValue,
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
-
-        //     console.log(overallValue, rewardAmount, percentValue, bribe.rewardcap);
-        //     console.log(voteData.proposal.start, voteData.proposal.end, voteData.proposal.state);
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
