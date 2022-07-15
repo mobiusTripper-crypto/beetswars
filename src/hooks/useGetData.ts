@@ -13,8 +13,8 @@ const useGetData = (bribeFile:string) => {
 
 console.log(bribeFile)
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile
-  //const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main"
-  const historyUrl = "https://api.github.com/repos/RnZ3/beetswars-data/git/trees/rebuild"
+  const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main"
+  //const historyUrl = "https://api.github.com/repos/RnZ3/beetswars-data/git/trees/rebuild"
   const [voteActive, setActive] = useState(false)
   const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
   const refresh = useTimer(refreshInterval)
