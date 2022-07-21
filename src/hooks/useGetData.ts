@@ -60,7 +60,7 @@ console.log(bribeFile)
         return response;
       });
 
-      setActive(voteData.proposal.state === "active" ?  true : false)
+      setActive((voteData.proposal.state === "active" || voteData.proposal.state === "pending")  ?  true : false)
 
       const endTime = new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-')
       console.log("state:",voteActive, voteData.proposal.state, refreshInterval, endTime)
