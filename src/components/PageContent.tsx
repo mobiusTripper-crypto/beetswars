@@ -38,7 +38,7 @@ const PageContent: FC = () => {
     proposal = getData.payload.proposalId
     voteState = getData.payload.proposalState
     bribeFiles = getData.payload.bribeFiles
-    console.log(getData.status)
+    //console.log(getData)
   }
 
   // debug timestamps
@@ -81,7 +81,7 @@ const PageContent: FC = () => {
         {voteTitle}
       </Typography>
       <Typography variant="body2" align="center">
-         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : "closed"})
+         Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : voteState})
       </Typography>
           <Typography variant="h4" align="center">
             {"Total Votes: " +
