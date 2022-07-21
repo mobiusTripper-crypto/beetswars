@@ -63,7 +63,6 @@ console.log(bribeFile)
       setActive(((voteData.proposal.state === "active") || (voteData.proposal.state === "pending"))  ?  true : false)
 
       const endTime = new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-')
-      console.log("state:",voteActive, voteData.proposal.state, refreshInterval, endTime)
 
       if(bribeData.tokendata) {
         bribeData.tokendata.forEach((td) => {
@@ -72,39 +71,42 @@ console.log(bribeFile)
         })
       }
 
-      if (voteActive) {    // realtime prices
-        const provider = new ethers.providers.JsonRpcProvider(
-          "https://rpc.ftm.tools"
-        );
-        const contract = new ethers.Contract(
-          contract_address,
-          contract_abi,
-          provider
-        );
-        tokenPriceData.forEach(async (tkn) => {
-          const priceobj = await contract.calculateAssetPrice(tkn.tokenaddress)
-          const price = parseFloat(ethers.utils.formatEther(priceobj))
-          const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
-          tokenPrices.push(data)
-          console.log("return l tkn:",tkn.token,price)
-        })
-      } else {    // historical prices
-        await Promise.all(
-          tokenPriceData.map(async (tkn) => {
-            const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.coingeckoid + "/history?date=" + endTime + "&localization=false"
-            await fetch(tknUrl || "")
-            .then((response) => {
-              return response.json();
-            })
-            .then((response) => {
-            const data:TokenPrice = { token: tkn.token, price: response.market_data.current_price.usd  }
-            tokenPrices.push(data)
-            })
-          console.log("return h tkn:",tkn.token,tokenPrices)
-          })
-        )
-      }
+      console.log("state:",voteActive, voteData.proposal.state, refreshInterval, endTime, tokenPriceData)
 
+      if (tokenPriceData.length !== 0) {
+        if (voteActive) {    // realtime prices
+          const provider = new ethers.providers.JsonRpcProvider(
+            "https://rpc.ftm.tools"
+          );
+          const contract = new ethers.Contract(
+            contract_address,
+            contract_abi,
+            provider
+          );
+          tokenPriceData.forEach(async (tkn) => {
+            const priceobj = await contract.calculateAssetPrice(tkn.tokenaddress)
+            const price = parseFloat(ethers.utils.formatEther(priceobj))
+            const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
+            tokenPrices.push(data)
+            console.log("return l tkn:",tkn.token,price)
+          })
+        } else {    // historical prices
+          await Promise.all(
+            tokenPriceData.map(async (tkn) => {
+              const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.coingeckoid + "/history?date=" + endTime + "&localization=false"
+              await fetch(tknUrl || "")
+              .then((response) => {
+                return response.json();
+              })
+              .then((response) => {
+              const data:TokenPrice = { token: tkn.token, price: response.market_data.current_price.usd  }
+              tokenPrices.push(data)
+              })
+            console.log("return h tkn:",tkn.token,tokenPrices)
+            })
+          )
+        }
+      }
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
