@@ -6,75 +6,94 @@ import { DashboardType, DashboardReturn, BribeFiles } from "types/Dashboard";
 import { getResults } from "hooks/voteSnapshot";
 import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
-import useTimer from "hooks/useTimer"
+import useTimer from "hooks/useTimer";
 
-const useGetData = (bribeFile:string) => {
-
-console.log(bribeFile)
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile
-  const historyUrl = "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main"
+const useGetData = (bribeFile: string) => {
+  console.log(bribeFile);
+  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile;
+  const historyUrl =
+    "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main";
   //const historyUrl = "https://api.github.com/repos/RnZ3/beetswars-data/git/trees/rebuild"
-  const [voteActive, setActive] = useState(false)
-  const refreshInterval:(number|null) = voteActive ? 60000 : null  // ms or null
-  const refresh = useTimer(refreshInterval)
+  const [voteActive, setActive] = useState(false);
+  const refreshInterval: number | null = voteActive ? 60000 : null; // ms or null
+  const refresh = useTimer(refreshInterval);
   const [dashboardResult, setDashboardResult] = useState<
     ServiceType<DashboardReturn>
   >({ status: "loading" });
 
-  var tokenPriceData: TokenPriceData[] = []
-  var tokenPrices: TokenPrice[] = []
-  var bribeFiles: BribeFiles[] = []
+  var tokenPriceData: TokenPriceData[] = [];
+  var tokenPrices: TokenPrice[] = [];
+  var bribeFiles: BribeFiles[] = [];
 
   useEffect(() => {
-
     const fetchDashboardData = async () => {
-
       const historyData = await fetch(historyUrl || "")
         .then((response) => {
           return response.json();
         })
         .then((response) => {
-          console.log("return dirlist")
+          console.log("return dirlist");
           return response;
         });
 
-      const regex_bribefile = new RegExp('bribe-data-[0-9a]*.json');
-      historyData.tree.forEach((item:any) => {
-        if(regex_bribefile.test(item.path)) {
-          const entry = { filename: item.path }
-          bribeFiles.push(entry)
+      const regex_bribefile = new RegExp("bribe-data-[0-9a]*.json");
+      historyData.tree.forEach((item: any) => {
+        if (regex_bribefile.test(item.path)) {
+          const entry = { filename: item.path };
+          bribeFiles.push(entry);
         }
-      })
+      });
 
       const bribeData = await fetch(dataUrl || "")
         .then((response) => {
           return response.json();
         })
         .then((response: Bribes) => {
-          console.log("return bribes")
+          console.log("return bribes");
           return response;
         });
 
-      const voteData = await getResults(bribeData.snapshot).then((response: VoteDataType) => {
-        console.log("return vote")
-        return response;
-      });
+      const voteData = await getResults(bribeData.snapshot).then(
+        (response: VoteDataType) => {
+          console.log("return vote");
+          return response;
+        }
+      );
 
-      setActive(((voteData.proposal.state === "active") || (voteData.proposal.state === "pending"))  ?  true : false)
+      setActive(
+        voteData.proposal.state === "active" ||
+          voteData.proposal.state === "pending"
+          ? true
+          : false
+      );
 
-      const endTime = new Date(voteData.proposal.end*1000).toLocaleDateString("de-DE").replace(/\./g, '-')
+      const endTime = new Date(voteData.proposal.end * 1000)
+        .toLocaleDateString("de-DE")
+        .replace(/\./g, "-");
 
-      if(bribeData.tokendata) {
+      if (bribeData.tokendata) {
         bribeData.tokendata.forEach((td) => {
-          const data:TokenPriceData = { token: td.token, tokenaddress: td.tokenaddress, coingeckoid: td.coingeckoid }
-          tokenPriceData.push(data)
-        })
+          const data: TokenPriceData = {
+            token: td.token,
+            tokenaddress: td.tokenaddress,
+            coingeckoid: td.coingeckoid,
+          };
+          tokenPriceData.push(data);
+        });
       }
 
-      console.log("state:",voteActive, voteData.proposal.state, refreshInterval, endTime, tokenPriceData)
+      console.log(
+        "state:",
+        voteActive,
+        voteData.proposal.state,
+        refreshInterval,
+        endTime,
+        tokenPriceData
+      );
 
       if (tokenPriceData.length !== 0) {
-        if (voteActive) {    // realtime prices
+        if (voteActive) {
+          // realtime prices
           const provider = new ethers.providers.JsonRpcProvider(
             "https://rpc.ftm.tools"
           );
@@ -83,28 +102,44 @@ console.log(bribeFile)
             contract_abi,
             provider
           );
-          tokenPriceData.forEach(async (tkn) => {
-            const priceobj = await contract.calculateAssetPrice(tkn.tokenaddress)
-            const price = parseFloat(ethers.utils.formatEther(priceobj))
-            const data:TokenPrice = { token: tkn.token, price: parseFloat(ethers.utils.formatEther(priceobj))  }
-            tokenPrices.push(data)
-            console.log("return l tkn:",tkn.token,price)
-          })
-        } else {    // historical prices
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
-              const tknUrl = "https://api.coingecko.com/api/v3/coins/" + tkn.coingeckoid + "/history?date=" + endTime + "&localization=false"
-              await fetch(tknUrl || "")
-              .then((response) => {
-                return response.json();
-              })
-              .then((response) => {
-              const data:TokenPrice = { token: tkn.token, price: response.market_data.current_price.usd  }
-              tokenPrices.push(data)
-              })
-            console.log("return h tkn:",tkn.token,tokenPrices)
+              const priceobj = await contract.calculateAssetPrice(
+                tkn.tokenaddress
+              );
+              const price = parseFloat(ethers.utils.formatEther(priceobj));
+              const data: TokenPrice = {
+                token: tkn.token,
+                price: parseFloat(ethers.utils.formatEther(priceobj)),
+              };
+              tokenPrices.push(data);
+              console.log("return l tkn:", tkn.token, price);
             })
-          )
+          );
+        } else {
+          // historical prices
+          await Promise.all(
+            tokenPriceData.map(async (tkn) => {
+              const tknUrl =
+                "https://api.coingecko.com/api/v3/coins/" +
+                tkn.coingeckoid +
+                "/history?date=" +
+                endTime +
+                "&localization=false";
+              await fetch(tknUrl || "")
+                .then((response) => {
+                  return response.json();
+                })
+                .then((response) => {
+                  const data: TokenPrice = {
+                    token: tkn.token,
+                    price: response.market_data.current_price.usd,
+                  };
+                  tokenPrices.push(data);
+                });
+              console.log("return h tkn:", tkn.token, tokenPrices);
+            })
+          );
         }
       }
       const dashboardData = normalizeDashboardData(
@@ -127,7 +162,7 @@ console.log(bribeFile)
           proposalTitle: voteData.proposal.title,
           proposalId: bribeData.snapshot,
           proposalState: voteData.proposal.state,
-          bribeFiles: bribeFiles
+          bribeFiles: bribeFiles,
         },
       });
     };
@@ -137,10 +172,9 @@ console.log(bribeFile)
       voteData: VoteDataType,
       tokenprice: TokenPrice[]
     ) => {
-
       const list: DashboardType[] = [];
 
-      bribes.bribedata.forEach( (bribe) => {
+      bribes.bribedata.forEach((bribe) => {
         let rewardAmount = 0;
         const isFixedReward = bribe.fixedreward.length !== 0;
         if (isFixedReward) {
@@ -210,11 +244,11 @@ console.log(bribeFile)
 
         list.push(data);
       });
-      console.log("return list")
+      console.log("return list");
       return list;
     };
     fetchDashboardData();
-  }, [ dataUrl, refresh, setDashboardResult, refreshInterval, voteActive, ]);
+  }, [dataUrl, refresh, setDashboardResult, refreshInterval, voteActive]);
 
   return dashboardResult;
 };
@@ -262,10 +296,6 @@ export default useGetData;
 // token: "OATH",
 // //price: parseFloat(ethers.utils.formatEther(oathPrice)),
 // pr
-
-
-
-
 
 /*  from line 103
 
