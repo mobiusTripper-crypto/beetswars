@@ -50,6 +50,7 @@ export interface TokenPriceData {
   token: string;
   tokenaddress: string;
   coingeckoid: string;
+  bptpoolid: string;
 }
 
 export interface AdditionalRewards {
