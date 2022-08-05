@@ -58,3 +58,15 @@ export const PROPOSAL_QUERY = gql`
     }
   }
 `;
+
+export const BPT_ACT_QUERY = gql`
+  query  Pool ( $id: String!) { 
+    poolGetPool(id:$id) {
+      dynamicData
+      {
+        totalLiquidity
+        totalShares
+      }
+    }
+  }
+`;

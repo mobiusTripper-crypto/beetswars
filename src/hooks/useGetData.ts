@@ -4,6 +4,8 @@ import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType, DashboardReturn, BribeFiles } from "types/Dashboard";
 import { getResults } from "hooks/voteSnapshot";
+import { request } from "graphql-request";
+import { BPT_ACT_QUERY } from "hooks/queries";
 import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 import useTimer from "hooks/useTimer";
@@ -77,6 +79,7 @@ const useGetData = (bribeFile: string) => {
             token: td.token,
             tokenaddress: td.tokenaddress,
             coingeckoid: td.coingeckoid,
+            bptpoolid: td.bptpoolid,
           };
           tokenPriceData.push(data);
         });
@@ -94,26 +97,58 @@ const useGetData = (bribeFile: string) => {
       if (tokenPriceData.length !== 0) {
         if (voteActive) {
           // realtime prices
-          const provider = new ethers.providers.JsonRpcProvider(
-            "https://rpc.ftm.tools"
-          );
-          const contract = new ethers.Contract(
-            contract_address,
-            contract_abi,
-            provider
-          );
+
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
-              const priceobj = await contract.calculateAssetPrice(
-                tkn.tokenaddress
-              );
-              const price = parseFloat(ethers.utils.formatEther(priceobj));
-              const data: TokenPrice = {
-                token: tkn.token,
-                price: parseFloat(ethers.utils.formatEther(priceobj)),
-              };
-              tokenPrices.push(data);
-              console.log("return l tkn:", tkn.token, price);
+              if (tkn.bptpoolid) {
+                const endpoint =
+                  "https://backend-v2.beets-ftm-node.com/graphql";
+
+                const id = tkn.bptpoolid;
+
+                const poolData = await request(endpoint, BPT_ACT_QUERY, {
+                  id,
+                }).then((response) => {
+                  if (response.status >= 400 && response.status < 600) {
+                    throw new Error("Bad response from server");
+                  }
+                  return response;
+                });
+
+                const sharePrice =
+                  (await parseFloat(
+                    poolData.poolGetPool.dynamicData.totalLiquidity
+                  )) / parseFloat(poolData.poolGetPool.dynamicData.totalShares);
+
+                const data: TokenPrice = {
+                  token: tkn.token,
+                  price: sharePrice,
+                };
+                tokenPrices.push(data);
+                console.log("return bpt tkn:", tkn.token, sharePrice);
+
+                console.log(tokenPrices);
+              } else {
+                const provider = new ethers.providers.JsonRpcProvider(
+                  "https://rpc.ftm.tools"
+                );
+                const contract = new ethers.Contract(
+                  contract_address,
+                  contract_abi,
+                  provider
+                );
+
+                const priceobj = await contract.calculateAssetPrice(
+                  tkn.tokenaddress
+                );
+                const price = parseFloat(ethers.utils.formatEther(priceobj));
+                const data: TokenPrice = {
+                  token: tkn.token,
+                  price: parseFloat(ethers.utils.formatEther(priceobj)),
+                };
+                tokenPrices.push(data);
+                console.log("return rpc tkn:", tkn.token, price);
+              }
             })
           );
         } else {
@@ -205,16 +240,19 @@ const useGetData = (bribeFile: string) => {
             voteData.votingResults.sumOfResultsBalance) *
           100;
 
-        const isQualified = votePercentage > 0.15;
-
         const percentAboveThreshold = Math.max(
           0,
           votePercentage - bribe.percentagethreshold
         );
+
         const percentValue = Math.min(
           percentAmount * percentAboveThreshold,
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
+
+        const isQualified = (votePercentage > 0.15) && (bribe.payoutthreshold && (votePercentage < bribe.payoutthreshold)) ? false : true
+
+        console.log(bribe.payoutthreshold, votePercentage, isQualified);
 
         const overallValue = Math.min(
           rewardAmount + percentValue,

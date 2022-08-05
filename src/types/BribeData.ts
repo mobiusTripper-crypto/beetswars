@@ -23,6 +23,7 @@ export interface BribeDataType {
   rewardcap: number;
   reward: RewardType[];
   additionalrewards: AdditionalRewards[];
+  payoutthreshold: number;
 }
 
 export interface Bribes {
@@ -50,6 +51,7 @@ export interface TokenPriceData {
   token: string;
   tokenaddress: string;
   coingeckoid: string;
+  bptpoolid: string;
 }
 
 export interface AdditionalRewards {
