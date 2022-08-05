@@ -23,6 +23,7 @@ export interface BribeDataType {
   rewardcap: number;
   reward: RewardType[];
   additionalrewards: AdditionalRewards[];
+  payoutthreshold: number;
 }
 
 export interface Bribes {

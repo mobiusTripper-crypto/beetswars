@@ -102,18 +102,19 @@ const useGetData = (bribeFile: string) => {
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
               if (tkn.bptpoolid) {
+                const endpoint =
+                  "https://backend-v2.beets-ftm-node.com/graphql";
 
-                const endpoint = "https://backend-v2.beets-ftm-node.com/graphql";
+                const id = tkn.bptpoolid;
 
-                const id = tkn.bptpoolid
-
-                const poolData = await request(endpoint, BPT_ACT_QUERY, { id })
-                  .then((response) => {
-                    if (response.status >= 400 && response.status < 600) {
-                      throw new Error("Bad response from server");
-                    }
-                    return response;
-                  })
+                const poolData = await request(endpoint, BPT_ACT_QUERY, {
+                  id,
+                }).then((response) => {
+                  if (response.status >= 400 && response.status < 600) {
+                    throw new Error("Bad response from server");
+                  }
+                  return response;
+                });
 
                 const sharePrice =
                   (await parseFloat(
@@ -240,16 +241,19 @@ const useGetData = (bribeFile: string) => {
             voteData.votingResults.sumOfResultsBalance) *
           100;
 
-        const isQualified = votePercentage > 0.15;
-
         const percentAboveThreshold = Math.max(
           0,
           votePercentage - bribe.percentagethreshold
         );
+
         const percentValue = Math.min(
           percentAmount * percentAboveThreshold,
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
+
+        const isQualified = (votePercentage > 0.15) && (bribe.payoutthreshold && (votePercentage < bribe.payoutthreshold)) ? false : true
+
+        console.log(bribe.payoutthreshold, votePercentage, isQualified);
 
         const overallValue = Math.min(
           rewardAmount + percentValue,
