@@ -166,7 +166,7 @@ const PageContent: FC = () => {
                         </span>
                       </Link>
                     </Typography>
-                    {(data.isQualified && (data.percentAboveThreshold > 0)) ? (
+                    {data.isQualified ? (
                       <div>
                         <Typography
                           variant="subtitle2"
@@ -192,7 +192,7 @@ const PageContent: FC = () => {
                         component="div"
                         align="center"
                       >
-                        below .15% votes or under threshold
+                        below .15% votes
                       </Typography>
                     )}
                     <Typography color="text.secondary" variant="body2">
