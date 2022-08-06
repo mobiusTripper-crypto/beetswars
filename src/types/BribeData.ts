@@ -40,6 +40,7 @@ export interface TokenData {
   token: string;
   amount: number;
   isfixed: boolean;
+  ispaypervote: boolean;
 }
 
 export interface TokenPrice {
