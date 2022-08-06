@@ -250,9 +250,11 @@ const useGetData = (bribeFile: string) => {
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
 
-        const isQualified = (votePercentage > 0.15) && (bribe.payoutthreshold && (votePercentage < bribe.payoutthreshold)) ? false : true
+        const isUndervote = votePercentage < 0.15
+        const isUnderthreshold = bribe.payoutthreshold && (votePercentage < bribe.payoutthreshold) ? true : false
+        const isQualified = !isUndervote || !isUnderthreshold
 
-        console.log(bribe.payoutthreshold, votePercentage, isQualified);
+        //console.log( isUnderthreshold, isUndervote, isQualified);
 
         const overallValue = Math.min(
           rewardAmount + percentValue,
