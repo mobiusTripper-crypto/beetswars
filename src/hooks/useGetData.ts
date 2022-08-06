@@ -211,6 +211,7 @@ const useGetData = (bribeFile: string) => {
 
       bribes.bribedata.forEach((bribe) => {
         let rewardAmount = 0;
+        let pervoteAmount = 0;
         const isFixedReward = bribe.fixedreward.length !== 0;
         if (isFixedReward) {
           bribe.fixedreward.forEach((reward) => {
@@ -219,6 +220,9 @@ const useGetData = (bribeFile: string) => {
             } else {
               const token = tokenprice.find((t) => t.token === reward.token);
               rewardAmount += reward.amount * (token ? token.price : 0);
+            }
+            if (reward.ispaypervote) {
+              pervoteAmount += reward.amount;
             }
           });
         }
@@ -261,6 +265,18 @@ const useGetData = (bribeFile: string) => {
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
 
+        let valuePerVote = 0
+        if (pervoteAmount !== 0) {
+          valuePerVote = pervoteAmount
+          if (bribe.rewardcap) {
+            rewardAmount = bribe.rewardcap
+          }
+        } else {
+          valuePerVote = overallValue / voteData.votingResults.resultsByVoteBalance[bribe.voteindex]
+        }
+
+        console.log(rewardAmount,pervoteAmount, overallValue)
+
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
           poolUrl: bribe.poolurl,
@@ -276,9 +292,7 @@ const useGetData = (bribeFile: string) => {
           voteTotal:
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
           votePercentage: votePercentage,
-          valuePerVote:
-            overallValue /
-            voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
+          valuePerVote: valuePerVote,
           id: bribe.voteindex,
         };
 
