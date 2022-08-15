@@ -363,13 +363,13 @@ const columns: GridColDef[] = [
     hide: true  
   },
   { 
-    field: 'titlevalue', 
+    field: 'LabelValue',
     headerName: 'Total Value', 
     type: 'number', 
     cellClassName: 'cell-mono',
     flex: 0.8, 
     renderCell: (cellValues) => {
-        return cellValues.row.titlevalue.value
+        return cellValues.row.LabelValue.value
           .toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
     },
   },
