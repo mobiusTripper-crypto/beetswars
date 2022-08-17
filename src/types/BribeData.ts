@@ -52,6 +52,8 @@ export interface TokenPriceData {
   tokenaddress: string;
   coingeckoid: string;
   bptpoolid: string;
+  isbpt: boolean;
+  lastprice: number;
 }
 
 export interface AdditionalRewards {

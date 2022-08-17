@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bribes, TokenData, TokenPrice, TokenPriceData, GenericReward } from "types/BribeData";
+import { Bribes, TokenData, TokenPrice, TokenPriceData } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType, DashboardReturn, BribeFiles } from "types/Dashboard";
@@ -80,6 +80,8 @@ const useGetData = (bribeFile: string) => {
             tokenaddress: td.tokenaddress,
             coingeckoid: td.coingeckoid,
             bptpoolid: td.bptpoolid,
+            isbpt: td.isbpt,
+            lastprice: td.lastprice
           };
           tokenPriceData.push(data);
         });
@@ -100,7 +102,7 @@ const useGetData = (bribeFile: string) => {
 
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
-              if (tkn.bptpoolid) {
+              if (tkn.isbpt && tkn.bptpoolid) {
                 const endpoint =
                   "https://backend-v2.beets-ftm-node.com/graphql";
 
@@ -126,8 +128,6 @@ const useGetData = (bribeFile: string) => {
                 };
                 tokenPrices.push(data);
                 console.log("return bpt tkn:", tkn.token, sharePrice);
-
-                //console.log(tokenPrices);
               } else {
                 const provider = new ethers.providers.JsonRpcProvider(
                   "https://rpc.ftm.tools"
@@ -155,33 +155,52 @@ const useGetData = (bribeFile: string) => {
           // historical prices
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
-              console.log("tkn:", tkn.coingeckoid);
 
-              if (await tkn.coingeckoid) {
-                const tknUrl =
-                  "https://api.coingecko.com/api/v3/coins/" +
-                  tkn.coingeckoid +
-                  "/history?date=" +
-                  endTime +
-                  "&localization=false";
+              if (tkn.isbpt && tkn.lastprice) {
+                // TODO get historical BPT price from backend
+                console.log("h bpt:", tkn.token, tkn.lastprice);
 
-                await fetch(tknUrl || "")
-                  .then((response) => {
-                    return response.json();
-                  })
-                  .then((response) => {
-                    const data: TokenPrice = {
-                      token: tkn.token,
-                      price: response.market_data.current_price.usd,
-                    };
-                    tokenPrices.push(data);
-                  });
-                console.log("return h tkn:", tkn.token, tokenPrices);
+                      const data: TokenPrice = await {
+                        token: tkn.token,
+                        price: tkn.lastprice
+                      };
+
+                      tokenPrices.push(data);
+
+
+                  console.log("return h bpt:", tkn.token);
+
+              } else {
+                console.log("h tkn:", tkn.token, tkn.coingeckoid);
+
+                if (tkn.coingeckoid) {
+                  const tknUrl =
+                    "https://api.coingecko.com/api/v3/coins/" +
+                    tkn.coingeckoid +
+                    "/history?date=" +
+                    endTime +
+                    "&localization=false";
+
+                  await fetch(tknUrl || "")
+                    .then((response) => {
+                      return response.json();
+                    })
+                    .then((response) => {
+                      const data: TokenPrice = {
+                        token: tkn.token,
+                        price: response.market_data.current_price.usd,
+                      };
+                      tokenPrices.push(data);
+                    });
+                  console.log("return h tkn:", tkn.token);
+                }
               }
             })
           );
         }
       }
+      console.log(tokenPrices);
+
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
@@ -214,17 +233,6 @@ const useGetData = (bribeFile: string) => {
     ) => {
       const list: DashboardType[] = [];
 
-      function calculateG(reward: GenericReward) {
-        let amount = 0;
-        if (reward.isfixed) {
-          amount += reward.amount;
-        } else {
-          const token = tokenprice.find((t) => t.token === reward.token);
-          amount += reward.amount * (token ? token.price : 0);
-        }
-        return amount;
-      }
-
       function calculate(reward: TokenData) {
         let amount = 0;
         if (reward.isfixed) {
@@ -255,17 +263,6 @@ const useGetData = (bribeFile: string) => {
         const isQualified = !isUndervote && !isUnderthreshold;
 
         let label = "";
-
-        // reward
-
-        let genericAmount = 0;
-        const isGenericReward = bribe.reward && bribe.reward.length !== 0;
-        if (isGenericReward) {
-          bribe.reward.map((reward) => {
-            genericAmount += calculateG(reward);
-            console.log("G", genericAmount, reward.type,reward.rewardcap);
-          });
-        }
 
         // pervotereward
 
@@ -307,12 +304,11 @@ const useGetData = (bribeFile: string) => {
         }
 
         const arr: number = [
-          isGenericReward,
           isPervoteReward,
           isFixedReward,
           isPercentReward,
         ].filter(Boolean).length;
-        arr !== 1 && console.log(arr, "rewards not implemented");
+        arr !== 1 && console.warn(arr, "rewards not implemented");
 
         const percentValue = Math.min(
           percentAmount * percentAboveThreshold,
@@ -344,12 +340,11 @@ const useGetData = (bribeFile: string) => {
           0,
           percentValue,
           overallPerVoteValue,
-          rewardAmount,
-          genericAmount
+          rewardAmount
         );
 
         //console.log( percentValue, overallPerVoteValue, rewardAmount, genericAmount)
-        //console.log(label, finalvalue);
+        console.log(label, finalvalue);
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
