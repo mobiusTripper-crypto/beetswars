@@ -7,6 +7,11 @@ export interface BribeFiles {
   filename: string;
 }
 
+interface LabelValuePair {
+  label: string,
+  value: number,
+}
+
 export interface DashboardType {
   poolName: string;
   poolUrl: string;
@@ -16,13 +21,13 @@ export interface DashboardType {
   rewardValue: number;
   ispercentage: boolean;
   percentAboveThreshold: number;
-  percentValue: number;
   overallValue: number;
   voteTotal: number;
   votePercentage: number;
   valuePerVote: number;
   id: number;
   additionalrewards: AdditionalRewards[];
+  LabelValue: { label: string, value: number };
 }
 
 export interface DashboardReturn {

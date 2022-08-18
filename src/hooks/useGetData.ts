@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bribes, TokenPrice, TokenPriceData } from "types/BribeData";
+import { Bribes, TokenData, TokenPrice, TokenPriceData } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType, DashboardReturn, BribeFiles } from "types/Dashboard";
@@ -11,7 +11,7 @@ import { ethers } from "ethers";
 import useTimer from "hooks/useTimer";
 
 const useGetData = (bribeFile: string) => {
-  console.log(bribeFile);
+  //console.log(bribeFile);
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile;
   const historyUrl =
     "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main";
@@ -34,7 +34,7 @@ const useGetData = (bribeFile: string) => {
           return response.json();
         })
         .then((response) => {
-          console.log("return dirlist");
+          //console.log("return dirlist");
           return response;
         });
 
@@ -51,13 +51,13 @@ const useGetData = (bribeFile: string) => {
           return response.json();
         })
         .then((response: Bribes) => {
-          console.log("return bribes");
+          //console.log("return bribes");
           return response;
         });
 
       const voteData = await getResults(bribeData.snapshot).then(
         (response: VoteDataType) => {
-          console.log("return vote");
+          //console.log("return vote");
           return response;
         }
       );
@@ -80,6 +80,8 @@ const useGetData = (bribeFile: string) => {
             tokenaddress: td.tokenaddress,
             coingeckoid: td.coingeckoid,
             bptpoolid: td.bptpoolid,
+            isbpt: td.isbpt,
+            lastprice: td.lastprice,
           };
           tokenPriceData.push(data);
         });
@@ -100,7 +102,7 @@ const useGetData = (bribeFile: string) => {
 
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
-              if (tkn.bptpoolid) {
+              if (tkn.isbpt && tkn.bptpoolid) {
                 const endpoint =
                   "https://backend-v2.beets-ftm-node.com/graphql";
 
@@ -116,9 +118,9 @@ const useGetData = (bribeFile: string) => {
                 });
 
                 const sharePrice =
-                  (await parseFloat(
+                  parseFloat(
                     poolData.poolGetPool.dynamicData.totalLiquidity
-                  )) / parseFloat(poolData.poolGetPool.dynamicData.totalShares);
+                  ) / parseFloat(poolData.poolGetPool.dynamicData.totalShares);
 
                 const data: TokenPrice = {
                   token: tkn.token,
@@ -126,8 +128,6 @@ const useGetData = (bribeFile: string) => {
                 };
                 tokenPrices.push(data);
                 console.log("return bpt tkn:", tkn.token, sharePrice);
-
-                console.log(tokenPrices);
               } else {
                 const provider = new ethers.providers.JsonRpcProvider(
                   "https://rpc.ftm.tools"
@@ -155,28 +155,46 @@ const useGetData = (bribeFile: string) => {
           // historical prices
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
-              const tknUrl =
-                "https://api.coingecko.com/api/v3/coins/" +
-                tkn.coingeckoid +
-                "/history?date=" +
-                endTime +
-                "&localization=false";
-              await fetch(tknUrl || "")
-                .then((response) => {
-                  return response.json();
-                })
-                .then((response) => {
-                  const data: TokenPrice = {
-                    token: tkn.token,
-                    price: response.market_data.current_price.usd,
-                  };
-                  tokenPrices.push(data);
-                });
-              console.log("return h tkn:", tkn.token, tokenPrices);
+              if (tkn.isbpt && tkn.lastprice) {
+                // TODO get historical BPT price from backend
+                console.log("h bpt:", tkn.token, tkn.lastprice);
+
+                const data: TokenPrice = {
+                  token: tkn.token,
+                  price: tkn.lastprice,
+                };
+                tokenPrices.push(data);
+                console.log("return h bpt:", tkn.token);
+              } else {
+                console.log("h tkn:", tkn.token, tkn.coingeckoid);
+                if (tkn.coingeckoid && voteData.proposal.state !== "active" ) {
+                  const tknUrl =
+                    "https://api.coingecko.com/api/v3/coins/" +
+                    tkn.coingeckoid +
+                    "/history?date=" +
+                    endTime +
+                    "&localization=false";
+
+                  await fetch(tknUrl || "")
+                    .then((response) => {
+                      return response.json();
+                    })
+                    .then((response) => {
+                      const data: TokenPrice = {
+                        token: tkn.token,
+                        price: response.market_data.current_price.usd,
+                      };
+                      tokenPrices.push(data);
+                    });
+                  console.log("return h tkn:", tkn.token);
+                }
+              }
             })
           );
         }
       }
+      console.log(tokenPrices);
+
       const dashboardData = normalizeDashboardData(
         bribeData,
         voteData,
@@ -189,7 +207,7 @@ const useGetData = (bribeFile: string) => {
           results: dashboardData,
           totalVotes: voteData.votingResults.sumOfResultsBalance,
           totalBribeAmount: dashboardData
-            .map((item) => item.overallValue)
+            .map((item) => item.LabelValue.value)
             .reduce((prev, curr) => prev + curr, 0),
           version: bribeData.version,
           proposalStart: voteData.proposal.start,
@@ -209,36 +227,18 @@ const useGetData = (bribeFile: string) => {
     ) => {
       const list: DashboardType[] = [];
 
-      bribes.bribedata.forEach((bribe) => {
-        let rewardAmount = 0;
-        let pervoteAmount = 0;
-        const isFixedReward = bribe.fixedreward.length !== 0;
-        if (isFixedReward) {
-          bribe.fixedreward.forEach((reward) => {
-            if (reward.isfixed) {
-              rewardAmount += reward.amount;
-            } else {
-              const token = tokenprice.find((t) => t.token === reward.token);
-              rewardAmount += reward.amount * (token ? token.price : 0);
-            }
-            if (reward.ispaypervote) {
-              pervoteAmount += reward.amount;
-            }
-          });
+      function calculate(reward: TokenData) {
+        let amount = 0;
+        if (reward.isfixed) {
+          amount += reward.amount;
+        } else {
+          const token = tokenprice.find((t) => t.token === reward.token);
+          amount += reward.amount * (token ? token.price : 0);
         }
+        return amount;
+      }
 
-        let percentAmount = 0;
-        const isPerecentReward = bribe.percentreward.length !== 0;
-        if (isPerecentReward) {
-          bribe.percentreward.forEach((reward) => {
-            if (reward.isfixed) {
-              percentAmount += reward.amount;
-            } else {
-              const token = tokenprice.find((t) => t.token === reward.token);
-              percentAmount += reward.amount * (token ? token.price : 0);
-            }
-          });
-        }
+      bribes.bribedata.forEach((bribe) => {
         const votePercentage =
           (voteData.votingResults.resultsByVoteBalance[bribe.voteindex] /
             voteData.votingResults.sumOfResultsBalance) *
@@ -249,33 +249,82 @@ const useGetData = (bribeFile: string) => {
           votePercentage - bribe.percentagethreshold
         );
 
+        const isUndervote = votePercentage < 0.15;
+        const isUnderthreshold =
+          bribe.payoutthreshold && votePercentage < bribe.payoutthreshold
+            ? true
+            : false;
+        const isQualified = !isUndervote && !isUnderthreshold;
+
+        let label = "";
+
+        // pervotereward
+        let pervoteAmount = 0;
+        const isPervoteReward =
+          bribe.pervotereward && bribe.pervotereward.length !== 0;
+        if (isPervoteReward) {
+          label = "Per Vote Amount";
+          bribe.pervotereward.forEach((reward) => {
+            pervoteAmount += calculate(reward);
+          });
+        }
+
+        // fixedreward
+        let rewardAmount = 0;
+        const isFixedReward =
+          bribe.fixedreward && bribe.fixedreward.length !== 0;
+        if (isFixedReward) {
+          label = "Fixed Reward Amount";
+          bribe.fixedreward.forEach((reward) => {
+            rewardAmount += calculate(reward);
+          });
+        }
+
+        // percentreward
+        let percentAmount = 0;
+        const isPercentReward =
+          bribe.percentreward && bribe.percentreward.length !== 0;
+        if (isPercentReward) {
+          label = "Percent Amount";
+          bribe.percentreward.forEach((reward) => {
+            percentAmount += calculate(reward);
+          });
+        }
+
         const percentValue = Math.min(
           percentAmount * percentAboveThreshold,
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
-
-        const isUndervote = votePercentage < 0.15
-        const isUnderthreshold = bribe.payoutthreshold && (votePercentage < bribe.payoutthreshold) ? true : false
-        const isQualified = !isUndervote && !isUnderthreshold
-
-        //console.log( isUnderthreshold, isUndervote, isQualified);
 
         const overallValue = Math.min(
           rewardAmount + percentValue,
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
 
-        let valuePerVote = 0
+        const overallPerVoteValue = Math.min(
+          pervoteAmount *
+            voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
+          isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
+        );
+
+        let valuePerVote = 0;
         if (pervoteAmount !== 0) {
-          valuePerVote = pervoteAmount
-          if (bribe.rewardcap) {
-            rewardAmount = bribe.rewardcap
-          }
+          valuePerVote = pervoteAmount;
+          rewardAmount = overallPerVoteValue;
         } else {
-          valuePerVote = overallValue / voteData.votingResults.resultsByVoteBalance[bribe.voteindex]
+          valuePerVote =
+            overallValue /
+            voteData.votingResults.resultsByVoteBalance[bribe.voteindex];
         }
 
-        console.log(rewardAmount,pervoteAmount, overallValue)
+        const finalvalue = Math.max(
+          0,
+          percentValue,
+          overallPerVoteValue,
+          rewardAmount
+        );
+
+        console.log(label, finalvalue);
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
@@ -285,20 +334,20 @@ const useGetData = (bribeFile: string) => {
           assumption: bribe.assumption,
           additionalrewards: bribe.additionalrewards,
           rewardValue: rewardAmount,
-          ispercentage: isPerecentReward,
+          ispercentage: isPercentReward,
           percentAboveThreshold: percentAboveThreshold,
-          percentValue: percentValue,
           overallValue: overallValue,
           voteTotal:
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
           votePercentage: votePercentage,
           valuePerVote: valuePerVote,
           id: bribe.voteindex,
+          LabelValue: { label: label, value: finalvalue },
         };
 
         list.push(data);
       });
-      console.log("return list");
+      //console.log("return list");
       return list;
     };
     fetchDashboardData();

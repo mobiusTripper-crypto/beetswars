@@ -221,36 +221,16 @@ const PageContent: FC = () => {
                   <Divider variant="middle" />
                   <Box sx={{ m: 1 }}>
                     <List dense={true}>
-                      {data.rewardValue > 0 && (
                         <LabeledListItem
-                          label="Fixed Reward Amount"
+                          label = {data.LabelValue.label}
                           value={
                             "$" +
-                            data.rewardValue.toLocaleString(undefined, {
+                            data.LabelValue.value.toLocaleString(undefined, {
                               minimumFractionDigits: 0,
                               maximumFractionDigits: 0,
                             })
                           }
                         />
-                      )}
-                      {data.ispercentage && (
-                        <div>
-                          {/* <LabeledListItem
-                            label="Percent Above Threshhold"
-                            value={data.percentAboveThreshold.toFixed(2) + "%"}
-                          /> */}
-                          <LabeledListItem
-                            label="Percent Amount"
-                            value={
-                              "$" +
-                              data.percentValue.toLocaleString(undefined, {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2,
-                              })
-                            }
-                          />{" "}
-                        </div>
-                      )}
                       {data.ispercentage && data.rewardValue > 0 && (
                         <LabeledListItem
                           label="Overall Amount"
@@ -383,12 +363,15 @@ const columns: GridColDef[] = [
     hide: true  
   },
   { 
-    field: 'overallValue', 
-    headerName: 'Overall Value', 
+    field: 'LabelValue',
+    headerName: 'Total Value', 
     type: 'number', 
     cellClassName: 'cell-mono',
     flex: 0.8, 
-    ...dec2 
+    renderCell: (cellValues) => {
+        return cellValues.row.LabelValue.value
+          .toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+    },
   },
   { 
     field: 'voteTotal', 
