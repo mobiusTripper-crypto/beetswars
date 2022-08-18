@@ -81,7 +81,7 @@ const useGetData = (bribeFile: string) => {
             coingeckoid: td.coingeckoid,
             bptpoolid: td.bptpoolid,
             isbpt: td.isbpt,
-            lastprice: td.lastprice
+            lastprice: td.lastprice,
           };
           tokenPriceData.push(data);
         });
@@ -118,9 +118,9 @@ const useGetData = (bribeFile: string) => {
                 });
 
                 const sharePrice =
-                  (await parseFloat(
+                  parseFloat(
                     poolData.poolGetPool.dynamicData.totalLiquidity
-                  )) / parseFloat(poolData.poolGetPool.dynamicData.totalShares);
+                  ) / parseFloat(poolData.poolGetPool.dynamicData.totalShares);
 
                 const data: TokenPrice = {
                   token: tkn.token,
@@ -155,25 +155,19 @@ const useGetData = (bribeFile: string) => {
           // historical prices
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
-
               if (tkn.isbpt && tkn.lastprice) {
                 // TODO get historical BPT price from backend
                 console.log("h bpt:", tkn.token, tkn.lastprice);
 
-                      const data: TokenPrice = await {
-                        token: tkn.token,
-                        price: tkn.lastprice
-                      };
-
-                      tokenPrices.push(data);
-
-
-                  console.log("return h bpt:", tkn.token);
-
+                const data: TokenPrice = {
+                  token: tkn.token,
+                  price: tkn.lastprice,
+                };
+                tokenPrices.push(data);
+                console.log("return h bpt:", tkn.token);
               } else {
                 console.log("h tkn:", tkn.token, tkn.coingeckoid);
-
-                if (tkn.coingeckoid) {
+                if (tkn.coingeckoid && voteData.proposal.state !== "active" ) {
                   const tknUrl =
                     "https://api.coingecko.com/api/v3/coins/" +
                     tkn.coingeckoid +
@@ -265,7 +259,6 @@ const useGetData = (bribeFile: string) => {
         let label = "";
 
         // pervotereward
-
         let pervoteAmount = 0;
         const isPervoteReward =
           bribe.pervotereward && bribe.pervotereward.length !== 0;
@@ -273,12 +266,10 @@ const useGetData = (bribeFile: string) => {
           label = "Per Vote Amount";
           bribe.pervotereward.forEach((reward) => {
             pervoteAmount += calculate(reward);
-            console.log("V", pervoteAmount);
           });
         }
 
         // fixedreward
-
         let rewardAmount = 0;
         const isFixedReward =
           bribe.fixedreward && bribe.fixedreward.length !== 0;
@@ -286,12 +277,10 @@ const useGetData = (bribeFile: string) => {
           label = "Fixed Reward Amount";
           bribe.fixedreward.forEach((reward) => {
             rewardAmount += calculate(reward);
-            console.log("F", rewardAmount);
           });
         }
 
         // percentreward
-
         let percentAmount = 0;
         const isPercentReward =
           bribe.percentreward && bribe.percentreward.length !== 0;
@@ -299,16 +288,8 @@ const useGetData = (bribeFile: string) => {
           label = "Percent Amount";
           bribe.percentreward.forEach((reward) => {
             percentAmount += calculate(reward);
-            console.log("%", percentAmount);
           });
         }
-
-        const arr: number = [
-          isPervoteReward,
-          isFixedReward,
-          isPercentReward,
-        ].filter(Boolean).length;
-        arr !== 1 && console.warn(arr, "rewards not implemented");
 
         const percentValue = Math.min(
           percentAmount * percentAboveThreshold,
@@ -343,7 +324,6 @@ const useGetData = (bribeFile: string) => {
           rewardAmount
         );
 
-        //console.log( percentValue, overallPerVoteValue, rewardAmount, genericAmount)
         console.log(label, finalvalue);
 
         const data: DashboardType = {
