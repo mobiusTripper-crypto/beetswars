@@ -2,10 +2,8 @@
 
 export interface GenericReward {
   type: string;
-  percentagethreshold: number;
   token: string;
   amount: number;
-  rewardcap: number;
   isfixed: boolean;
 }
 
@@ -16,9 +14,6 @@ export interface BribeDataType {
   poolurl: string;
   rewarddescription: string;
   assumption: string;
-  fixedreward: TokenData[];
-  percentreward: TokenData[];
-  pervotereward: TokenData[];
   percentagethreshold: number;
   rewardcap: number;
   reward: GenericReward[];
@@ -34,12 +29,6 @@ export interface Bribes {
   snapshot: string;
   tokendata: TokenPriceData[];
   bribedata: BribeDataType[];
-}
-
-export interface TokenData {
-  token: string;
-  amount: number;
-  isfixed: boolean;
 }
 
 export interface TokenPrice {

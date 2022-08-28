@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
-import { Bribes, TokenData, TokenPrice, TokenPriceData } from "types/BribeData";
+import {
+  Bribes,
+  TokenPrice,
+  TokenPriceData,
+  GenericReward,
+} from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
 import { DashboardType, DashboardReturn, BribeFiles } from "types/Dashboard";
@@ -11,11 +16,9 @@ import { ethers } from "ethers";
 import useTimer from "hooks/useTimer";
 
 const useGetData = (bribeFile: string) => {
-  //console.log(bribeFile);
   const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile;
   const historyUrl =
     "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main";
-  //const historyUrl = "https://api.github.com/repos/RnZ3/beetswars-data/git/trees/rebuild"
   const [voteActive, setActive] = useState(false);
   const refreshInterval: number | null = voteActive ? 60000 : null; // ms or null
   const refresh = useTimer(refreshInterval);
@@ -105,9 +108,7 @@ const useGetData = (bribeFile: string) => {
               if (tkn.isbpt && tkn.bptpoolid) {
                 const endpoint =
                   "https://backend-v2.beets-ftm-node.com/graphql";
-
                 const id = tkn.bptpoolid;
-
                 const poolData = await request(endpoint, BPT_ACT_QUERY, {
                   id,
                 }).then((response) => {
@@ -116,11 +117,9 @@ const useGetData = (bribeFile: string) => {
                   }
                   return response;
                 });
-
                 const sharePrice =
-                  parseFloat(
-                    poolData.poolGetPool.dynamicData.totalLiquidity
-                  ) / parseFloat(poolData.poolGetPool.dynamicData.totalShares);
+                  parseFloat(poolData.poolGetPool.dynamicData.totalLiquidity) /
+                  parseFloat(poolData.poolGetPool.dynamicData.totalShares);
 
                 const data: TokenPrice = {
                   token: tkn.token,
@@ -137,7 +136,6 @@ const useGetData = (bribeFile: string) => {
                   contract_abi,
                   provider
                 );
-
                 const priceobj = await contract.calculateAssetPrice(
                   tkn.tokenaddress
                 );
@@ -156,9 +154,8 @@ const useGetData = (bribeFile: string) => {
           await Promise.all(
             tokenPriceData.map(async (tkn) => {
               if (tkn.isbpt && tkn.lastprice) {
-                // TODO get historical BPT price from backend
-                console.log("h bpt:", tkn.token, tkn.lastprice);
-
+                //TODO get historical BPT price from backend
+                //console.log("h bpt:", tkn.token, tkn.lastprice);
                 const data: TokenPrice = {
                   token: tkn.token,
                   price: tkn.lastprice,
@@ -166,15 +163,14 @@ const useGetData = (bribeFile: string) => {
                 tokenPrices.push(data);
                 console.log("return h bpt:", tkn.token);
               } else {
-                console.log("h tkn:", tkn.token, tkn.coingeckoid);
-                if (tkn.coingeckoid && voteData.proposal.state !== "active" ) {
+                //console.log("h tkn:", tkn.token, tkn.coingeckoid);
+                if (tkn.coingeckoid && voteData.proposal.state !== "active") {
                   const tknUrl =
                     "https://api.coingecko.com/api/v3/coins/" +
                     tkn.coingeckoid +
                     "/history?date=" +
                     endTime +
                     "&localization=false";
-
                   await fetch(tknUrl || "")
                     .then((response) => {
                       return response.json();
@@ -227,7 +223,7 @@ const useGetData = (bribeFile: string) => {
     ) => {
       const list: DashboardType[] = [];
 
-      function calculate(reward: TokenData) {
+      function calculate(reward: GenericReward) {
         let amount = 0;
         if (reward.isfixed) {
           amount += reward.amount;
@@ -257,38 +253,37 @@ const useGetData = (bribeFile: string) => {
         const isQualified = !isUndervote && !isUnderthreshold;
 
         let label = "";
-
-        // pervotereward
+        let valuePerVote = 0;
         let pervoteAmount = 0;
-        const isPervoteReward =
-          bribe.pervotereward && bribe.pervotereward.length !== 0;
-        if (isPervoteReward) {
-          label = "Per Vote Amount";
-          bribe.pervotereward.forEach((reward) => {
-            pervoteAmount += calculate(reward);
-          });
-        }
-
-        // fixedreward
-        let rewardAmount = 0;
-        const isFixedReward =
-          bribe.fixedreward && bribe.fixedreward.length !== 0;
-        if (isFixedReward) {
-          label = "Fixed Reward Amount";
-          bribe.fixedreward.forEach((reward) => {
-            rewardAmount += calculate(reward);
-          });
-        }
-
-        // percentreward
         let percentAmount = 0;
-        const isPercentReward =
-          bribe.percentreward && bribe.percentreward.length !== 0;
-        if (isPercentReward) {
-          label = "Percent Amount";
-          bribe.percentreward.forEach((reward) => {
+        let fixedValue = 0;
+        let isPervoteReward = false;
+        let isFixedReward = false;
+        let isPercentReward = false;
+
+        bribe.reward.forEach((reward, index) => {
+          if (reward.type === "pervote") {
+            label = "Per Vote Amount";
+            pervoteAmount += calculate(reward);
+            isPervoteReward = true;
+          } else if (reward.type === "percent") {
+            label = "Percent Amount";
             percentAmount += calculate(reward);
-          });
+            isPercentReward = true;
+          } else if (reward.type === "fixed") {
+            label = "Fixed Reward Amount";
+            fixedValue += calculate(reward);
+            isFixedReward = true;
+          } else {
+            console.warn("no reward type");
+          }
+        });
+
+        if (
+          [isPervoteReward, isFixedReward, isPercentReward].filter(Boolean)
+            .length > 1
+        ) {
+          label = "Overall Amount";
         }
 
         const percentValue = Math.min(
@@ -296,35 +291,32 @@ const useGetData = (bribeFile: string) => {
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
 
-        const overallValue = Math.min(
-          rewardAmount + percentValue,
-          isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
-        );
-
-        const overallPerVoteValue = Math.min(
+        const pervoteValue = Math.min(
           pervoteAmount *
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
           isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
         );
 
-        let valuePerVote = 0;
-        if (pervoteAmount !== 0) {
+        const overallValue = Math.min(
+          fixedValue + percentValue + pervoteValue,
+          isNaN(bribe.rewardcap) ? Infinity : bribe.rewardcap
+        );
+
+        if (isPervoteReward) {
           valuePerVote = pervoteAmount;
-          rewardAmount = overallPerVoteValue;
         } else {
           valuePerVote =
             overallValue /
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex];
         }
 
-        const finalvalue = Math.max(
+        const finalValue = Math.max(
           0,
           percentValue,
-          overallPerVoteValue,
-          rewardAmount
+          pervoteValue,
+          fixedValue,
+          overallValue
         );
-
-        console.log(label, finalvalue);
 
         const data: DashboardType = {
           poolName: voteData.proposal.choices[bribe.voteindex],
@@ -333,16 +325,13 @@ const useGetData = (bribeFile: string) => {
           rewardDescription: bribe.rewarddescription,
           assumption: bribe.assumption,
           additionalrewards: bribe.additionalrewards,
-          rewardValue: rewardAmount,
-          ispercentage: isPercentReward,
           percentAboveThreshold: percentAboveThreshold,
-          overallValue: overallValue,
           voteTotal:
             voteData.votingResults.resultsByVoteBalance[bribe.voteindex],
           votePercentage: votePercentage,
           valuePerVote: valuePerVote,
           id: bribe.voteindex,
-          LabelValue: { label: label, value: finalvalue },
+          LabelValue: { label: label, value: finalValue },
         };
 
         list.push(data);
