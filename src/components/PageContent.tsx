@@ -231,18 +231,6 @@ const PageContent: FC = () => {
                             })
                           }
                         />
-                      {data.ispercentage && data.rewardValue > 0 && (
-                        <LabeledListItem
-                          label="Overall Amount"
-                          value={
-                            "$" +
-                            data.overallValue.toLocaleString(undefined, {
-                              minimumFractionDigits: 2,
-                              maximumFractionDigits: 2,
-                            })
-                          }
-                        />
-                      )}
                       <LabeledListItem
                         label="Vote Total"
                         value={
@@ -255,7 +243,6 @@ const PageContent: FC = () => {
                           " ]"
                         }
                       />
-
                       <LabeledListItem
                         label="$ / fBEETS"
                         value={data.valuePerVote.toFixed(7)}

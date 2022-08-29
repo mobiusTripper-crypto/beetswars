@@ -18,16 +18,13 @@ export interface DashboardType {
   rewardDescription: string;
   assumption: string;
   isQualified: boolean;
-  rewardValue: number;
-  ispercentage: boolean;
   percentAboveThreshold: number;
-  overallValue: number;
   voteTotal: number;
   votePercentage: number;
   valuePerVote: number;
   id: number;
   additionalrewards: AdditionalRewards[];
-  LabelValue: { label: string, value: number };
+  LabelValue: LabelValuePair;
 }
 
 export interface DashboardReturn {
