@@ -247,9 +247,8 @@ const useGetData = (bribeFile: string) => {
 
         const isUndervote = votePercentage < 0.15 && !bribe.payoutthreshold;
         const isUnderthreshold =
-          bribe.payoutthreshold && votePercentage < bribe.payoutthreshold
-            ? true
-            : false;
+          bribe.payoutthreshold && votePercentage < bribe.payoutthreshold;
+
         const isQualified = !isUndervote && !isUnderthreshold;
 
         let label = "";
