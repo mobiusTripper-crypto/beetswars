@@ -245,7 +245,7 @@ const useGetData = (bribeFile: string) => {
           votePercentage - bribe.percentagethreshold
         );
 
-        const isUndervote = votePercentage < 0.15;
+        const isUndervote = votePercentage < 0.15 && !bribe.payoutthreshold;
         const isUnderthreshold =
           bribe.payoutthreshold && votePercentage < bribe.payoutthreshold
             ? true
