@@ -282,12 +282,6 @@ const PageContent: FC = () => {
               columns={columns}
               autoHeight={true}
               hideFooter={true}
-              getCellClassName={(params: GridCellParams<number>) => {
-               // if (params.field === 'votePercentage' && params.value <== 0.15 ) {
-               //   return 'underthreshold';
-               // }
-                return '';
-              }}
             />
           </Box>
           )}
@@ -355,6 +349,7 @@ const columns: GridColDef[] = [
     type: 'number', 
     cellClassName: 'cell-mono',
     flex: 0.8, 
+    valueGetter: (params) => params.row.LabelValue.value,
     renderCell: (cellValues) => {
         return cellValues.row.LabelValue.value
           .toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
