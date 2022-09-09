@@ -1,116 +1,45 @@
 import React from "react";
 import ReactECharts from "echarts-for-react";
 
+//prettier-ignore
 const rData = [
-  {
-    round: "Round 04",
-    totalVotes: 33021516,
-    totalBribes: 1045420,
-    totalVoters: 2086,
-  },
-  {
-    round: "Round 05",
-    totalVotes: 25430796,
-    totalBribes: 580863,
-    totalVoters: 2000,
-  },
-  {
-    round: "Round 06",
-    totalVotes: 36220537,
-    totalBribes: 568172,
-    totalVoters: 2064,
-  },
-  {
-    round: "Round 07",
-    totalVotes: 52744344,
-    totalBribes: 552793,
-    totalVoters: 2734,
-  },
-  {
-    round: "Round 08",
-    totalVotes: 50076576,
-    totalBribes: 589463,
-    totalVoters: 2244,
-  },
-  {
-    round: "Round 09",
-    totalVotes: 48214147,
-    totalBribes: 177810,
-    totalVoters: 1726,
-  },
-  {
-    round: "Round 10",
-    totalVotes: 49594267,
-    totalBribes: 67245,
-    totalVoters: 1311,
-  },
-  {
-    round: "Round 11",
-    totalVotes: 57583594,
-    totalBribes: 54510,
-    totalVoters: 1317,
-  },
-  {
-    round: "Round 12",
-    totalVotes: 50997573,
-    totalBribes: 46990,
-    totalVoters: 1081,
-  },
-  {
-    round: "Round 13",
-    totalVotes: 52804442,
-    totalBribes: 34730,
-    totalVoters: 998,
-  },
-  {
-    round: "Round 14",
-    totalVotes: 60070860,
-    totalBribes: 32397,
-    totalVoters: 1020,
-  },
-  {
-    round: "Round 15",
-    totalVotes: 58166127,
-    totalBribes: 36891,
-    totalVoters: 940,
-  },
-  {
-    round: "Round 16",
-    totalVotes: 61494823,
-    totalBribes: 43605,
-    totalVoters: 1001,
-  },
-  {
-    round: "Round 17",
-    totalVotes: 63262198,
-    totalBribes: 32892,
-    totalVoters: 912,
-  },
-  {
-    round: "Round 18",
-    totalVotes: 62777030,
-    totalBribes: 24516,
-    totalVoters: 806,
-  },
+  { round: "Round 04", voteEnd: "1645376400", totalVotes: 33021516, totalBribes: 1045420, totalVoter: 2086, },
+  { round: "Round 05", voteEnd: "1646586000", totalVotes: 25430796, totalBribes: 580863,  totalVoter: 2000, },
+  { round: "Round 06", voteEnd: "1647792000", totalVotes: 36220537, totalBribes: 568172,  totalVoter: 2064, },
+  { round: "Round 07", voteEnd: "1649001600", totalVotes: 52744344, totalBribes: 552793,  totalVoter: 2734, },
+  { round: "Round 08", voteEnd: "1650211200", totalVotes: 50076576, totalBribes: 589463,  totalVoter: 2244, },
+  { round: "Round 09", voteEnd: "1651420800", totalVotes: 48214147, totalBribes: 177810,  totalVoter: 1726, },
+  { round: "Round 10", voteEnd: "1652630400", totalVotes: 49594267, totalBribes: 67245,   totalVoter: 1311, },
+  { round: "Round 11", voteEnd: "1653840000", totalVotes: 57583594, totalBribes: 54510,   totalVoter: 1317, },
+  { round: "Round 12", voteEnd: "1655049600", totalVotes: 50997573, totalBribes: 46990,   totalVoter: 1081, },
+  { round: "Round 13", voteEnd: "1657468800", totalVotes: 52804442, totalBribes: 34730,   totalVoter: 998,  },
+  { round: "Round 14", voteEnd: "1657468800", totalVotes: 60070860, totalBribes: 32397,   totalVoter: 1020, },
+  { round: "Round 15", voteEnd: "1658678400", totalVotes: 58166127, totalBribes: 36891,   totalVoter: 940,  },
+  { round: "Round 16", voteEnd: "1659888000", totalVotes: 61494823, totalBribes: 43605,   totalVoter: 1001, },
+  { round: "Round 17", voteEnd: "1661097600", totalVotes: 63262198, totalBribes: 32892,   totalVoter: 912,  },
+  { round: "Round 18", voteEnd: "1662307200", totalVotes: 62777030, totalBribes: 24516,   totalVoter: 806,  },
 ];
 
-const rounds = rData.map(function (round) {
+const rounds = rData.map((round) => {
   return round.round;
 });
 const tVotes = rData.map(function (round) {
   return round.totalVotes;
 });
 const tVoters = rData.map(function (round) {
-  return round.totalVoters;
+  return round.totalVoter;
 });
 const tBribes = rData.map(function (round) {
   return round.totalBribes;
 });
 const avgPer1000 = rData.map(function (round) {
-  return round.totalBribes / round.totalVotes * 1000 ;
+  return ((round.totalBribes / round.totalVotes) * 1000).toFixed(2);
+});
+const endTime = rData.map(function (round) {
+  return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString("en-GB");
 });
 
-console.log(avgPer1000)
+//console.log(endTime);
 
 const Chart1: React.FC = () => {
   const option = {
@@ -125,7 +54,7 @@ const Chart1: React.FC = () => {
       subtextStyle: {
         color: "#fefefe",
       },
-      text: "Total Bribes / Votes / Voter",
+      text: "Total Bribes / Votes",
       subtext: "Round 04 - 18",
       left: "center",
     },
@@ -149,34 +78,38 @@ const Chart1: React.FC = () => {
     //  },
 
     axisPointer: {
-//      link: { xAxisIndex: "all", },
+      //      link: { xAxisIndex: "all", },
       label: { show: false },
     },
 
     grid: [
       {
-show: false,
+        backgroundColor: "#222222",
+        borderColor: "#222222",
+        show: true,
         height: "220",
         left: "200",
         right: "200",
         top: "80",
       },
       {
-show: false,
+        backgroundColor: "#222222",
+        borderColor: "#222222",
+        show: true,
         height: "220",
         left: "200",
         right: "200",
         top: "350",
       },
       {
-show: false,
-        height: "70",
+        show: false,
+        height: "220",
         left: "200",
         right: "200",
-        top: "500",
+        top: "350",
       },
       {
-show: false,
+        show: false,
         height: "220",
         left: "200",
         right: "200",
@@ -185,7 +118,8 @@ show: false,
     ],
 
     xAxis: [
-      { //bribes
+      {
+        //bribes
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
@@ -193,15 +127,18 @@ show: false,
         gridIndex: 0,
         show: false,
       },
-      { //votes
+      {
+        //votes
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
-        data: rounds,
+        data: endTime,
         gridIndex: 1,
-        show: false,
+        show: true,
+        offset: 20,
       },
-      { //voter
+      {
+        //voter
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
@@ -209,11 +146,12 @@ show: false,
         gridIndex: 2,
         show: true,
       },
-      { //avg1000
+      {
+        //avg1000
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
-        data: rounds,
+        data: endTime,
         gridIndex: 3,
         show: false,
       },
@@ -221,29 +159,29 @@ show: false,
 
     yAxis: [
       {
-        name: 'Total Bribes $',
+        name: "Total Bribes $",
         type: "value",
-        splitLine: { lineStyle: { type: 'dotted', color: '#999999', } },
+        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
       },
       {
-        name: 'Total Votes',
+        name: "Total Votes",
         type: "value",
-        splitLine: { lineStyle: { type: 'dotted', color: '#999999', } },
+        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         //  inverse: true,
         gridIndex: 1,
         position: "left",
       },
       {
-        name: 'Total Voter',
+        name: "Total Voter",
         type: "value",
-        splitLine: { lineStyle: { type: 'dotted', color: '#999999', } },
+        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         gridIndex: 2,
         position: "right",
       },
       {
-        name: 'avg $/1000',
+        name: "avg $/1000",
         type: "value",
-        splitLine: { lineStyle: { type: 'dotted', color: '#999999', } },
+        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         gridIndex: 3,
         position: "right",
       },
@@ -253,11 +191,11 @@ show: false,
       {
         name: "Bribes",
         type: "line",
-symbolSize: 1,
+        symbolSize: 1,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: '0.4' },
-        lineStyle: { width: '2' },
+        areaStyle: { opacity: "0.2" },
+        lineStyle: { width: "2" },
         data: tBribes,
         xAxisIndex: 0,
         yAxisIndex: 0,
@@ -265,10 +203,10 @@ symbolSize: 1,
       {
         name: "Votes",
         type: "line",
-symbolSize: 1,
+        symbolSize: 1,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: '0.4' },
+        areaStyle: { opacity: "0.2" },
         data: tVotes,
         xAxisIndex: 1,
         yAxisIndex: 1,
@@ -276,10 +214,10 @@ symbolSize: 1,
       {
         name: "Voter",
         type: "line",
-symbolSize: 1,
+        symbolSize: 1,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: '0.4' },
+        areaStyle: { opacity: "0.2" },
         data: tVoters,
         xAxisIndex: 2,
         yAxisIndex: 2,
@@ -287,10 +225,10 @@ symbolSize: 1,
       {
         name: "Avg/1000",
         type: "line",
-symbolSize: 1,
+        symbolSize: 1,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: '0.4' },
+        areaStyle: { opacity: "0.2" },
         data: avgPer1000,
         xAxisIndex: 3,
         yAxisIndex: 3,
@@ -298,9 +236,7 @@ symbolSize: 1,
     ],
   };
 
-  return (
-    <ReactECharts option={option} style={{ height: 800 }} />
-  );
+  return <ReactECharts option={option} style={{ height: 740 }} />;
 };
 
 export default Chart1;
