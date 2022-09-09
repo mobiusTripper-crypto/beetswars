@@ -106,8 +106,11 @@ const tVoters = rData.map(function (round) {
 const tBribes = rData.map(function (round) {
   return round.totalBribes;
 });
+const avgPer1000 = rData.map(function (round) {
+  return round.totalBribes / round.totalVotes * 1000 ;
+});
 
-//console.log(rounds)
+console.log(avgPer1000)
 
 const Chart1: React.FC = () => {
   const option = {
@@ -172,6 +175,13 @@ show: false,
         right: "200",
         top: "500",
       },
+      {
+show: false,
+        height: "220",
+        left: "200",
+        right: "200",
+        top: "80",
+      },
     ],
 
     xAxis: [
@@ -199,11 +209,19 @@ show: false,
         gridIndex: 2,
         show: true,
       },
+      { //avg1000
+        type: "category",
+        boundaryGap: false,
+        axisLine: { onZero: true },
+        data: rounds,
+        gridIndex: 3,
+        show: false,
+      },
     ],
 
     yAxis: [
       {
-        name: 'Total Bribes',
+        name: 'Total Bribes $',
         type: "value",
         splitLine: { lineStyle: { type: 'dotted', color: '#999999', } },
       },
@@ -222,12 +240,20 @@ show: false,
         gridIndex: 2,
         position: "right",
       },
+      {
+        name: 'avg $/1000',
+        type: "value",
+        splitLine: { lineStyle: { type: 'dotted', color: '#999999', } },
+        gridIndex: 3,
+        position: "right",
+      },
     ],
 
     series: [
       {
         name: "Bribes",
         type: "line",
+symbolSize: 1,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: '0.4' },
@@ -239,6 +265,7 @@ show: false,
       {
         name: "Votes",
         type: "line",
+symbolSize: 1,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: '0.4' },
@@ -249,12 +276,24 @@ show: false,
       {
         name: "Voter",
         type: "line",
+symbolSize: 1,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: '0.4' },
         data: tVoters,
         xAxisIndex: 2,
         yAxisIndex: 2,
+      },
+      {
+        name: "Avg/1000",
+        type: "line",
+symbolSize: 1,
+        smooth: "true",
+        stack: "",
+        areaStyle: { opacity: '0.4' },
+        data: avgPer1000,
+        xAxisIndex: 3,
+        yAxisIndex: 3,
       },
     ],
   };
