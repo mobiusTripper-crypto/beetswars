@@ -12,6 +12,8 @@ import { useState } from 'react'
 import TimeFormatter from "utils/TimeFormatter"
 import { BribeFiles } from "types/Dashboard";
 import MyBackdrop from 'components/MyBackdrop';
+import Chart1 from "components/Chart1";
+
 
 const PageContent: FC = () => {
 
@@ -73,8 +75,12 @@ const PageContent: FC = () => {
         <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
       </Typography>
 
-      {getData.status === "loading" && <Typography variant="h4" align="center">Loading...</Typography>}
+{! voteActive ? (<Chart1 />) : (<>
+
+
+      {getData.status === "loading" && <Typography variant="h4" align="center">Loading....</Typography>}
       {getData.status === "loaded" && (
+
 
         <div>
       <Typography variant="h4" align="center">
@@ -292,7 +298,11 @@ const PageContent: FC = () => {
           </Box>
           )}
         </div>
+
+
       )}
+
+</>) }
       <Typography variant="body2" align="center">
         This website is still in BETA. This is 3rd party service independent of
         BeethovenX and please do your own research. This is not investment
