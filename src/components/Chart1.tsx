@@ -1,5 +1,9 @@
 import React from "react";
+import { useState,useEffect } from 'react'
 import ReactECharts from "echarts-for-react";
+import { useGlobalContext } from "contexts/GlobalContext";
+
+
 
 //prettier-ignore
 const rData = [
@@ -39,9 +43,12 @@ const endTime = rData.map(function (round) {
   return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString("en-GB");
 });
 
-//console.log(endTime);
 
-const Chart1: React.FC = () => {
+const Chart1 = () => {
+
+  const {gBribeFile, setBribeFile, wantChart, setWantChart} = useGlobalContext()
+  console.log(gBribeFile,wantChart);
+
   const option = {
     textStyle: {
       color: "#ffffff",
@@ -67,15 +74,15 @@ const Chart1: React.FC = () => {
     //      data:['Votes','Bribes']
     //    },
 
-    //  toolbox: {
-    //    feature: {
-    //      dataZoom: {
-    //        yAxisIndex: 'none'
-    //      },
-    //      restore: {},
-    //      saveAsImage: {}
-    //    }
-    //  },
+      toolbox: {
+        feature: {
+          dataZoom: {
+            yAxisIndex: 'none'
+          },
+          restore: {},
+          saveAsImage: {}
+        }
+      },
 
     axisPointer: {
       //      link: { xAxisIndex: "all", },
@@ -126,6 +133,7 @@ const Chart1: React.FC = () => {
         data: rounds,
         gridIndex: 0,
         show: false,
+    triggerEvent: true
       },
       {
         //votes
@@ -136,6 +144,7 @@ const Chart1: React.FC = () => {
         gridIndex: 1,
         show: true,
         offset: 20,
+    triggerEvent: true
       },
       {
         //voter
@@ -145,6 +154,7 @@ const Chart1: React.FC = () => {
         data: rounds,
         gridIndex: 2,
         show: true,
+    triggerEvent: true
       },
       {
         //avg1000
@@ -154,6 +164,7 @@ const Chart1: React.FC = () => {
         data: endTime,
         gridIndex: 3,
         show: false,
+    triggerEvent: true
       },
     ],
 
@@ -236,7 +247,20 @@ const Chart1: React.FC = () => {
     ],
   };
 
-  return <ReactECharts option={option} style={{ height: 740 }} />;
+  const onChartClick = (params:any) => {
+    const offset = 4
+    let requestedRound = params.dataIndex + offset
+    requestedRound = requestedRound < 10 ? "0"+requestedRound : requestedRound
+    console.log('click', params.dataIndex, "bribe-data-"+requestedRound+".json" );
+    setBribeFile("bribe-data-"+requestedRound+".json")
+    setWantChart(false)
+  };
+
+  const onEvents = {
+    click: onChartClick,
+  };
+
+  return <ReactECharts option={option} onEvents={onEvents} style={{ height: 740 }} />;
 };
 
 export default Chart1;

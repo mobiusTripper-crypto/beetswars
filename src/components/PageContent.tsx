@@ -8,15 +8,19 @@ import Link from "@mui/material/Link";
 import LabeledListItem from "components/LabeledListItem";
 import NavBar from "components/NavBar";
 import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import TimeFormatter from "utils/TimeFormatter"
 import { BribeFiles } from "types/Dashboard";
 import MyBackdrop from 'components/MyBackdrop';
 import Chart1 from "components/Chart1";
+import { useGlobalContext } from "contexts/GlobalContext";
+
 
 
 const PageContent: FC = () => {
 
+
+  const {gBribeFile, setBribeFile, wantChart, setWantChart} = useGlobalContext()
   const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
   const [tableCards, changeTableCards] = useState(true)
   const [oldproposal, setOldproposal] = useState("nix")
@@ -63,6 +67,12 @@ const PageContent: FC = () => {
     changeBribeFile(e.target.value);
   };
 
+  useEffect(() => {
+    changeBribeFile(gBribeFile);
+  }, [gBribeFile]);
+
+  console.log(gBribeFile,wantChart)
+
   return (
     <div>
       <NavBar
@@ -75,7 +85,7 @@ const PageContent: FC = () => {
         <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
       </Typography>
 
-{! voteActive ? (<Chart1 />) : (<>
+      {((! voteActive && bribeFile === 'bribe-data-latest.json') || wantChart) ? ( <Chart1 /> ) : ( <>
 
 
       {getData.status === "loading" && <Typography variant="h4" align="center">Loading....</Typography>}
@@ -102,6 +112,11 @@ const PageContent: FC = () => {
               })}
           </Typography>
           <Box sx={{  padding: "2px", display: 'flex', justifyContent: 'flex-end', marginTop: "10px" }}> 
+          <div style={{ marginRight: '9px'}}>
+            <button onClick={() => setWantChart(true)}>
+              Stats
+            </button>
+          </div>
             <div style={{ marginRight: '9px'}}>
               <select onChange={handleChange} value={bribeFile}>
                 {bribeFilesRev.map((bf:any,index:number) =>
