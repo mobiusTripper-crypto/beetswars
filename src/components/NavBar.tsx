@@ -2,6 +2,7 @@ import React, { FC } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Link from "@mui/material/Link";
+import { useGlobalContext } from "contexts/GlobalContext";
 
 type Props = { 
    version: string, 
@@ -10,7 +11,8 @@ type Props = {
 
 const NavBar: FC<Props> = ({ version, proposal }) => {
 
-  var plink: string = "https://snapshot.org/#/beets.eth/proposal/" + proposal
+  const {gBribeFile,  showChart } = useGlobalContext()
+  const plink: string = "https://snapshot.org/#/beets.eth/" + (showChart ? "" : "proposal/"+proposal)
 
   return (
    <Box sx={{ marginBottom: "12px", padding: "2px", 
@@ -28,7 +30,7 @@ const NavBar: FC<Props> = ({ version, proposal }) => {
        </Link> |&nbsp; 
        <Link 
           style={{ fontSize: "0.85rem"}} 
-          href={plink} 
+          href={plink } 
           target="_blank" 
           color="white" 
           underline="hover">
@@ -41,7 +43,9 @@ const NavBar: FC<Props> = ({ version, proposal }) => {
           color="white" 
           underline="hover">
           github
-       </Link> |&nbsp; 
+       </Link>
+{!showChart &&
+<> |&nbsp; 
        <Link 
           style={{ fontSize: "0.85rem"}} 
           href="https://github.com/mobiusTripper-crypto/beetswars-data" 
@@ -50,6 +54,8 @@ const NavBar: FC<Props> = ({ version, proposal }) => {
           underline="hover">
           data: {version}
        </Link>
+</>
+}
      </Typography>
    </Box>
   );

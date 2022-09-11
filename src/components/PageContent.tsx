@@ -20,7 +20,7 @@ import { useGlobalContext } from "contexts/GlobalContext";
 const PageContent: FC = () => {
 
 
-  const {gBribeFile, setBribeFile, wantChart, setWantChart} = useGlobalContext()
+  const {gBribeFile, showChart, setShowChart} = useGlobalContext()
   const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
   const [tableCards, changeTableCards] = useState(true)
   const [oldproposal, setOldproposal] = useState("nix")
@@ -58,6 +58,8 @@ const PageContent: FC = () => {
 
   voteActive = (voteState === "active" ) ? true : false
 
+  if (voteActive) { setShowChart(false) }
+
   const roundNumber = /[0-9]a*/g
   const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
 
@@ -71,7 +73,7 @@ const PageContent: FC = () => {
     changeBribeFile(gBribeFile);
   }, [gBribeFile]);
 
-  console.log(gBribeFile,wantChart)
+  console.log(gBribeFile,showChart)
 
   return (
     <div>
@@ -85,7 +87,10 @@ const PageContent: FC = () => {
         <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
       </Typography>
 
-      {((! voteActive && bribeFile === 'bribe-data-latest.json') || wantChart) ? ( <Chart1 /> ) : ( <>
+      {(showChart) ? ( 
+        <Chart1 /> 
+      ) : ( 
+      <>
 
 
       {getData.status === "loading" && <Typography variant="h4" align="center">Loading....</Typography>}
@@ -113,7 +118,7 @@ const PageContent: FC = () => {
           </Typography>
           <Box sx={{  padding: "2px", display: 'flex', justifyContent: 'flex-end', marginTop: "10px" }}> 
           <div style={{ marginRight: '9px'}}>
-            <button onClick={() => setWantChart(true)}>
+            <button onClick={() => setShowChart(true)}>
               Stats
             </button>
           </div>
@@ -313,11 +318,9 @@ const PageContent: FC = () => {
           </Box>
           )}
         </div>
-
-
       )}
-
-</>) }
+        </>
+      )}
       <Typography variant="body2" align="center">
         This website is still in BETA. This is 3rd party service independent of
         BeethovenX and please do your own research. This is not investment

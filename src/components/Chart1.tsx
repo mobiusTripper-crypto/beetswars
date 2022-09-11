@@ -46,8 +46,7 @@ const endTime = rData.map(function (round) {
 
 const Chart1 = () => {
 
-  const {gBribeFile, setBribeFile, wantChart, setWantChart} = useGlobalContext()
-  console.log(gBribeFile,wantChart);
+  const {gBribeFile, setBribeFile, showChart, setShowChart} = useGlobalContext()
 
   const option = {
     textStyle: {
@@ -95,8 +94,8 @@ const Chart1 = () => {
         borderColor: "#222222",
         show: true,
         height: "220",
-        left: "200",
-        right: "200",
+        left: "20%",
+        right: "20%",
         top: "80",
       },
       {
@@ -104,22 +103,22 @@ const Chart1 = () => {
         borderColor: "#222222",
         show: true,
         height: "220",
-        left: "200",
-        right: "200",
+        left: "20%",
+        right: "20%",
         top: "350",
       },
       {
         show: false,
         height: "220",
-        left: "200",
-        right: "200",
+        left: "20%",
+        right: "20%",
         top: "350",
       },
       {
         show: false,
         height: "220",
-        left: "200",
-        right: "200",
+        left: "20%",
+        right: "20%",
         top: "80",
       },
     ],
@@ -251,9 +250,10 @@ const Chart1 = () => {
     const offset = 4
     let requestedRound = params.dataIndex + offset
     requestedRound = requestedRound < 10 ? "0"+requestedRound : requestedRound
-    console.log('click', params.dataIndex, "bribe-data-"+requestedRound+".json" );
     setBribeFile("bribe-data-"+requestedRound+".json")
-    setWantChart(false)
+    setShowChart(false)
+
+    console.log('click', params.dataIndex, "->", gBribeFile);
   };
 
   const onEvents = {
@@ -264,3 +264,4 @@ const Chart1 = () => {
 };
 
 export default Chart1;
+
