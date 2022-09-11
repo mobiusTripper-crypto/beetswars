@@ -1,26 +1,22 @@
 import React, { FC } from "react";
-import useGetData from "hooks/useGetData";
+import { useState,useEffect } from 'react'
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
-import LabeledListItem from "components/LabeledListItem";
-import NavBar from "components/NavBar";
 import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
-import { useState,useEffect } from 'react'
+import LabeledListItem from "components/LabeledListItem";
+import useGetData from "hooks/useGetData";
 import TimeFormatter from "utils/TimeFormatter"
 import { BribeFiles } from "types/Dashboard";
 import MyBackdrop from 'components/MyBackdrop';
 import Chart1 from "components/Chart1";
 import { useGlobalContext } from "contexts/GlobalContext";
 
-
-
 const PageContent: FC = () => {
 
-
-  const {gBribeFile, showChart, setShowChart} = useGlobalContext()
+  const {gBribeFile, showChart, setShowChart, setGVersion, setGProposal} = useGlobalContext()
   const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
   const [tableCards, changeTableCards] = useState(true)
   const [oldproposal, setOldproposal] = useState("nix")
@@ -73,25 +69,19 @@ const PageContent: FC = () => {
     changeBribeFile(gBribeFile);
   }, [gBribeFile]);
 
+  useEffect(() => {
+    setGVersion(version);
+    setGProposal(proposal);
+  }, [version,proposal]);
+
   console.log(gBribeFile,showChart)
 
   return (
     <div>
-      <NavBar
-        version={version}
-        proposal={proposal}
-      />
-      <Typography variant="h2" fontWeight="700" align="center">
-        <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
-        {" - "}
-        <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
-      </Typography>
 
-      {(showChart) ? ( 
-        <Chart1 /> 
-      ) : ( 
+      {(showChart) ? ( <Chart1 /> ) : ( 
+
       <>
-
 
       {getData.status === "loading" && <Typography variant="h4" align="center">Loading....</Typography>}
       {getData.status === "loaded" && (
@@ -319,7 +309,7 @@ const PageContent: FC = () => {
           )}
         </div>
       )}
-        </>
+      </>
       )}
       <Typography variant="body2" align="center">
         This website is still in BETA. This is 3rd party service independent of

@@ -1,9 +1,8 @@
 import React from "react";
-import { useState,useEffect } from 'react'
+import { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
+import Typography from "@mui/material/Typography";
 import { useGlobalContext } from "contexts/GlobalContext";
-
-
 
 //prettier-ignore
 const rData = [
@@ -40,13 +39,12 @@ const avgPer1000 = rData.map(function (round) {
   return ((round.totalBribes / round.totalVotes) * 1000).toFixed(2);
 });
 const endTime = rData.map(function (round) {
-  return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString("en-GB");
+  return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString("en-US");
 });
 
-
 const Chart1 = () => {
-
-  const {gBribeFile, setBribeFile, showChart, setShowChart} = useGlobalContext()
+  const { gBribeFile, setBribeFile, showChart, setShowChart } =
+    useGlobalContext();
 
   const option = {
     textStyle: {
@@ -60,8 +58,7 @@ const Chart1 = () => {
       subtextStyle: {
         color: "#fefefe",
       },
-      text: "Total Bribes / Votes",
-      subtext: "Round 04 - 18",
+      text: "Round 04 - 18",
       left: "center",
     },
 
@@ -73,15 +70,15 @@ const Chart1 = () => {
     //      data:['Votes','Bribes']
     //    },
 
-      toolbox: {
-        feature: {
-          dataZoom: {
-            yAxisIndex: 'none'
-          },
-          restore: {},
-          saveAsImage: {}
-        }
+    toolbox: {
+      feature: {
+        dataZoom: {
+          yAxisIndex: "none",
+        },
+        restore: {},
+        saveAsImage: {},
       },
+    },
 
     axisPointer: {
       //      link: { xAxisIndex: "all", },
@@ -132,7 +129,7 @@ const Chart1 = () => {
         data: rounds,
         gridIndex: 0,
         show: false,
-    triggerEvent: true
+        triggerEvent: true,
       },
       {
         //votes
@@ -143,7 +140,7 @@ const Chart1 = () => {
         gridIndex: 1,
         show: true,
         offset: 20,
-    triggerEvent: true
+        triggerEvent: true,
       },
       {
         //voter
@@ -153,7 +150,7 @@ const Chart1 = () => {
         data: rounds,
         gridIndex: 2,
         show: true,
-    triggerEvent: true
+        triggerEvent: true,
       },
       {
         //avg1000
@@ -163,7 +160,7 @@ const Chart1 = () => {
         data: endTime,
         gridIndex: 3,
         show: false,
-    triggerEvent: true
+        triggerEvent: true,
       },
     ],
 
@@ -246,22 +243,35 @@ const Chart1 = () => {
     ],
   };
 
-  const onChartClick = (params:any) => {
-    const offset = 4
-    let requestedRound = params.dataIndex + offset
-    requestedRound = requestedRound < 10 ? "0"+requestedRound : requestedRound
-    setBribeFile("bribe-data-"+requestedRound+".json")
-    setShowChart(false)
+  const onChartClick = (params: any) => {
+    const offset = 4;
+    let requestedRound = params.dataIndex + offset;
+    requestedRound =
+      requestedRound < 10 ? "0" + requestedRound : requestedRound;
+    setBribeFile("bribe-data-" + requestedRound + ".json");
+    setShowChart(false);
 
-    console.log('click', params.dataIndex, "->", gBribeFile);
+    console.log("click", params.dataIndex, "->", gBribeFile);
   };
 
   const onEvents = {
     click: onChartClick,
   };
 
-  return <ReactECharts option={option} onEvents={onEvents} style={{ height: 740 }} />;
+  return (
+    <>
+      <Typography variant="h4" align="center">
+        Total Bribes / Votes
+      </Typography>
+      <ReactECharts
+        option={option}
+        onEvents={onEvents}
+        style={{ height: 740 }}
+      />
+    </>
+  );
 };
 
 export default Chart1;
+
 
