@@ -4,6 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import ThemeProvider from "theme/ThemeProvider";
 import NavBar from "components/NavBar";
 import Heading from "components/Heading";
+import Footer from "components/Footer";
 import { MyGlobalContext } from "contexts/GlobalContext";
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
           <NavBar />
           <Heading />
           <PageContent />
+          <Footer />
         </ThemeProvider>
       </MyGlobalContext.Provider>
     </div>

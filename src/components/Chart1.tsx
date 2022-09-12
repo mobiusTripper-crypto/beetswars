@@ -56,6 +56,7 @@ const Chart1 = () => {
   var tVotes = [];
   var tVoter = [];
   var tBribes = [];
+  var tBriber = [];
   var avgPer1000 = [];
   var endTime = [];
   var numRounds = 0
@@ -87,6 +88,9 @@ const Chart1 = () => {
     });
     tBribes = chartD.chartdata.map(function (round: any) {
       return round.totalBribes;
+    });
+    tBriber = chartD.chartdata.map((round: any) => {
+      return round.totalBriber;
     });
     avgPer1000 = chartD.chartdata.map(function (round: any) {
       return ((round.totalBribes / round.totalVotes) * 1000).toFixed(2);
@@ -171,6 +175,15 @@ const Chart1 = () => {
         right: "15%",
         top: "80",
       },
+      {
+        backgroundColor: "#222222",
+        borderColor: "#222222",
+        show: true,
+        height: "220",
+        left: "15%",
+        right: "15%",
+        top: "80",
+      },
     ],
 
     xAxis: [
@@ -181,7 +194,7 @@ const Chart1 = () => {
         axisLine: { onZero: true },
         data: rounds,
         gridIndex: 0,
-        show: true,
+        show: false,
         triggerEvent: true,
       },
       {
@@ -191,7 +204,7 @@ const Chart1 = () => {
         axisLine: { onZero: true },
         data: endTime,
         gridIndex: 1,
-        show: false,
+        show: true,
         offset: 20,
         triggerEvent: true,
       },
@@ -202,7 +215,7 @@ const Chart1 = () => {
         axisLine: { onZero: true },
         data: rounds,
         gridIndex: 2,
-        show: false,
+        show: true,
         triggerEvent: true,
       },
       {
@@ -213,7 +226,17 @@ const Chart1 = () => {
         data: endTime,
         gridIndex: 3,
         offset: 20,
-        show: true,
+        show: false,
+        triggerEvent: true,
+      },
+      {
+        //bribes
+        type: "category",
+        boundaryGap: false,
+        axisLine: { onZero: true },
+        data: rounds,
+        gridIndex: 4,
+        show: false,
         triggerEvent: true,
       },
     ],
@@ -221,9 +244,10 @@ const Chart1 = () => {
     yAxis: [
       {
         name: "Total Bribes $",
-nameTextStyle: { color: "blue", fontSize: '1em' },
+nameTextStyle: { color: "cyan", fontSize: '1em' },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
+        gridIndex: 0,
       },
       {
         name: "Total Votes",
@@ -238,7 +262,7 @@ nameTextStyle: { color: "green", fontSize: "1em" },
         name: "Total Voter",
 nameTextStyle: { color: "yellow", fontSize: "1em" },
         type: "value",
-        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
+        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 2,
         position: "right",
       },
@@ -246,9 +270,20 @@ nameTextStyle: { color: "yellow", fontSize: "1em" },
         name: "avg $/1000",
 nameTextStyle: { color: "red", fontSize: "1em" },
         type: "value",
-        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
+        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 3,
         position: "right",
+axisLabel: { color: "red", align: "left" },
+nameLocation: "start"
+      },
+      {
+        name: "Total Briber",
+nameTextStyle: { color: "blue", fontSize: "1em" },
+        type: "value",
+        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
+        gridIndex: 4,
+        position: "right",
+axisLabel: { color: "blue", align: "left" }
       },
     ],
 
@@ -260,7 +295,7 @@ nameTextStyle: { color: "red", fontSize: "1em" },
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
-        lineStyle: { width: "2" },
+        lineStyle: { color: "cyan", width: 2 },
         data: tBribes,
         xAxisIndex: 0,
         yAxisIndex: 0,
@@ -272,6 +307,7 @@ nameTextStyle: { color: "red", fontSize: "1em" },
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
+        lineStyle: { color: "green" },
         data: tVotes,
         xAxisIndex: 1,
         yAxisIndex: 1,
@@ -283,6 +319,7 @@ nameTextStyle: { color: "red", fontSize: "1em" },
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
+        lineStyle: { color: "yellow" },
         data: tVoter,
         xAxisIndex: 2,
         yAxisIndex: 2,
@@ -294,9 +331,23 @@ nameTextStyle: { color: "red", fontSize: "1em" },
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
+        lineStyle: { color: "red" },
         data: avgPer1000,
         xAxisIndex: 3,
         yAxisIndex: 3,
+      },
+      {
+        name: "Briber",
+        type: "line",
+        symbolSize: 1,
+        smooth: "true",
+        stack: "",
+        areaStyle: { opacity: "0.1" },
+        lineStyle: { color: "blue", width: 2 },
+        data: tBriber,
+        xAxisIndex: 4,
+        yAxisIndex: 4,
+markPoint: { itemStyle: { color: 'blue' }},
       },
     ],
   };
@@ -326,6 +377,10 @@ nameTextStyle: { color: "red", fontSize: "1em" },
         onEvents={onEvents}
         style={{ height: 740 }}
       />
+      <Typography variant="body2" align="center">
+        (clicking on data points loads historical pages)
+      </Typography>
+
     </>
   );
 };
