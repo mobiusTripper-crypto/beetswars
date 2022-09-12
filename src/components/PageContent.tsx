@@ -66,6 +66,7 @@ const PageContent: FC = () => {
   };
 
   useEffect(() => {
+    setOldproposal(proposal)
     changeBribeFile(gBribeFile);
   }, [gBribeFile]);
 

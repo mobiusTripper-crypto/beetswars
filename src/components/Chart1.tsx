@@ -4,6 +4,7 @@ import ReactECharts from "echarts-for-react";
 import Typography from "@mui/material/Typography";
 import { useGlobalContext } from "contexts/GlobalContext";
 
+/*
 //prettier-ignore
 const rData = [
   { round: "Round 04", voteEnd: "1645376400", totalVotes: 33021516, totalBribes: 1045420, totalVoter: 2086, },
@@ -22,7 +23,6 @@ const rData = [
   { round: "Round 17", voteEnd: "1661097600", totalVotes: 63262198, totalBribes: 32892,   totalVoter: 912,  },
   { round: "Round 18", voteEnd: "1662307200", totalVotes: 62777030, totalBribes: 24516,   totalVoter: 806,  },
 ];
-
 const rounds = rData.map((round) => {
   return round.round;
 });
@@ -41,10 +41,63 @@ const avgPer1000 = rData.map(function (round) {
 const endTime = rData.map(function (round) {
   return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString("en-US");
 });
+*/
 
 const Chart1 = () => {
+
+  const dataUrl =
+    "https://beetswars-data-git-chartdata-rnz3.vercel.app/chart-data.json";
   const { gBribeFile, setBribeFile, showChart, setShowChart } =
     useGlobalContext();
+  const [isLoaded, setLoaded] = useState(false);
+  const [chartData, setData] = useState([]);
+  var chartD = [];
+  var rounds = [];
+  var tVotes = [];
+  var tVoter = [];
+  var tBribes = [];
+  var avgPer1000 = [];
+  var endTime = [];
+  var numRounds = 0
+
+  const fetchData = async () => {
+    const res = await fetch(dataUrl);
+    const json = await res.json();
+    setData(json);
+    setLoaded(true);
+  };
+
+  useEffect(() => {
+    setLoaded(false);
+    fetchData();
+  }, []);
+
+  if (!isLoaded) {
+    return <></>;
+  } else {
+    chartD = JSON.parse(JSON.stringify(chartData));
+    rounds = chartD.chartdata.map((round: any) => {
+      return "R"+round.round;
+    });
+    tVotes = chartD.chartdata.map(function (round: any) {
+      return round.totalVotes;
+    });
+    tVoter = chartD.chartdata.map(function (round: any) {
+      return round.totalVoter;
+    });
+    tBribes = chartD.chartdata.map(function (round: any) {
+      return round.totalBribes;
+    });
+    avgPer1000 = chartD.chartdata.map(function (round: any) {
+      return ((round.totalBribes / round.totalVotes) * 1000).toFixed(2);
+    });
+    endTime = chartD.chartdata.map(function (round: any) {
+      return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString(
+        "en-US"
+      );
+    });
+    numRounds = rounds.length
+  }
 
   const option = {
     textStyle: {
@@ -58,18 +111,18 @@ const Chart1 = () => {
       subtextStyle: {
         color: "#fefefe",
       },
-      text: "Round 04 - 18",
+      text: "Round 04 - " + (numRounds + 3) ,
       left: "center",
     },
 
     tooltip: {
       trigger: "axis",
     },
+  /*
 
-    //    legend: {
-    //      data:['Votes','Bribes']
-    //    },
-
+        legend: {
+          data:['Votes','Bribes']
+        },
     toolbox: {
       feature: {
         dataZoom: {
@@ -79,10 +132,10 @@ const Chart1 = () => {
         saveAsImage: {},
       },
     },
-
+  */
     axisPointer: {
       //      link: { xAxisIndex: "all", },
-      label: { show: false },
+      label: { show: true },
     },
 
     grid: [
@@ -91,8 +144,8 @@ const Chart1 = () => {
         borderColor: "#222222",
         show: true,
         height: "220",
-        left: "20%",
-        right: "20%",
+        left: "15%",
+        right: "15%",
         top: "80",
       },
       {
@@ -100,22 +153,22 @@ const Chart1 = () => {
         borderColor: "#222222",
         show: true,
         height: "220",
-        left: "20%",
-        right: "20%",
-        top: "350",
+        left: "15%",
+        right: "15%",
+        top: "380",
       },
       {
         show: false,
         height: "220",
-        left: "20%",
-        right: "20%",
-        top: "350",
+        left: "15%",
+        right: "15%",
+        top: "380",
       },
       {
         show: false,
         height: "220",
-        left: "20%",
-        right: "20%",
+        left: "15%",
+        right: "15%",
         top: "80",
       },
     ],
@@ -128,7 +181,7 @@ const Chart1 = () => {
         axisLine: { onZero: true },
         data: rounds,
         gridIndex: 0,
-        show: false,
+        show: true,
         triggerEvent: true,
       },
       {
@@ -138,7 +191,7 @@ const Chart1 = () => {
         axisLine: { onZero: true },
         data: endTime,
         gridIndex: 1,
-        show: true,
+        show: false,
         offset: 20,
         triggerEvent: true,
       },
@@ -149,7 +202,7 @@ const Chart1 = () => {
         axisLine: { onZero: true },
         data: rounds,
         gridIndex: 2,
-        show: true,
+        show: false,
         triggerEvent: true,
       },
       {
@@ -159,7 +212,8 @@ const Chart1 = () => {
         axisLine: { onZero: true },
         data: endTime,
         gridIndex: 3,
-        show: false,
+        offset: 20,
+        show: true,
         triggerEvent: true,
       },
     ],
@@ -167,12 +221,14 @@ const Chart1 = () => {
     yAxis: [
       {
         name: "Total Bribes $",
+nameTextStyle: { color: "blue", fontSize: '1em' },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
       },
       {
         name: "Total Votes",
         type: "value",
+nameTextStyle: { color: "green", fontSize: "1em" },
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         //  inverse: true,
         gridIndex: 1,
@@ -180,6 +236,7 @@ const Chart1 = () => {
       },
       {
         name: "Total Voter",
+nameTextStyle: { color: "yellow", fontSize: "1em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         gridIndex: 2,
@@ -187,6 +244,7 @@ const Chart1 = () => {
       },
       {
         name: "avg $/1000",
+nameTextStyle: { color: "red", fontSize: "1em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         gridIndex: 3,
@@ -225,7 +283,7 @@ const Chart1 = () => {
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
-        data: tVoters,
+        data: tVoter,
         xAxisIndex: 2,
         yAxisIndex: 2,
       },
@@ -261,7 +319,7 @@ const Chart1 = () => {
   return (
     <>
       <Typography variant="h4" align="center">
-        Total Bribes / Votes
+        Bribe / Vote History
       </Typography>
       <ReactECharts
         option={option}
@@ -273,5 +331,3 @@ const Chart1 = () => {
 };
 
 export default Chart1;
-
-
