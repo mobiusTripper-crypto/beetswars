@@ -44,7 +44,6 @@ const endTime = rData.map(function (round) {
 */
 
 const Chart1 = () => {
-
   const dataUrl =
     "https://beetswars-data-git-chartdata-rnz3.vercel.app/chart-data.json";
   const { gBribeFile, setBribeFile, showChart, setShowChart } =
@@ -59,7 +58,7 @@ const Chart1 = () => {
   var tBriber = [];
   var avgPer1000 = [];
   var endTime = [];
-  var numRounds = 0
+  var numRounds = 0;
 
   const fetchData = async () => {
     const res = await fetch(dataUrl);
@@ -78,7 +77,7 @@ const Chart1 = () => {
   } else {
     chartD = JSON.parse(JSON.stringify(chartData));
     rounds = chartD.chartdata.map((round: any) => {
-      return "R"+round.round;
+      return "R" + round.round;
     });
     tVotes = chartD.chartdata.map(function (round: any) {
       return round.totalVotes;
@@ -100,7 +99,7 @@ const Chart1 = () => {
         "en-US"
       );
     });
-    numRounds = rounds.length
+    numRounds = rounds.length;
   }
 
   const option = {
@@ -115,14 +114,14 @@ const Chart1 = () => {
       subtextStyle: {
         color: "#fefefe",
       },
-      text: "Round 04 - " + (numRounds + 3) ,
+      text: "Round 04 - " + (numRounds + 3),
       left: "center",
     },
 
     tooltip: {
       trigger: "axis",
     },
-  /*
+    /*
 
         legend: {
           data:['Votes','Bribes']
@@ -139,11 +138,12 @@ const Chart1 = () => {
   */
     axisPointer: {
       //      link: { xAxisIndex: "all", },
-      label: { show: true },
+      label: { show: false },
     },
 
     grid: [
       {
+        // Briber 0
         backgroundColor: "#222222",
         borderColor: "#222222",
         show: true,
@@ -153,6 +153,23 @@ const Chart1 = () => {
         top: "80",
       },
       {
+        // avg 1
+        show: false,
+        height: "220",
+        left: "15%",
+        right: "15%",
+        top: "80",
+      },
+      {
+        // Bribes 2
+        show: false,
+        height: "220",
+        left: "15%",
+        right: "15%",
+        top: "80",
+      },
+      {
+        // Voter 3
         backgroundColor: "#222222",
         borderColor: "#222222",
         show: true,
@@ -162,60 +179,24 @@ const Chart1 = () => {
         top: "380",
       },
       {
+        // Votes 4
         show: false,
         height: "220",
         left: "15%",
         right: "15%",
         top: "380",
-      },
-      {
-        show: false,
-        height: "220",
-        left: "15%",
-        right: "15%",
-        top: "80",
-      },
-      {
-        backgroundColor: "#222222",
-        borderColor: "#222222",
-        show: true,
-        height: "220",
-        left: "15%",
-        right: "15%",
-        top: "80",
       },
     ],
 
     xAxis: [
       {
-        //bribes
+        //briber
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
         data: rounds,
         gridIndex: 0,
         show: false,
-        triggerEvent: true,
-      },
-      {
-        //votes
-        type: "category",
-        boundaryGap: false,
-        axisLine: { onZero: true },
-        data: endTime,
-        gridIndex: 1,
-        show: true,
-        offset: 20,
-        triggerEvent: true,
-      },
-      {
-        //voter
-        type: "category",
-        boundaryGap: false,
-        axisLine: { onZero: true },
-        data: rounds,
-        gridIndex: 2,
-        show: true,
         triggerEvent: true,
       },
       {
@@ -224,7 +205,7 @@ const Chart1 = () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         data: endTime,
-        gridIndex: 3,
+        gridIndex: 1,
         offset: 20,
         show: false,
         triggerEvent: true,
@@ -235,94 +216,92 @@ const Chart1 = () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         data: rounds,
-        gridIndex: 4,
+        gridIndex: 2,
         show: false,
+        triggerEvent: true,
+      },
+      {
+        //voter
+        type: "category",
+        boundaryGap: false,
+        axisLine: { onZero: true },
+        data: rounds,
+        gridIndex: 3,
+        show: true,
+        triggerEvent: true,
+      },
+      {
+        //votes
+        type: "category",
+        boundaryGap: false,
+        axisLine: { onZero: true },
+        data: endTime,
+        gridIndex: 4,
+        show: true,
+        offset: 20,
         triggerEvent: true,
       },
     ],
 
     yAxis: [
       {
-        name: "Total Bribes $",
-nameTextStyle: { color: "cyan", fontSize: '1em' },
-        type: "value",
-        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
-        gridIndex: 0,
-      },
-      {
-        name: "Total Votes",
-        type: "value",
-nameTextStyle: { color: "green", fontSize: "1em" },
-        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
-        //  inverse: true,
-        gridIndex: 1,
-        position: "left",
-      },
-      {
-        name: "Total Voter",
-nameTextStyle: { color: "yellow", fontSize: "1em" },
+        name: "Total Offers",
+        nameTextStyle: { color: "blue", fontSize: "1em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
-        gridIndex: 2,
+        gridIndex: 0,
         position: "right",
+        axisLabel: { color: "blue", align: "left" },
       },
       {
         name: "avg $/1000",
-nameTextStyle: { color: "red", fontSize: "1em" },
+        nameTextStyle: { color: "red", fontSize: "1em" },
+        type: "value",
+        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
+        gridIndex: 1,
+        position: "right",
+        axisLabel: { color: "red", align: "left" },
+        nameLocation: "start",
+      },
+      {
+        name: "Total Bribes $",
+        nameTextStyle: { color: "cyan", fontSize: "1em" },
+        type: "value",
+        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
+        gridIndex: 2,
+      },
+      {
+        name: "Total Voter",
+        nameTextStyle: { color: "yellow", fontSize: "1em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 3,
         position: "right",
-axisLabel: { color: "red", align: "left" },
-nameLocation: "start"
       },
       {
-        name: "Total Briber",
-nameTextStyle: { color: "blue", fontSize: "1em" },
+        name: "Total Votes",
         type: "value",
-        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
+        nameTextStyle: { color: "#56FF00", fontSize: "1em" },
+        splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
+        //  inverse: true,
         gridIndex: 4,
-        position: "right",
-axisLabel: { color: "blue", align: "left" }
+        position: "left",
       },
     ],
 
     series: [
       {
-        name: "Bribes",
+        name: "Briber",
         type: "line",
         symbolSize: 1,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.2" },
-        lineStyle: { color: "cyan", width: 2 },
-        data: tBribes,
+        areaStyle: { opacity: "0.1" },
+        lineStyle: { color: "blue", width: 2 },
+        data: tBriber,
         xAxisIndex: 0,
         yAxisIndex: 0,
-      },
-      {
-        name: "Votes",
-        type: "line",
-        symbolSize: 1,
-        smooth: "true",
-        stack: "",
-        areaStyle: { opacity: "0.2" },
-        lineStyle: { color: "green" },
-        data: tVotes,
-        xAxisIndex: 1,
-        yAxisIndex: 1,
-      },
-      {
-        name: "Voter",
-        type: "line",
-        symbolSize: 1,
-        smooth: "true",
-        stack: "",
-        areaStyle: { opacity: "0.2" },
-        lineStyle: { color: "yellow" },
-        data: tVoter,
-        xAxisIndex: 2,
-        yAxisIndex: 2,
+        markPoint: { itemStyle: { color: "blue" } },
       },
       {
         name: "Avg/1000",
@@ -333,21 +312,44 @@ axisLabel: { color: "blue", align: "left" }
         areaStyle: { opacity: "0.2" },
         lineStyle: { color: "red" },
         data: avgPer1000,
-        xAxisIndex: 3,
-        yAxisIndex: 3,
+        xAxisIndex: 1,
+        yAxisIndex: 1,
       },
       {
-        name: "Briber",
+        name: "Bribes",
         type: "line",
         symbolSize: 1,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "blue", width: 2 },
-        data: tBriber,
+        areaStyle: { opacity: "0.2" },
+        lineStyle: { color: "cyan", width: 2 },
+        data: tBribes,
+        xAxisIndex: 2,
+        yAxisIndex: 2,
+      },
+      {
+        name: "Voter",
+        type: "line",
+        symbolSize: 1,
+        smooth: "true",
+        stack: "",
+        areaStyle: { opacity: "0.2" },
+        lineStyle: { color: "yellow" },
+        data: tVoter,
+        xAxisIndex: 3,
+        yAxisIndex: 3,
+      },
+      {
+        name: "Votes",
+        type: "line",
+        symbolSize: 1,
+        smooth: "true",
+        stack: "",
+        areaStyle: { opacity: "0.2" },
+        lineStyle: { color: "#56FF00" },
+        data: tVotes,
         xAxisIndex: 4,
         yAxisIndex: 4,
-markPoint: { itemStyle: { color: 'blue' }},
       },
     ],
   };
@@ -370,17 +372,16 @@ markPoint: { itemStyle: { color: 'blue' }},
   return (
     <>
       <Typography variant="h4" align="center">
-        Bribe / Vote History
+        Gauge Vote History
       </Typography>
       <ReactECharts
         option={option}
         onEvents={onEvents}
-        style={{ height: 740 }}
+        style={{ height: 700 }}
       />
       <Typography variant="body2" align="center">
         (clicking on data points loads historical pages)
       </Typography>
-
     </>
   );
 };
