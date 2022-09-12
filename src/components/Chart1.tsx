@@ -103,6 +103,7 @@ const Chart1 = () => {
   }
 
   const option = {
+  color: ['blue', 'red', 'cyan', 'yellow', '#56FF00'],
     textStyle: {
       color: "#ffffff",
     },
@@ -120,6 +121,7 @@ const Chart1 = () => {
 
     tooltip: {
       trigger: "axis",
+formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>{a3}: {c3}<br/>{a4}: {c4}'
     },
     /*
 
@@ -137,7 +139,7 @@ const Chart1 = () => {
     },
   */
     axisPointer: {
-      //      link: { xAxisIndex: "all", },
+            link: { xAxisIndex: "all", },
       label: { show: false },
     },
 
@@ -198,6 +200,7 @@ const Chart1 = () => {
         gridIndex: 0,
         show: false,
         triggerEvent: true,
+      axisTick: { show: false },
       },
       {
         //avg1000
@@ -252,6 +255,7 @@ const Chart1 = () => {
         gridIndex: 0,
         position: "right",
         axisLabel: { color: "blue", align: "left" },
+      axisTick: { show: false },
       },
       {
         name: "avg $/1000",
@@ -291,9 +295,10 @@ const Chart1 = () => {
 
     series: [
       {
-        name: "Briber",
+        name: "Offers",
         type: "line",
-        symbolSize: 1,
+        symbolSize: 3,
+showSymbol: false,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
@@ -306,7 +311,8 @@ const Chart1 = () => {
       {
         name: "Avg/1000",
         type: "line",
-        symbolSize: 1,
+        symbolSize: 3,
+showSymbol: false,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
@@ -318,7 +324,8 @@ const Chart1 = () => {
       {
         name: "Bribes",
         type: "line",
-        symbolSize: 1,
+        symbolSize: 3,
+showSymbol: false,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
@@ -330,7 +337,8 @@ const Chart1 = () => {
       {
         name: "Voter",
         type: "line",
-        symbolSize: 1,
+        symbolSize: 3,
+showSymbol: false,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
@@ -342,7 +350,8 @@ const Chart1 = () => {
       {
         name: "Votes",
         type: "line",
-        symbolSize: 1,
+        symbolSize: 3,
+showSymbol: false,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.2" },
