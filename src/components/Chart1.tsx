@@ -103,7 +103,7 @@ const Chart1 = () => {
   }
 
   const option = {
-  color: ['blue', 'red', 'cyan', 'yellow', '#56FF00'],
+    color: ["blue", "red", "cyan", "yellow", "#56FF00"],
     textStyle: {
       color: "#ffffff",
     },
@@ -121,10 +121,25 @@ const Chart1 = () => {
 
     tooltip: {
       trigger: "axis",
-formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>{a3}: {c3}<br/>{a4}: {c4}'
-    },
-    /*
+      padding: 1,
+      backgroundColor: "#FFFFFFEE",
+      formatter: (args: any) => {
+        console.log(args);
+        let tooltip = `<p align='center'><b>${args[0].axisValue} - 
+                        ${args[1].axisValue}</b></p>
+                          <table> `;
 
+        args.forEach((item: any) => {
+          tooltip += `<tr><td>${item.marker}</td><td> ${item.seriesName}:</td><td align='right'> ${item.value}</td></tr>`;
+        });
+        tooltip += `</table>`;
+
+        return tooltip;
+      },
+      //formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>{a3}: {c3}<br/>{a4}: {c4}'
+    },
+
+    /*
         legend: {
           data:['Votes','Bribes']
         },
@@ -138,15 +153,16 @@ formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>
       },
     },
   */
+
     axisPointer: {
-            link: { xAxisIndex: "all", },
+      link: { xAxisIndex: "all" },
       label: { show: false },
     },
 
     grid: [
       {
         // Briber 0
-        backgroundColor: "#222222",
+        backgroundColor: "#222222DD",
         borderColor: "#222222",
         show: true,
         height: "220",
@@ -172,7 +188,7 @@ formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>
       },
       {
         // Voter 3
-        backgroundColor: "#222222",
+        backgroundColor: "#222222DD",
         borderColor: "#222222",
         show: true,
         height: "220",
@@ -200,7 +216,7 @@ formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>
         gridIndex: 0,
         show: false,
         triggerEvent: true,
-      axisTick: { show: false },
+        axisTick: { show: false },
       },
       {
         //avg1000
@@ -254,8 +270,9 @@ formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 0,
         position: "right",
+        offset: 23,
         axisLabel: { color: "blue", align: "left" },
-      axisTick: { show: false },
+        axisTick: { show: false },
       },
       {
         name: "avg $/1000",
@@ -280,6 +297,7 @@ formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 3,
+        axisLabel: { color: "yellow", align: "left" },
         position: "right",
       },
       {
@@ -298,7 +316,7 @@ formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>
         name: "Offers",
         type: "line",
         symbolSize: 3,
-showSymbol: false,
+        showSymbol: false,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
@@ -312,10 +330,10 @@ showSymbol: false,
         name: "Avg/1000",
         type: "line",
         symbolSize: 3,
-showSymbol: false,
+        showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.2" },
+        areaStyle: { opacity: "0.1" },
         lineStyle: { color: "red" },
         data: avgPer1000,
         xAxisIndex: 1,
@@ -325,10 +343,10 @@ showSymbol: false,
         name: "Bribes",
         type: "line",
         symbolSize: 3,
-showSymbol: false,
+        showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.2" },
+        areaStyle: { opacity: "0.1" },
         lineStyle: { color: "cyan", width: 2 },
         data: tBribes,
         xAxisIndex: 2,
@@ -338,10 +356,10 @@ showSymbol: false,
         name: "Voter",
         type: "line",
         symbolSize: 3,
-showSymbol: false,
+        showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.2" },
+        areaStyle: { opacity: "0.1" },
         lineStyle: { color: "yellow" },
         data: tVoter,
         xAxisIndex: 3,
@@ -351,10 +369,10 @@ showSymbol: false,
         name: "Votes",
         type: "line",
         symbolSize: 3,
-showSymbol: false,
+        showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.2" },
+        areaStyle: { opacity: "0.1" },
         lineStyle: { color: "#56FF00" },
         data: tVotes,
         xAxisIndex: 4,
