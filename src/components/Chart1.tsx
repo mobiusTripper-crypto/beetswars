@@ -52,6 +52,7 @@ const Chart1 = () => {
   const [chartData, setData] = useState([]);
   var chartD = [];
   var rounds = [];
+  var roundsfortooltip = [];
   var tVotes = [];
   var tVoter = [];
   var tBribes = [];
@@ -77,7 +78,10 @@ const Chart1 = () => {
   } else {
     chartD = JSON.parse(JSON.stringify(chartData));
     rounds = chartD.chartdata.map((round: any) => {
-      return "R" + round.round;
+      return "Round " + round.round;
+    });
+    roundsfortooltip = chartD.chartdata.map((round: any) => {
+      return "Round " + round.round;
     });
     tVotes = chartD.chartdata.map(function (round: any) {
       return round.totalVotes;
@@ -121,7 +125,7 @@ const Chart1 = () => {
 
     tooltip: {
       trigger: "axis",
-      padding: 1,
+      padding: 2,
       backgroundColor: "#FFFFFFEE",
       formatter: (args: any) => {
         //console.log(args);
@@ -212,7 +216,7 @@ const Chart1 = () => {
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
-        data: rounds,
+        data: roundsfortooltip,
         gridIndex: 0,
         show: false,
         triggerEvent: true,
@@ -404,11 +408,13 @@ const Chart1 = () => {
       <ReactECharts
         option={option}
         onEvents={onEvents}
-        style={{ height: 700 }}
+        style={{ height: 680 }}
       />
       <Typography variant="body2" align="center">
-        (clicking on data points loads historical pages)
+        (clicking on data points loads historical pages) {' '}
+        <button onClick={() => setShowChart(false)}> toggle view </button>
       </Typography>
+
     </>
   );
 };
