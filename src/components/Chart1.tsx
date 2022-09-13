@@ -52,7 +52,6 @@ const Chart1 = () => {
   const [chartData, setData] = useState([]);
   var chartD = [];
   var rounds = [];
-  var roundsfortooltip = [];
   var tVotes = [];
   var tVoter = [];
   var tBribes = [];
@@ -78,9 +77,6 @@ const Chart1 = () => {
   } else {
     chartD = JSON.parse(JSON.stringify(chartData));
     rounds = chartD.chartdata.map((round: any) => {
-      return "Round " + round.round;
-    });
-    roundsfortooltip = chartD.chartdata.map((round: any) => {
       return "Round " + round.round;
     });
     tVotes = chartD.chartdata.map(function (round: any) {
@@ -134,13 +130,16 @@ const Chart1 = () => {
                           <table> `;
 
         args.forEach((item: any) => {
-          tooltip += `<tr><td>${item.marker}</td><td> ${item.seriesName}:</td><td align='right'> ${item.value}</td></tr>`;
+          tooltip += `<tr><td>${item.marker}</td><td> ${item.seriesName}:</td><td align='right'> ${item.value
+            .toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+            }</td></tr>`;
         });
         tooltip += `</table>`;
 
         return tooltip;
       },
       //formatter: '<b>{b0} - {b1}</b><br/>{a2}: {c2}<br/>{a1}: {c1}<br/>{a0}: {c0}<br/>{a3}: {c3}<br/>{a4}: {c4}'
+      //valueFormatter: (value:any) => '$' + value.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
     },
 
     /*
@@ -198,7 +197,7 @@ const Chart1 = () => {
         height: "220",
         left: "15%",
         right: "15%",
-        top: "380",
+        top: "370",
       },
       {
         // Votes 4
@@ -206,7 +205,7 @@ const Chart1 = () => {
         height: "220",
         left: "15%",
         right: "15%",
-        top: "380",
+        top: "370",
       },
     ],
 
@@ -216,7 +215,7 @@ const Chart1 = () => {
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
-        data: roundsfortooltip,
+        data: rounds,
         gridIndex: 0,
         show: false,
         triggerEvent: true,
@@ -269,7 +268,7 @@ const Chart1 = () => {
     yAxis: [
       {
         name: "Total Offers",
-        nameTextStyle: { color: "#F57EFF", fontSize: "1em" },
+        nameTextStyle: { color: "#F57EFF", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 0,
@@ -280,7 +279,7 @@ const Chart1 = () => {
       },
       {
         name: "avg $/1000",
-        nameTextStyle: { color: "red", fontSize: "1em" },
+        nameTextStyle: { color: "red", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 1,
@@ -290,14 +289,15 @@ const Chart1 = () => {
       },
       {
         name: "Total Bribes $",
-        nameTextStyle: { color: "cyan", fontSize: "1em" },
+        nameTextStyle: { color: "cyan", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
+        axisLabel: { color: "cyan", align: "right" },
         gridIndex: 2,
       },
       {
         name: "Total Voter",
-        nameTextStyle: { color: "yellow", fontSize: "1em" },
+        nameTextStyle: { color: "yellow", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 3,
@@ -307,10 +307,11 @@ const Chart1 = () => {
       {
         name: "Total Votes",
         type: "value",
-        nameTextStyle: { color: "#56FF00", fontSize: "1em" },
+        nameTextStyle: { color: "#56FF00", fontSize: "0.9em" },
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         //  inverse: true,
         gridIndex: 4,
+        axisLabel: { color: "#56FF00", align: "right" },
         position: "left",
       },
     ],
@@ -386,13 +387,15 @@ const Chart1 = () => {
   };
 
   const onChartClick = (params: any) => {
-    const offset = 4;
-    let requestedRound = params.dataIndex + offset;
-    requestedRound =
-      requestedRound < 10 ? "0" + requestedRound : requestedRound;
-    setBribeFile("bribe-data-" + requestedRound + ".json");
-    setShowChart(false);
+    const offset = 1;
 
+    if ( params.dataIndex > 2 ) {
+      let requestedRound = params.dataIndex + offset;
+      requestedRound =
+        requestedRound < 10 ? "0" + requestedRound : requestedRound;
+      setBribeFile("bribe-data-" + requestedRound + ".json");
+      setShowChart(false);
+    }
     console.log("click", params.dataIndex, "->", gBribeFile);
   };
 
