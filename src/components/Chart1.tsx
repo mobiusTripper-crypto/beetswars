@@ -124,7 +124,7 @@ const Chart1 = () => {
       padding: 1,
       backgroundColor: "#FFFFFFEE",
       formatter: (args: any) => {
-        console.log(args);
+        //console.log(args);
         let tooltip = `<p align='center'><b>${args[0].axisValue} - 
                         ${args[1].axisValue}</b></p>
                           <table> `;
