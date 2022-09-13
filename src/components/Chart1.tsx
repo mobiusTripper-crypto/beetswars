@@ -115,7 +115,7 @@ const Chart1 = () => {
       subtextStyle: {
         color: "#fefefe",
       },
-      text: "Round 04 - " + (numRounds + 3),
+      text: "Round 04 - " + (numRounds),
       left: "center",
     },
 
