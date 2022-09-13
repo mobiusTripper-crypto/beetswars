@@ -103,7 +103,7 @@ const Chart1 = () => {
   }
 
   const option = {
-    color: ["blue", "red", "cyan", "yellow", "#56FF00"],
+    color: ["#F57EFF", "red", "cyan", "yellow", "#56FF00"],
     textStyle: {
       color: "#ffffff",
     },
@@ -265,13 +265,13 @@ const Chart1 = () => {
     yAxis: [
       {
         name: "Total Offers",
-        nameTextStyle: { color: "blue", fontSize: "1em" },
+        nameTextStyle: { color: "#F57EFF", fontSize: "1em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
         gridIndex: 0,
         position: "right",
         offset: 23,
-        axisLabel: { color: "blue", align: "left" },
+        axisLabel: { color: "#F57EFF", align: "left" },
         axisTick: { show: false },
       },
       {
@@ -320,11 +320,11 @@ const Chart1 = () => {
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "blue", width: 2 },
+        lineStyle: { color: "#F57EFF", width: 1 },
         data: tBriber,
         xAxisIndex: 0,
         yAxisIndex: 0,
-        markPoint: { itemStyle: { color: "blue" } },
+        markPoint: { itemStyle: { color: "#F57EFF" } },
       },
       {
         name: "Avg/1000",
@@ -334,7 +334,7 @@ const Chart1 = () => {
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "red" },
+        lineStyle: { color: "red", width: 1 },
         data: avgPer1000,
         xAxisIndex: 1,
         yAxisIndex: 1,
@@ -360,7 +360,7 @@ const Chart1 = () => {
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "yellow" },
+        lineStyle: { color: "yellow", width: 1 },
         data: tVoter,
         xAxisIndex: 3,
         yAxisIndex: 3,
