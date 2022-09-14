@@ -47,7 +47,7 @@ const endTime = rData.map(function (round) {
 const Chart1 = () => {
   const dataUrl =
     "https://beetswars-data-git-chartdata-rnz3.vercel.app/chart-data.json";
-  const { gBribeFile, setBribeFile, showChart, setShowChart } =
+  const { bribeFile, setBribeFile, showChart, setShowChart } =
     useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
   const [chartData, setData] = useState([]);
@@ -398,7 +398,7 @@ const Chart1 = () => {
       setBribeFile("bribe-data-" + requestedRound + ".json");
       setShowChart(false);
     }
-    console.log("click", params.dataIndex, "->", gBribeFile);
+    console.log("click", params.dataIndex, "->", bribeFile);
   };
 
   const onEvents = {

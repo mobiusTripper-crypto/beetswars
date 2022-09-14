@@ -16,8 +16,7 @@ import { useGlobalContext } from "contexts/GlobalContext";
 
 const PageContent: FC = () => {
 
-  const {gBribeFile, showChart, setShowChart, setGVersion, setGProposal} = useGlobalContext()
-  const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
+  const {bribeFile, setBribeFile, showChart, setShowChart, setGVersion, setGProposal} = useGlobalContext()
   const [tableCards, changeTableCards] = useState(true)
   const [oldproposal, setOldproposal] = useState("nix")
   const getData = useGetData(bribeFile);
@@ -43,10 +42,6 @@ const PageContent: FC = () => {
     //console.log(getData)
   }
 
-  // debug timestamps
-  // voteStart = 1654690000
-  // voteEnd =   1656082854
-
   const tsNow = Math.floor(Date.now() / 1000)
   const dateStart = new Date(voteStart*1000).toUTCString()
   const dateEnd = new Date(voteEnd*1000).toUTCString()
@@ -61,21 +56,19 @@ const PageContent: FC = () => {
 
   const handleChange = (e:any) => {
     console.log(e.target.value);
-    setOldproposal(proposal)
-    changeBribeFile(e.target.value);
+    setBribeFile(e.target.value);
   };
 
   useEffect(() => {
     setOldproposal(proposal)
-    changeBribeFile(gBribeFile);
-  }, [gBribeFile]);
+  }, [bribeFile]);
 
   useEffect(() => {
     setGVersion(version);
     setGProposal(proposal);
   }, [version,proposal]);
 
-  console.log(gBribeFile,showChart)
+  console.log(bribeFile)
 
   return (
     <div>

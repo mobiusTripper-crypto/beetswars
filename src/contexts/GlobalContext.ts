@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 type GlobalContext = {
-  gBribeFile: string;
+  bribeFile: string;
   setBribeFile: (c: string) => void;
   gProposal: string;
   setGProposal: (c: string) => void;
@@ -12,7 +12,7 @@ type GlobalContext = {
 };
 
 export const MyGlobalContext = createContext<GlobalContext>({
-  gBribeFile: '',
+  bribeFile: '',
   setBribeFile: () => {},
   gProposal: '',
   setGProposal: () => {},

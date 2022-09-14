@@ -5,15 +5,15 @@ import Link from "@mui/material/Link";
 import { useGlobalContext } from "contexts/GlobalContext";
 
 const NavBar: FC = () => {
-  const { gBribeFile, showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
+  const { bribeFile, showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
   const plink: string =
     "https://snapshot.org/#/beets.eth/" +
     (showChart ? "" : "proposal/" + gProposal);
 
-  console.log(gBribeFile, showChart, gProposal, gVersion);
+  //  console.log(bribeFile, showChart, gProposal, gVersion);
 
   return (
-<>
+  <>
     <Box
       sx={{
         padding: "2px",
@@ -24,7 +24,6 @@ const NavBar: FC = () => {
         textDecoration: "none",
       }}
     >
-
       <Typography variant="caption" align="right">
         <Link
           style={{ fontSize: "0.9rem" }}
@@ -86,7 +85,7 @@ const NavBar: FC = () => {
         {showChart ? ("Dashboard"):("Stats")}
       </button>
     </Box>
-</>
+  </>
   );
 };
 export default NavBar;
