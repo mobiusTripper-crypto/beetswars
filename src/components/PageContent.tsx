@@ -108,11 +108,6 @@ const PageContent: FC = () => {
               })}
           </Typography>
           <Box sx={{  padding: "2px", display: 'flex', justifyContent: 'flex-end', marginTop: "10px" }}> 
-          <div style={{ marginRight: '9px'}}>
-            <button onClick={() => setShowChart(true)}>
-              Stats
-            </button>
-          </div>
             <div style={{ marginRight: '9px'}}>
               <select onChange={handleChange} value={bribeFile}>
                 {bribeFilesRev.map((bf:any,index:number) =>

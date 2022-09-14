@@ -5,7 +5,7 @@ import Link from "@mui/material/Link";
 import { useGlobalContext } from "contexts/GlobalContext";
 
 const NavBar: FC = () => {
-  const { gBribeFile, showChart, gProposal, gVersion } = useGlobalContext();
+  const { gBribeFile, showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
   const plink: string =
     "https://snapshot.org/#/beets.eth/" +
     (showChart ? "" : "proposal/" + gProposal);
@@ -13,9 +13,9 @@ const NavBar: FC = () => {
   console.log(gBribeFile, showChart, gProposal, gVersion);
 
   return (
+<>
     <Box
       sx={{
-        marginBottom: "12px",
         padding: "2px",
         display: "flex",
         justifyContent: "flex-end",
@@ -24,9 +24,10 @@ const NavBar: FC = () => {
         textDecoration: "none",
       }}
     >
+
       <Typography variant="caption" align="right">
         <Link
-          style={{ fontSize: "0.85rem" }}
+          style={{ fontSize: "0.9rem" }}
           href="https://beets.fi/#/"
           target="_blank"
           color="white"
@@ -36,7 +37,7 @@ const NavBar: FC = () => {
         </Link>{" "}
         |&nbsp;
         <Link
-          style={{ fontSize: "0.85rem" }}
+          style={{ fontSize: "0.9rem" }}
           href={plink}
           target="_blank"
           color="white"
@@ -46,7 +47,7 @@ const NavBar: FC = () => {
         </Link>{" "}
         |&nbsp;
         <Link
-          style={{ fontSize: "0.85rem" }}
+          style={{ fontSize: "0.9rem" }}
           href="https://github.com/mobiusTripper-crypto/beetswars"
           target="_blank"
           color="white"
@@ -59,7 +60,7 @@ const NavBar: FC = () => {
             {" "}
             |&nbsp;
             <Link
-              style={{ fontSize: "0.85rem" }}
+              style={{ fontSize: "0.9rem" }}
               href="https://github.com/mobiusTripper-crypto/beetswars-data"
               target="_blank"
               color="white"
@@ -71,6 +72,21 @@ const NavBar: FC = () => {
         )}
       </Typography>
     </Box>
+    <Box
+      sx={{
+        marginTop: "4px",
+        padding: "2px",
+        display: "flex",
+        justifyContent: "flex-end",
+        color: "white",
+        textDecoration: "none",
+      }}
+    >
+      <button onClick={() => setShowChart(!showChart)}>
+        {showChart ? ("Dashboard"):("Stats")}
+      </button>
+    </Box>
+</>
   );
 };
 export default NavBar;

@@ -2,6 +2,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { useGlobalContext } from "contexts/GlobalContext";
 
 /*
@@ -130,7 +131,8 @@ const Chart1 = () => {
                           <table> `;
 
         args.forEach((item: any) => {
-          tooltip += `<tr><td>${item.marker}</td><td> ${item.seriesName}:</td><td align='right'> ${item.value
+          tooltip += `<tr><td>${item.marker}</td><td> ${item.seriesName}:</td><td align='right'> 
+            ${(item.value === "0") ? "ukn" : item.value 
             .toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
             }</td></tr>`;
         });
@@ -414,8 +416,7 @@ const Chart1 = () => {
         style={{ height: 680 }}
       />
       <Typography variant="body2" align="center">
-        (clicking on data points loads historical pages) {' '}
-        <button onClick={() => setShowChart(false)}> toggle view </button>
+        (clicking on data points loads historical pages)
       </Typography>
 
     </>
