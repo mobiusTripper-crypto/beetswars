@@ -11,7 +11,7 @@ function App() {
   const [bribeFile, setBribeFile] = useState<string>("bribe-data-latest.json");
   const [gVersion, setGVersion] = useState<string>("");
   const [gProposal, setGProposal] = useState<string>("");
-  const [showChart, setShowChart] = useState<boolean>(true);
+  const [showChart, setShowChart] = useState<boolean>(false);
 
   return (
     <div>

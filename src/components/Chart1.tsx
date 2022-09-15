@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import ReactECharts from "echarts-for-react";
 import Typography from "@mui/material/Typography";
 import { useGlobalContext } from "contexts/GlobalContext";
@@ -29,9 +29,12 @@ const Chart1 = React.memo( () => {
     setLoaded(true);
   };
 
+const mountedRef = useRef(true)
+
   useEffect(() => {
     setLoaded(false);
     fetchData();
+    return () => {mountedRef.current = false}
   }, []);
 
   if (!isLoaded) {

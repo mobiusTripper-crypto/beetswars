@@ -48,12 +48,14 @@ const PageContent: FC = () => {
   const dateEnd = new Date(voteEnd*1000).toUTCString()
   const timeTogo:string = TimeFormatter((voteEnd - tsNow))
 
-  voteActive = (voteState === "active" ) ? true : false
+  if (voteState === "active" ) { voteActive = true }
 
-  if (voteActive && firstLoad) { 
-    setShowChart(false) 
+  useEffect(() => {
+    if (voteActive && firstLoad) { 
+      setShowChart(false) 
+    }
     setFirstLoad(false)
-  }
+  }, [voteActive])
 
   const roundNumber = /[0-9]a*/g
   const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
@@ -72,12 +74,10 @@ const PageContent: FC = () => {
     setGProposal(proposal);
   }, [version,proposal]);
 
-  console.log(bribeFile,showChart,firstLoad)
+  console.log(voteActive,showChart,firstLoad)
 
   return (
     <div>
-
-
 
       {getData.status === "loading" && <Typography variant="h4" align="center">Loading....</Typography>}
       {getData.status === "loaded" && (

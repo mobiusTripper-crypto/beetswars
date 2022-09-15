@@ -13,79 +13,81 @@ const NavBar: FC = () => {
   //  console.log(showChart, gProposal, gVersion);
 
   return (
-  <>
-    <Box
-      sx={{
-        padding: "2px",
-        display: "flex",
-        justifyContent: "flex-end",
-        background: "black",
-        color: "white",
-        textDecoration: "none",
-      }}
-    >
-      <Typography variant="caption" align="right">
-        <Link
-          style={{ fontSize: "0.9rem" }}
-          href="https://beets.fi/#/"
-          target="_blank"
-          color="white"
-          underline="hover"
-        >
-          beethoven-x
-        </Link>{" "}
-        |&nbsp;
-        <Link
-          style={{ fontSize: "0.9rem" }}
-          href={plink}
-          target="_blank"
-          color="white"
-          underline="hover"
-        >
-          snapshot
-        </Link>{" "}
-        |&nbsp;
-        <Link
-          style={{ fontSize: "0.9rem" }}
-          href="https://github.com/mobiusTripper-crypto/beetswars"
-          target="_blank"
-          color="white"
-          underline="hover"
-        >
-          github
-        </Link>
-        {!showChart && (
-          <>
-            {" "}
-            |&nbsp;
-            <Link
-              style={{ fontSize: "0.9rem" }}
-              href="https://github.com/mobiusTripper-crypto/beetswars-data"
-              target="_blank"
-              color="white"
-              underline="hover"
-            >
-              data: {gVersion}
-            </Link>
-          </>
-        )}
-      </Typography>
-    </Box>
-    <Box
-      sx={{
-        marginTop: "4px",
-        padding: "2px",
-        display: "flex",
-        justifyContent: "flex-end",
-        color: "white",
-        textDecoration: "none",
-      }}
-    >
-      <button onClick={() => setShowChart(!showChart)}>
-        {showChart ? ("Dashboard"):("Stats")}
-      </button>
-    </Box>
-  </>
+    <>
+      <Box
+        sx={{
+          padding: "2px",
+          display: "flex",
+          justifyContent: "flex-end",
+          background: "black",
+          color: "white",
+          textDecoration: "none",
+        }}
+      >
+        <Typography variant="caption" align="right">
+          <Link
+            style={{ fontSize: "0.9rem" }}
+            href="https://beets.fi/#/"
+            target="_blank"
+            color="white"
+            underline="hover"
+          >
+            beethoven-x
+          </Link>{" "}
+          |&nbsp;
+          <Link
+            style={{ fontSize: "0.9rem" }}
+            href={plink}
+            target="_blank"
+            color="white"
+            underline="hover"
+          >
+            snapshot
+          </Link>{" "}
+          |&nbsp;
+          <Link
+            style={{ fontSize: "0.9rem" }}
+            href="https://github.com/mobiusTripper-crypto/beetswars"
+            target="_blank"
+            color="white"
+            underline="hover"
+          >
+            github
+          </Link>
+          {!showChart && (
+            <>
+              {" "}
+              |&nbsp;
+              <Link
+                style={{ fontSize: "0.9rem" }}
+                href="https://github.com/mobiusTripper-crypto/beetswars-data"
+                target="_blank"
+                color="white"
+                underline="hover"
+              >
+                data: {gVersion}
+              </Link>
+            </>
+          )}
+        </Typography>
+      </Box>
+      <Box
+        sx={{
+          marginTop: "2px",
+          padding: "2px",
+          display: "flex",
+          justifyContent: "flex-end",
+          color: "white",
+          textDecoration: "none",
+        }}
+      >
+        <div style={{ marginRight: "9px" }}>
+          <button onClick={() => setShowChart(!showChart)}>
+            {showChart ? "Dashboard" : "Stats"}
+          </button>
+        </div>
+      </Box>
+    </>
   );
 };
 export default NavBar;
