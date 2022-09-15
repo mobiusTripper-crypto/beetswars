@@ -5,12 +5,12 @@ import Link from "@mui/material/Link";
 import { useGlobalContext } from "contexts/GlobalContext";
 
 const NavBar: FC = () => {
-  const { bribeFile, showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
+  const { showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
   const plink: string =
     "https://snapshot.org/#/beets.eth/" +
     (showChart ? "" : "proposal/" + gProposal);
 
-  //  console.log(bribeFile, showChart, gProposal, gVersion);
+  //  console.log(showChart, gProposal, gVersion);
 
   return (
   <>

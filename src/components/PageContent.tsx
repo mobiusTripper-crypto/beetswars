@@ -19,6 +19,7 @@ const PageContent: FC = () => {
   const {bribeFile, setBribeFile, showChart, setShowChart, setGVersion, setGProposal} = useGlobalContext()
   const [tableCards, changeTableCards] = useState(true)
   const [oldproposal, setOldproposal] = useState("nix")
+  const [firstLoad, setFirstLoad] = useState(true)
   const getData = useGetData(bribeFile);
   var rows: GridRowsProp = []
   var version: string = ''
@@ -49,7 +50,10 @@ const PageContent: FC = () => {
 
   voteActive = (voteState === "active" ) ? true : false
 
-  if (voteActive) { setShowChart(false) }
+  if (voteActive && firstLoad) { 
+    setShowChart(false) 
+    setFirstLoad(false)
+  }
 
   const roundNumber = /[0-9]a*/g
   const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
@@ -68,18 +72,18 @@ const PageContent: FC = () => {
     setGProposal(proposal);
   }, [version,proposal]);
 
-  console.log(bribeFile)
+  console.log(bribeFile,showChart,firstLoad)
 
   return (
     <div>
 
-      {(showChart) ? ( <Chart1 /> ) : ( 
 
-      <>
 
       {getData.status === "loading" && <Typography variant="h4" align="center">Loading....</Typography>}
       {getData.status === "loaded" && (
 
+      <>
+      {showChart ? ( <Chart1 /> ) : ( 
 
         <div>
       <Typography variant="h4" align="center">
