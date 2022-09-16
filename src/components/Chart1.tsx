@@ -131,9 +131,9 @@ const mountedRef = useRef(true)
     grid: [
       {
         // Briber 0
-        backgroundColor: "#222222DD",
-        borderColor: "#222222",
-        show: true,
+        //backgroundColor: "#222222DD",
+        //borderColor: "#222222",
+        show: false,
         height: "220",
         left: "15%",
         right: "15%",
@@ -157,9 +157,9 @@ const mountedRef = useRef(true)
       },
       {
         // Voter 3
-        backgroundColor: "#222222DD",
-        borderColor: "#222222",
-        show: true,
+        //backgroundColor: "#222222DD",
+        //borderColor: "#222222",
+        show: false,
         height: "220",
         left: "15%",
         right: "15%",
@@ -371,7 +371,7 @@ const mountedRef = useRef(true)
 
   return (
     <>
-      <Typography variant="h4" align="center">
+      <Typography variant="h4" align="center" marginBottom="20px">
         Gauge Vote History
       </Typography>
       <ReactECharts
