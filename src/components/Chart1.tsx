@@ -361,8 +361,8 @@ const mountedRef = useRef(true)
         requestedRound < 10 ? "0" + requestedRound : requestedRound;
       setBribeFile("bribe-data-" + requestedRound + ".json");
       setShowChart(false);
+      console.log("click", params.dataIndex, "->", "bribe-data-" + requestedRound + ".json");
     }
-    console.log("click", params.dataIndex, "->", bribeFile);
   };
 
   const onEvents = {

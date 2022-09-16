@@ -19,7 +19,6 @@ const PageContent: FC = () => {
   const {bribeFile, setBribeFile, showChart, setShowChart, setGVersion, setGProposal} = useGlobalContext()
   const [tableCards, changeTableCards] = useState(true)
   const [oldproposal, setOldproposal] = useState("nix")
-  const [firstLoad, setFirstLoad] = useState(true)
   const getData = useGetData(bribeFile);
   var rows: GridRowsProp = []
   var version: string = ''
@@ -51,11 +50,10 @@ const PageContent: FC = () => {
   if (voteState === "active" ) { voteActive = true }
 
   useEffect(() => {
-    if (voteActive && firstLoad) { 
-      setShowChart(false) 
+    if (!voteActive && getData.status === "loaded") {
+      setShowChart(true)
     }
-    setFirstLoad(false)
-  }, [voteActive])
+  }, [getData.status])
 
   const roundNumber = /[0-9]a*/g
   const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
@@ -74,7 +72,7 @@ const PageContent: FC = () => {
     setGProposal(proposal);
   }, [version,proposal]);
 
-  console.log(voteActive,showChart,firstLoad)
+  console.log(getData.status,voteActive,showChart)
 
   return (
     <div>
