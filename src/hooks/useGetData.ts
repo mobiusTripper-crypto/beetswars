@@ -131,6 +131,7 @@ const useGetData = (bribeFile: string) => {
                 const provider = new ethers.providers.JsonRpcProvider(
                   "https://rpc.ftm.tools"
                 );
+
                 const contract = new ethers.Contract(
                   contract_address,
                   contract_abi,
@@ -346,93 +347,4 @@ const useGetData = (bribeFile: string) => {
 
 export default useGetData;
 
-//end of gauge 5 voting token price
-// const tokenPrices: TokenPrice[] = [
-//   {
-//     token: "BEETS",
-//     price: 0.7761880532901334,
-//   },
-//   {
-//     token: "RING",
-//     price: 1.4818958991180278,
-//   },
-//   {
-//     token: "SUPA",
-//     price: 0.0460032384969553,
-//   },
-//   {
-//     token: "FBEETS",
-//     price: 0.7761880532901334 * 1.0152,
-//   },
-// ];
 
-//end of gauge 6 voting token price
-// {
-//   token: "BEETS",
-//   price: 0.6342,
-//   //price: parseFloat(ethers.utils.formatEther(beetsPrice)),
-// },
-// {
-//   token: "RING",
-//   price: 0.801435,
-//   //price: parseFloat(ethers.utils.formatEther(ringPrice)),
-// },
-
-// end of gaug vote 8
-// token: "BEETS",
-// //price: parseFloat(ethers.utils.formatEther(beetsPrice)),
-// price: 0.465,
-// },
-// {
-// token: "OATH",
-// //price: parseFloat(ethers.utils.formatEther(oathPrice)),
-// pr
-
-/*  from line 103
-
-      const beetsPrice = await contract.calculateAssetPrice(
-        "0xf24bcf4d1e507740041c9cfd2dddb29585adce1e"
-      );
-
-      // const oathPrice = await contract.calculateAssetPrice(
-      //   "0x21ada0d2ac28c3a5fa3cd2ee30882da8812279b6"
-      // );
-      // const ringPrice = await contract.calculateAssetPrice(
-      //   "0x582423C10c9e83387a96d00A69bA3D11ee47B7b5"
-      // );
-//      const ftmPrice = await contract.calculateAssetPrice(
-//        "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"
-//      );
-      // const fbeetsPrice = await contract.calculateAssetPrice(
-      //   "0xfcef8a994209d6916EB2C86cDD2AFD60Aa6F54b1"
-      // );
-//      const panicPrice = await contract.calculateAssetPrice(
-//        "0xa882ceac81b22fc2bef8e1a82e823e3e9603310b"
-//      );
-
-      //      fixed prices from the end of gauge, goto bottom of this file
-      const tokenPrices: TokenPrice[] = [
-        {
-          token: "BEETS",
-          price: parseFloat(ethers.utils.formatEther(beetsPrice)),
-          //          price: 0.465,
-        },
-//        {
-//          token: "OATH",
-//          //price: parseFloat(ethers.utils.formatEther(oathPrice)),
-//          price: 0.206,
-//        },
-//        {
-//          token: "FTM",
-//          price: parseFloat(ethers.utils.formatEther(ftmPrice)),
-//        },
-//        {
-//          token: "PANIC",
-//          price: parseFloat(ethers.utils.formatEther(panicPrice)),
-//        },
-        // {
-        //   token: "FBEETS",
-        //   price: parseFloat(ethers.utils.formatEther(beetsPrice)) * 1.0152,
-        // },
-      ];
-*/

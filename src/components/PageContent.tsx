@@ -1,21 +1,22 @@
 import React, { FC } from "react";
-import useGetData from "hooks/useGetData";
+import { useState,useEffect } from 'react'
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
-import LabeledListItem from "components/LabeledListItem";
-import NavBar from "components/NavBar";
 import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
-import { useState } from 'react'
+import LabeledListItem from "components/LabeledListItem";
+import useGetData from "hooks/useGetData";
 import TimeFormatter from "utils/TimeFormatter"
 import { BribeFiles } from "types/Dashboard";
 import MyBackdrop from 'components/MyBackdrop';
+import Chart1 from "components/Chart1";
+import { useGlobalContext } from "contexts/GlobalContext";
 
 const PageContent: FC = () => {
 
-  const [bribeFile, changeBribeFile] = useState('bribe-data-latest.json')
+  const {bribeFile, setBribeFile, showChart, setShowChart, setGVersion, setGProposal} = useGlobalContext()
   const [tableCards, changeTableCards] = useState(true)
   const [oldproposal, setOldproposal] = useState("nix")
   const getData = useGetData(bribeFile);
@@ -41,40 +42,48 @@ const PageContent: FC = () => {
     //console.log(getData)
   }
 
-  // debug timestamps
-  // voteStart = 1654690000
-  // voteEnd =   1656082854
-
   const tsNow = Math.floor(Date.now() / 1000)
   const dateStart = new Date(voteStart*1000).toUTCString()
   const dateEnd = new Date(voteEnd*1000).toUTCString()
   const timeTogo:string = TimeFormatter((voteEnd - tsNow))
 
-  voteActive = (voteState === "active" ) ? true : false
+  if (voteState === "active" ) { voteActive = true }
+
+  useEffect(() => {
+    if (!voteActive && getData.status === "loaded") {
+      setShowChart(true)
+  console.log(bribeFilesRev[0].filename)
+    }
+  }, [getData.status])
 
   const roundNumber = /[0-9]a*/g
   const bribeFilesRev: BribeFiles[] = JSON.parse(JSON.stringify(bribeFiles)).reverse()
 
   const handleChange = (e:any) => {
     console.log(e.target.value);
-    setOldproposal(proposal)
-    changeBribeFile(e.target.value);
+    setBribeFile(e.target.value);
   };
+
+  useEffect(() => {
+    setOldproposal(proposal)
+  }, [bribeFile]);
+
+  useEffect(() => {
+    setGVersion(version);
+    setGProposal(proposal);
+  }, [version,proposal]);
+
+  console.log(getData.status,voteActive,showChart,bribeFile)
+  console.log("P",proposal,oldproposal)
 
   return (
     <div>
-      <NavBar
-        version={version}
-        proposal={proposal}
-      />
-      <Typography variant="h2" fontWeight="700" align="center">
-        <Box sx={{ display: "inline", color: "#4BE39C" }}>BEETS WARS</Box>
-        {" - "}
-        <Box sx={{ display: "inline", color: "#ED1200" }}>ROI Dashboard</Box>
-      </Typography>
 
-      {getData.status === "loading" && <Typography variant="h4" align="center">Loading...</Typography>}
+      {getData.status === "loading" && <Typography variant="h4" align="center">Loading....</Typography>}
       {getData.status === "loaded" && (
+
+      <>
+      {showChart ? ( <Chart1 /> ) : (
 
         <div>
       <Typography variant="h4" align="center">
@@ -89,7 +98,7 @@ const PageContent: FC = () => {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }) +
-              " Total Bribes - $" +
+              " - Total Bribes: $" +
               getData.payload.totalBribeAmount.toLocaleString(undefined, {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
@@ -282,22 +291,13 @@ const PageContent: FC = () => {
               columns={columns}
               autoHeight={true}
               hideFooter={true}
-              getCellClassName={(params: GridCellParams<number>) => {
-               // if (params.field === 'votePercentage' && params.value <== 0.15 ) {
-               //   return 'underthreshold';
-               // }
-                return '';
-              }}
             />
           </Box>
           )}
         </div>
       )}
-      <Typography variant="body2" align="center">
-        This website is still in BETA. This is 3rd party service independent of
-        BeethovenX and please do your own research. This is not investment
-        advice!
-      </Typography>
+      </>
+      )}
       {proposal === oldproposal && <MyBackdrop/>}
     </div>
   );
@@ -355,6 +355,7 @@ const columns: GridColDef[] = [
     type: 'number', 
     cellClassName: 'cell-mono',
     flex: 0.8, 
+    valueGetter: (params) => params.row.LabelValue.value,
     renderCell: (cellValues) => {
         return cellValues.row.LabelValue.value
           .toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
