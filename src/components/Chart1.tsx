@@ -6,8 +6,7 @@ import { useGlobalContext } from "contexts/GlobalContext";
 
 
 const Chart1 = React.memo( () => {
-  const dataUrl =
-    "https://beetswars-data-git-chartdata-rnz3.vercel.app/chart-data.json";
+  const dataUrl = "https://data.beetswars.live/chart-data.json";
   const { bribeFile, setBribeFile, setShowChart } = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
   const [chData, setData] = useState([]);
