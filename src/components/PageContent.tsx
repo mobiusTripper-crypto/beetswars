@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
-import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef, GridCellParams} from '@mui/x-data-grid';
+import { DataGrid, GridRowsProp, GridColDef, GridColTypeDef} from '@mui/x-data-grid';
 import LabeledListItem from "components/LabeledListItem";
 import useGetData from "hooks/useGetData";
 import TimeFormatter from "utils/TimeFormatter"
@@ -54,6 +54,7 @@ const PageContent: FC = () => {
       setShowChart(true)
   console.log(bribeFilesRev[0].filename)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getData.status])
 
   const roundNumber = /[0-9]a*/g
@@ -66,11 +67,13 @@ const PageContent: FC = () => {
 
   useEffect(() => {
     setOldproposal(proposal)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bribeFile]);
 
   useEffect(() => {
     setGVersion(version);
     setGProposal(proposal);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version,proposal]);
 
   console.log(getData.status,voteActive,showChart,bribeFile)

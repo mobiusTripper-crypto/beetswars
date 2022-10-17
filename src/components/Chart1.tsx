@@ -7,7 +7,7 @@ import { useGlobalContext } from "contexts/GlobalContext";
 
 const Chart1 = React.memo( () => {
   const dataUrl = "https://data.beetswars.live/chart-data.json";
-  const { bribeFile, setBribeFile, setShowChart } = useGlobalContext();
+  const {setBribeFile, setShowChart} = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
   const [chData, setData] = useState([]);
   var chartData = [];
@@ -18,7 +18,7 @@ const Chart1 = React.memo( () => {
   var totalOffers = [];
   var avgPer1000 = [];
   var endTime = [];
-  var numRounds = 0;
+  //var numRounds = 0;
 
   const fetchData = async () => {
     const res = await fetch(dataUrl);
@@ -62,7 +62,7 @@ const Chart1 = React.memo( () => {
         "en-US"
       );
     });
-    numRounds = rounds.length;
+    //numRounds = rounds.length;
   }
 
   const option = {

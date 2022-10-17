@@ -12,7 +12,7 @@
     "@types/node": "^16.11.25",
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
-    "echarts": "^5.3.3",
+    "echarts": "^5.4.0",
     "echarts-for-react": "^3.0.2",
     "ethers": "^5.5.4",
     "graphql": "^16.3.0",

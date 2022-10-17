@@ -340,6 +340,7 @@ const useGetData = (bribeFile: string) => {
       return list;
     };
     fetchDashboardData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataUrl, refresh, setDashboardResult, refreshInterval, voteActive]);
 
   return dashboardResult;
