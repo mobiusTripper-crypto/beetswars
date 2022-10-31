@@ -52,7 +52,7 @@ const PageContent: FC = () => {
   useEffect(() => {
     if (!voteActive && getData.status === "loaded") {
       setShowChart(true)
-  console.log(bribeFilesRev[0].filename)
+  //console.log(bribeFilesRev[0].filename)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getData.status])
@@ -66,7 +66,11 @@ const PageContent: FC = () => {
   };
 
   useEffect(() => {
-    setOldproposal(proposal)
+    if (!oldproposal) {
+      setOldproposal("no old proposal")
+    } else {
+      setOldproposal(proposal)
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bribeFile]);
 
@@ -77,7 +81,7 @@ const PageContent: FC = () => {
   }, [version,proposal]);
 
   console.log(getData.status,voteActive,showChart,bribeFile)
-  console.log("P",proposal,oldproposal)
+  //console.log("P",proposal,oldproposal)
 
   return (
     <div>
