@@ -13,6 +13,7 @@ const Chart1 = React.memo( () => {
   var chartData = [];
   var rounds = [];
   var totalVotes = [];
+  var bribedVotes = [];
   var totalVoter = [];
   var totalBribes = [];
   var totalOffers = [];
@@ -42,6 +43,9 @@ const Chart1 = React.memo( () => {
     rounds = chartData.chartdata.map((round: any) => {
       return "Round " + round.round;
     });
+    bribedVotes = chartData.chartdata.map(function (round: any) {
+      return round.bribedVotes;
+    });
     totalVotes = chartData.chartdata.map(function (round: any) {
       return round.totalVotes;
     });
@@ -55,7 +59,7 @@ const Chart1 = React.memo( () => {
       return round.totalBriber;
     });
     avgPer1000 = chartData.chartdata.map(function (round: any) {
-      return ((round.totalBribes / round.totalVotes) * 1000).toFixed(2);
+      return ((round.totalBribes / round.bribedVotes) * 1000).toFixed(2);
     });
     endTime = chartData.chartdata.map(function (round: any) {
       return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString(
@@ -66,7 +70,7 @@ const Chart1 = React.memo( () => {
   }
 
   const option = {
-    color: ["#F57EFF", "red", "cyan", "yellow", "#56FF00"],
+    color: ["#F57EFF", "red", "cyan", "yellow", "#56FF00", "#15883b"],
     textStyle: {
       color: "#ffffff",
     },
@@ -154,6 +158,14 @@ const Chart1 = React.memo( () => {
         right: "15%",
         top: "370",
       },
+      {
+        // bribed Votes 5
+        show: false,
+        height: "220",
+        left: "15%",
+        right: "15%",
+        top: "370",
+      },
     ],
 
     xAxis: [
@@ -210,6 +222,17 @@ const Chart1 = React.memo( () => {
         offset: 20,
         triggerEvent: true,
       },
+      {
+        //bribed votes
+        type: "category",
+        boundaryGap: false,
+        axisLine: { onZero: true },
+        //data: rounds,
+        gridIndex: 5,
+        show: false,
+        offset: 20,
+        triggerEvent: true,
+      },
     ],
 
     yAxis: [
@@ -252,7 +275,7 @@ const Chart1 = React.memo( () => {
         position: "right",
       },
       {
-        name: "Total Votes",
+        name: "total/bribed Votes",
         type: "value",
         nameTextStyle: { color: "#56FF00", fontSize: "0.9em" },
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
@@ -260,6 +283,19 @@ const Chart1 = React.memo( () => {
         gridIndex: 4,
         axisLabel: { color: "#56FF00", align: "right" },
         position: "left",
+max: 70000000,
+      },
+      {
+        name: "Bribed Votes",
+        nameTextStyle: { color: "FF0000", fontSize: "0.9em" },
+        type: "value",
+        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
+        gridIndex: 5,
+        position: "right",
+        axisLabel: { color: "FF0000", align: "left" },
+        nameLocation: "start",
+show: false,
+max: 70000000,
       },
     ],
 
@@ -272,11 +308,11 @@ const Chart1 = React.memo( () => {
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "#F57EFF", width: 1 },
+        lineStyle: { color: "#F57EFF", width: 2 },
         data: totalOffers,
         xAxisIndex: 0,
         yAxisIndex: 0,
-        markPoint: { itemStyle: { color: "#F57EFF" } },
+        //markPoint: { itemStyle: { color: "#F57EFF" } },
       },
       {
         name: "avg $/1000",
@@ -286,7 +322,7 @@ const Chart1 = React.memo( () => {
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "red", width: 1 },
+        lineStyle: { color: "red", width: 2 },
         data: avgPer1000,
         xAxisIndex: 1,
         yAxisIndex: 1,
@@ -312,23 +348,37 @@ const Chart1 = React.memo( () => {
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "yellow", width: 1 },
+        lineStyle: { color: "yellow", width: 2 },
         data: totalVoter,
         xAxisIndex: 3,
         yAxisIndex: 3,
       },
       {
-        name: "Votes",
+        name: "total Votes",
         type: "line",
         symbolSize: 3,
         showSymbol: false,
         smooth: "true",
         stack: "",
         areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "#56FF00" },
+        lineStyle: { color: "#56FF00", width: 2 },
         data: totalVotes,
         xAxisIndex: 4,
         yAxisIndex: 4,
+      },
+      {
+        name: "bribed Votes",
+        type: "line",
+        symbolSize: 3,
+        showSymbol: false,
+        smooth: "true",
+        stack: "",
+        areaStyle: { opacity: "0.1" },
+        lineStyle: { color: "#15883b", width: 2 },
+        data: bribedVotes,
+        xAxisIndex: 5,
+        yAxisIndex: 5,
+        //markPoint: { itemStyle: { color: "#15883b" } },
       },
     ],
   };
