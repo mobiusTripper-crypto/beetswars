@@ -203,6 +203,9 @@ const useGetData = (bribeFile: string) => {
         payload: {
           results: dashboardData,
           totalVotes: voteData.votingResults.sumOfResultsBalance,
+          totalBribedVotes: dashboardData
+            .map((item) => item.voteTotal)
+            .reduce((prev, curr) => prev + curr, 0),
           totalBribeAmount: dashboardData
             .map((item) => item.LabelValue.value)
             .reduce((prev, curr) => prev + curr, 0),

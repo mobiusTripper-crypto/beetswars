@@ -39,7 +39,7 @@ const PageContent: FC = () => {
     proposal = getData.payload.proposalId
     voteState = getData.payload.proposalState
     bribeFiles = getData.payload.bribeFiles
-    //console.log(getData)
+    //console.log(getData.payload.totalBribedVotes)
   }
 
   const tsNow = Math.floor(Date.now() / 1000)
@@ -99,17 +99,30 @@ const PageContent: FC = () => {
       <Typography variant="body2" align="center">
          Vote Start: {dateStart} - Vote End: {dateEnd} - ({voteActive ? timeTogo + " to go" : voteState})
       </Typography>
-          <Typography variant="h4" align="center">
-            {"Total Votes: " +
+          <Typography variant="h5" align="center">
+            {
+              "Votes total: " +
               getData.payload.totalVotes.toLocaleString(undefined, {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }) +
-              " - Total Bribes: $" +
+              " - on bribed Pools: " +
+              getData.payload.totalBribedVotes.toLocaleString(undefined, {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+              }) +
+              " | Bribes: $" +
               getData.payload.totalBribeAmount.toLocaleString(undefined, {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
-              })}
+              }) +
+              " - avg$/1000fB: " +
+              (getData.payload.totalBribeAmount/getData.payload.totalBribedVotes*1000)
+                .toLocaleString(undefined, {
+                minimumFractionDigits: 3,
+                maximumFractionDigits: 3,
+              })
+            }
           </Typography>
           <Box sx={{  padding: "2px", display: 'flex', justifyContent: 'flex-end', marginTop: "10px" }}> 
             <div style={{ marginRight: '9px'}}>

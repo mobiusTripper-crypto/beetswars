@@ -30,6 +30,7 @@ export interface DashboardType {
 export interface DashboardReturn {
   results: DashboardType[];
   totalVotes: number;
+  totalBribedVotes: number;
   totalBribeAmount: number;
   version: string;
   proposalState: string;
