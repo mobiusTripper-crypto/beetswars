@@ -74,7 +74,7 @@ const Chart1 = React.memo( () => {
       );
     });
     votingApr = chartData.chartdata.map((round: any) => {
-      return round.totalBribes/round.priceBeets/round.bribedVotes*1460
+      return round.totalBribes/round.priceBeets/round.bribedVotes*2600
     });
     //numRounds = rounds.length;
   }
