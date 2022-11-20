@@ -20,11 +20,14 @@ const Chart1 = React.memo( () => {
   var totalOffers = [];
   var avgPer1000 = [];
   var priceBeets = [];
+  var priceFbeets = [];
   var votingApr = [];
   var endTime = [];
   //var numRounds = 0;
 
-  let linewidth = "1";
+  let linewidth = "2";
+  let opacity = "0.04";
+  let areastyle = { opacity: opacity };
 
   const fetchData = async () => {
     const res = await fetch(dataUrl);
@@ -72,13 +75,16 @@ const Chart1 = React.memo( () => {
     priceBeets = chartData.chartdata.map((round: any) => {
       return parseFloat(round.priceBeets).toFixed(4);
     });
+    priceFbeets = chartData.chartdata.map((round: any) => {
+      return round.priceFbeets;
+    });
     endTime = chartData.chartdata.map(function (round: any) {
       return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString(
         "en-US"
       );
     });
     votingApr = chartData.chartdata.map((round: any) => {
-      return round.totalBribes/round.priceBeets/round.bribedVotes*2600
+      return round.totalBribes/round.priceFbeets/round.bribedVotes*2600
     });
     //numRounds = rounds.length;
   }
@@ -118,6 +124,7 @@ const Chart1 = React.memo( () => {
         });
         tooltip += `</table>`;
 
+//console.log("T",tooltip)
         return tooltip;
       },
     },
@@ -129,76 +136,28 @@ const Chart1 = React.memo( () => {
 
     grid: [
       {
-        // Offers index 0  top
-        show: false,
-        height: "220",
-        left: "15%",
-        right: "15%",
-        top: "60",
-      },
-      {
-        // Bribes index 1 top
-        show: false,
-        height: "220",
-        left: "15%",
-        right: "15%",
-        top: "60",
-      },
-      {
-        // avg1000   index 2 middle
-        show: false,
-        height: "220",
-        left: "15%",
-        right: "15%",
-        top: "340",
-      },
-      {
-        // beets price index 3  middle
-        show: false,
-        height: "220",
-        left: "15%",
-        right: "15%",
-        top: "340",
-      },
-      {
-        // voting apr index 4  middle
-        show: false,
-        height: "220",
-        left: "15%",
-        right: "15%",
-        top: "340",
-      },
-      {
-        // Votes index 5  bottom
+        // index 0  top
         show: false,
         height: "240",
         left: "15%",
         right: "15%",
-        top: "630",
+//        top: "60",
       },
       {
-        // bribed Votes index 6  bottom
+        // index 1 middle
         show: false,
         height: "240",
         left: "15%",
         right: "15%",
-        top: "630",
+        top: "360",
       },
       {
-        // Voter index 7  bottom
+        // index 2  bottom
         show: false,
         height: "240",
         left: "15%",
         right: "15%",
-        top: "630",
-      },
-      {
-        // bribed ratio  index 8  bottom
-        show: false,
-        height: "240",
-        left: "15%",
-        right: "15%",
-        top: "630",
+        top: "680",
       },
     ],
 
@@ -220,7 +179,7 @@ const Chart1 = React.memo( () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         data: endTime,
-        gridIndex: 1,
+        gridIndex: 0,
         show: false,
         triggerEvent: true,
       },
@@ -230,7 +189,7 @@ const Chart1 = React.memo( () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         data: rounds,
-        gridIndex: 2,
+        gridIndex: 1,
         offset: 20,
         show: false,
         triggerEvent: true,
@@ -241,7 +200,7 @@ const Chart1 = React.memo( () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         data: endTime,
-        gridIndex: 3,
+        gridIndex: 1,
         show: false,
         offset: 20,
         triggerEvent: true,
@@ -252,7 +211,7 @@ const Chart1 = React.memo( () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         //data: rounds,
-        gridIndex: 4,
+        gridIndex: 1,
         show: false,
         offset: 20,
         triggerEvent: true,
@@ -263,8 +222,10 @@ const Chart1 = React.memo( () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         data: rounds,
-        gridIndex: 5,
+        gridIndex: 2,
         show: true,
+        offset: 10,
+position: "bottom",
         triggerEvent: true,
       },
       {
@@ -273,9 +234,10 @@ const Chart1 = React.memo( () => {
         boundaryGap: false,
         axisLine: { onZero: true },
         data: endTime,
-        gridIndex: 6,
+        gridIndex: 2,
         show: true,
-        offset: 20,
+        offset: 30,
+position: "bottom",
         triggerEvent: true,
       },
       {
@@ -283,10 +245,10 @@ const Chart1 = React.memo( () => {
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
-        //data: rounds,
-        gridIndex: 7,
+        data: endTime,
+        gridIndex: 2,
         show: false,
-        offset: 20,
+        offset: 30,
         triggerEvent: true,
       },
       {
@@ -294,10 +256,10 @@ const Chart1 = React.memo( () => {
         type: "category",
         boundaryGap: false,
         axisLine: { onZero: true },
-        //data: rounds,
-        gridIndex: 8,
+        data: endTime,
+        gridIndex: 2,
         show: false,
-        offset: 20,
+        //offset: 20,
         triggerEvent: true,
       },
     ],
@@ -315,19 +277,19 @@ const Chart1 = React.memo( () => {
         axisTick: { show: false },
       },
       {
-        name: "Total Bribes $",
+        name: "Total Incentives $",
         nameTextStyle: { color: "cyan", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         axisLabel: { color: "cyan", align: "right" },
-        gridIndex: 1,
+        gridIndex: 0,
       },
       {
         name: "Avg $/1000 fB",
         nameTextStyle: { color: "orange", fontSize: "0.9em" },
         type: "log",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
-        gridIndex: 2,
+        gridIndex: 1,
         position: "right",
         axisLabel: { color: "orange", align: "left" },
         //nameLocation: "start",
@@ -338,7 +300,7 @@ const Chart1 = React.memo( () => {
         nameTextStyle: { color: "red", fontSize: "0.9em" },
         type: "log",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
-        gridIndex: 3,
+        gridIndex: 1,
         position: "left",
         axisLabel: { color: "red", align: "right" },
         //nameLocation: "start",
@@ -346,9 +308,9 @@ const Chart1 = React.memo( () => {
       {
         name: "Voting APR %",
         nameTextStyle: { color: "white", fontSize: "0.9em" },
-        type: "log",
+        type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
-        gridIndex: 4,
+        gridIndex: 1,
         position: "right",
         axisLabel: { color: "white", align: "left" },
         nameLocation: "start",
@@ -358,27 +320,27 @@ const Chart1 = React.memo( () => {
         nameTextStyle: { color: "yellow", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
-        gridIndex: 5,
+        gridIndex: 2,
         axisLabel: { color: "yellow", align: "left" },
         position: "right",
       },
       {
-        name: "Total Votes - Bribed Votes",
+        name: "Total Votes - Incentivised Votes",
         type: "value",
         nameTextStyle: { color: "lime", fontSize: "0.9em" },
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         //  inverse: true,
-        gridIndex: 6,
+        gridIndex: 2,
         axisLabel: { color: "lime", align: "right" },
         position: "left",
         max: 70000000,
       },
       {
-        name: "Bribed Votes",
+        name: "Incentivised Votes",
         nameTextStyle: { color: "green", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
-        gridIndex: 7,
+        gridIndex: 2,
         position: "right",
         axisLabel: { color: "green", align: "left" },
         nameLocation: "start",
@@ -386,11 +348,11 @@ const Chart1 = React.memo( () => {
         max: 70000000,
       },
       {
-        name: "Bribed Votes Ratio",
+        name: "Incentivised Votes Ratio",
         nameTextStyle: { color: "grey", fontSize: "0.9em" },
         type: "value",
         splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },
-        gridIndex: 8,
+        gridIndex: 2,
         position: "right",
         axisLabel: { color: "grey", align: "left" },
         nameLocation: "start",
@@ -406,7 +368,7 @@ const Chart1 = React.memo( () => {
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
+        areaStyle: { opacity: opacity },
         lineStyle: { color: "magenta", width: linewidth },
         data: totalOffers,
         xAxisIndex: 0,
@@ -414,13 +376,13 @@ const Chart1 = React.memo( () => {
         //markPoint: { itemStyle: { color: "#F57EFF" } },
       },
       {
-        name: "Total Bribes",
+        name: "Total Incentives",
         type: "line",
         symbolSize: 3,
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
+        areaStyle: { opacity: opacity },
         lineStyle: { color: "cyan", width: linewidth },
         data: totalBribes,
         xAxisIndex: 1,
@@ -433,7 +395,7 @@ const Chart1 = React.memo( () => {
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
+        areaStyle: { opacity: opacity },
         lineStyle: { color: "orange", width: linewidth },
         data: avgPer1000,
         xAxisIndex: 2,
@@ -446,7 +408,7 @@ const Chart1 = React.memo( () => {
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
+        areaStyle: { opacity: opacity },
         lineStyle: { color: "red", width: linewidth },
         data: priceBeets,
         xAxisIndex: 3,
@@ -460,7 +422,7 @@ const Chart1 = React.memo( () => {
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
+        areaStyle: { opacity: opacity },
         lineStyle: { color: "white", width: linewidth },
         data: votingApr,
         xAxisIndex: 4,
@@ -474,7 +436,7 @@ const Chart1 = React.memo( () => {
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
+        areaStyle: { opacity: opacity },
         lineStyle: { color: "yellow", width: linewidth },
         data: totalVoter,
         xAxisIndex: 5,
@@ -487,31 +449,31 @@ const Chart1 = React.memo( () => {
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
+        areaStyle: areastyle,
         lineStyle: { color: "lime", width: linewidth },
         data: totalVotes,
         xAxisIndex: 6,
         yAxisIndex: 6,
       },
       {
-        name: "Bribed Votes",
+        name: "Incentivised Votes",
         type: "line",
         symbolSize: 3,
         showSymbol: false,
         smooth: "true",
         stack: "",
-        areaStyle: { opacity: "0.1" },
-        lineStyle: { color: "green", width: 2 },
+        areaStyle: { opacity: opacity },
+        lineStyle: { color: "green", width: linewidth },
         data: bribedVotes,
         xAxisIndex: 7,
         yAxisIndex: 7,
         //markPoint: { itemStyle: { color: "#15883b" } },
       },
       {
-        name: "Bribed Votes Ratio %",
+        name: "Incentivised Votes Ratio %",
         type: "bar",
         showSymbol: false,
-        itemStyle: { opacity: "0.01" },
+        itemStyle: { opacity: opacity },
         data: bribedVotesRatio,
         xAxisIndex: 8,
         yAxisIndex: 8,
@@ -544,7 +506,7 @@ const Chart1 = React.memo( () => {
       <ReactECharts
         option={option}
         onEvents={onEvents}
-        style={{ height: 980 }}
+        style={{ height: 1000 }}
       />
       <Typography variant="body2" align="center">
         (clicking on data points loads historical pages)

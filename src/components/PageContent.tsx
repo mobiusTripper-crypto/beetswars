@@ -106,12 +106,12 @@ const PageContent: FC = () => {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }) +
-              " - on bribed Pools: " +
+              " - on incentivised Pools: " +
               getData.payload.totalBribedVotes.toLocaleString(undefined, {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               }) +
-              " | Bribes: $" +
+              " | Incentives: $" +
               getData.payload.totalBribeAmount.toLocaleString(undefined, {
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
