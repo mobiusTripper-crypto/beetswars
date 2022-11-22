@@ -4,10 +4,9 @@ import ReactECharts from "echarts-for-react";
 import Typography from "@mui/material/Typography";
 import { useGlobalContext } from "contexts/GlobalContext";
 
-
-const Chart1 = React.memo( () => {
+const Chart1 = React.memo(() => {
   const dataUrl = "https://data.beetswars.live/chart-data.json";
-  const {setBribeFile, setShowChart} = useGlobalContext();
+  const { setBribeFile, setShowChart } = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
   const [chData, setData] = useState([]);
   var chartData = [];
@@ -36,12 +35,14 @@ const Chart1 = React.memo( () => {
     setLoaded(true);
   };
 
-  const mountedRef = useRef(true)
+  const mountedRef = useRef(true);
 
   useEffect(() => {
     setLoaded(false);
     fetchData();
-    return () => {mountedRef.current = false}
+    return () => {
+      mountedRef.current = false;
+    };
   }, []);
 
   if (!isLoaded) {
@@ -55,7 +56,7 @@ const Chart1 = React.memo( () => {
       return round.bribedVotes;
     });
     bribedVotesRatio = chartData.chartdata.map((round: any) => {
-      return (round.bribedVotes / round.totalVotes * 100).toFixed(2);
+      return ((round.bribedVotes / round.totalVotes) * 100).toFixed(2);
     });
     totalVotes = chartData.chartdata.map((round: any) => {
       return round.totalVotes;
@@ -84,13 +85,23 @@ const Chart1 = React.memo( () => {
       );
     });
     votingApr = chartData.chartdata.map((round: any) => {
-      return round.totalBribes/round.priceFbeets/round.bribedVotes*2600
+      return (round.totalBribes / round.priceFbeets / round.bribedVotes) * 2600;
     });
     //numRounds = rounds.length;
   }
 
   const option = {
-    color: ["magenta", "cyan", "orange", "red", "white", "yellow", "lime", "green", "grey" ],
+    color: [
+      "magenta",
+      "cyan",
+      "orange",
+      "red",
+      "white",
+      "yellow",
+      "lime",
+      "green",
+      "grey",
+    ],
     textStyle: {
       color: "#ffffff",
     },
@@ -108,7 +119,7 @@ const Chart1 = React.memo( () => {
 
     tooltip: {
       trigger: "axis",
-      padding: 2,
+      padding: 7,
       backgroundColor: "#FFFFFFEE",
       formatter: (args: any) => {
         //console.log(args);
@@ -117,14 +128,20 @@ const Chart1 = React.memo( () => {
                           <table> `;
 
         args.forEach((item: any) => {
-          tooltip += `<tr><td>${item.marker}</td><td> ${item.seriesName}:</td><td align='right'> 
-            ${(item.value === "0") ? "ukn" : item.value
-            .toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})
+          tooltip += `<tr><td>${item.marker}</td><td> ${
+            item.seriesName
+          }:</td><td align='right'> 
+            ${
+              item.value === "0"
+                ? "0"
+                : item.value.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
             }</td></tr>`;
         });
         tooltip += `</table>`;
 
-//console.log("T",tooltip)
         return tooltip;
       },
     },
@@ -141,7 +158,7 @@ const Chart1 = React.memo( () => {
         height: "240",
         left: "15%",
         right: "15%",
-//        top: "60",
+        // top: "60",
       },
       {
         // index 1 middle
@@ -225,7 +242,7 @@ const Chart1 = React.memo( () => {
         gridIndex: 2,
         show: true,
         offset: 10,
-position: "bottom",
+        position: "bottom",
         triggerEvent: true,
       },
       {
@@ -237,7 +254,7 @@ position: "bottom",
         gridIndex: 2,
         show: true,
         offset: 30,
-position: "bottom",
+        position: "bottom",
         triggerEvent: true,
       },
       {
@@ -269,10 +286,9 @@ position: "bottom",
         name: "Offers",
         nameTextStyle: { color: "magenta", fontSize: "0.9em" },
         type: "value",
-        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } },  //  #XXXXXX00 invisible
+        splitLine: { lineStyle: { type: "dotted", color: "#55555500" } }, //  #XXXXXX00 invisible
         gridIndex: 0,
         position: "right",
-        //offset: 23,
         axisLabel: { color: "magenta", align: "left" },
         axisTick: { show: false },
       },
@@ -292,7 +308,6 @@ position: "bottom",
         gridIndex: 1,
         position: "right",
         axisLabel: { color: "orange", align: "left" },
-        //nameLocation: "start",
         offset: 43,
       },
       {
@@ -303,7 +318,6 @@ position: "bottom",
         gridIndex: 1,
         position: "left",
         axisLabel: { color: "red", align: "right" },
-        //nameLocation: "start",
       },
       {
         name: "Voting APR %",
@@ -329,7 +343,6 @@ position: "bottom",
         type: "value",
         nameTextStyle: { color: "lime", fontSize: "0.9em" },
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
-        //  inverse: true,
         gridIndex: 2,
         axisLabel: { color: "lime", align: "right" },
         position: "left",
@@ -373,7 +386,6 @@ position: "bottom",
         data: totalOffers,
         xAxisIndex: 0,
         yAxisIndex: 0,
-        //markPoint: { itemStyle: { color: "#F57EFF" } },
       },
       {
         name: "Total Incentives",
@@ -413,7 +425,6 @@ position: "bottom",
         data: priceBeets,
         xAxisIndex: 3,
         yAxisIndex: 3,
-        //markPoint: { itemStyle: { color: "#15883b" } },
       },
       {
         name: "Voting APR %",
@@ -427,7 +438,6 @@ position: "bottom",
         data: votingApr,
         xAxisIndex: 4,
         yAxisIndex: 4,
-        //markPoint: { itemStyle: { color: "#15883b" } },
       },
       {
         name: "Total Voter",
@@ -473,7 +483,7 @@ position: "bottom",
         name: "Incentivised Votes Ratio %",
         type: "bar",
         showSymbol: false,
-        itemStyle: { opacity: opacity },
+        itemStyle: { opacity: 0.0 },
         data: bribedVotesRatio,
         xAxisIndex: 8,
         yAxisIndex: 8,
@@ -484,13 +494,18 @@ position: "bottom",
   const onChartClick = (params: any) => {
     const offset = 1;
 
-    if ( params.dataIndex > 2 ) {
+    if (params.dataIndex > 2) {
       let requestedRound = params.dataIndex + offset;
       requestedRound =
         requestedRound < 10 ? "0" + requestedRound : requestedRound;
       setBribeFile("bribe-data-" + requestedRound + ".json");
       setShowChart(false);
-      console.log("click", params.dataIndex, "->", "bribe-data-" + requestedRound + ".json");
+      console.log(
+        "click",
+        params.dataIndex,
+        "->",
+        "bribe-data-" + requestedRound + ".json"
+      );
     }
   };
 
@@ -511,7 +526,6 @@ position: "bottom",
       <Typography variant="body2" align="center">
         (clicking on data points loads historical pages)
       </Typography>
-
     </>
   );
 });

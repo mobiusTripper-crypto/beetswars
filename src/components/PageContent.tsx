@@ -80,7 +80,7 @@ const PageContent: FC = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version,proposal]);
 
-  console.log(getData.status,voteActive,showChart,bribeFile)
+  //console.log(getData.status,voteActive,showChart,bribeFile)
   //console.log("P",proposal,oldproposal)
 
   return (
