@@ -65,7 +65,7 @@ const Chart1 = React.memo(() => {
       return round.totalVoter;
     });
     totalBribes = chartData.chartdata.map((round: any) => {
-      return round.totalBribes;
+      return round.totalBribes === "0" ? "NaN" : round.totalBribes
     });
     totalOffers = chartData.chartdata.map((round: any) => {
       return round.totalBriber;
@@ -295,10 +295,11 @@ const Chart1 = React.memo(() => {
       {
         name: "Total Incentives $",
         nameTextStyle: { color: "cyan", fontSize: "0.9em" },
-        type: "value",
+        type: "log",
         splitLine: { lineStyle: { type: "dotted", color: "#555555" } },
         axisLabel: { color: "cyan", align: "right" },
         gridIndex: 0,
+        max: 1200000,
       },
       {
         name: "Avg $/1000 fB",
