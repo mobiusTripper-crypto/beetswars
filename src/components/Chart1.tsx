@@ -389,7 +389,7 @@ const Chart1 = React.memo(() => {
         yAxisIndex: 0,
       },
       {
-        name: "Total Incentives",
+        name: "Total Incentives $",
         type: "line",
         symbolSize: 3,
         showSymbol: false,
