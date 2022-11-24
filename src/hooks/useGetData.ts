@@ -126,7 +126,7 @@ const useGetData = (bribeFile: string) => {
                   price: sharePrice,
                 };
                 tokenPrices.push(data);
-                console.log("return bpt tkn:", tkn.token, sharePrice);
+                //console.log("return bpt tkn:", tkn.token, sharePrice);
               } else {
                 const provider = new ethers.providers.JsonRpcProvider(
                   "https://rpc.ftm.tools"
@@ -146,7 +146,7 @@ const useGetData = (bribeFile: string) => {
                   price: parseFloat(ethers.utils.formatEther(priceobj)),
                 };
                 tokenPrices.push(data);
-                console.log("return rpc tkn:", tkn.token, price);
+                //console.log("return rpc tkn:", tkn.token, price);
               }
             })
           );
@@ -162,7 +162,7 @@ const useGetData = (bribeFile: string) => {
                   price: tkn.lastprice,
                 };
                 tokenPrices.push(data);
-                console.log("return h bpt:", tkn.token);
+                //console.log("return h bpt:", tkn.token);
               } else {
                 //console.log("h tkn:", tkn.token, tkn.coingeckoid);
                 if (tkn.coingeckoid && voteData.proposal.state !== "active") {
@@ -183,7 +183,7 @@ const useGetData = (bribeFile: string) => {
                       };
                       tokenPrices.push(data);
                     });
-                  console.log("return h tkn:", tkn.token);
+                  //console.log("return h tkn:", tkn.token);
                 }
               }
             })
@@ -203,6 +203,9 @@ const useGetData = (bribeFile: string) => {
         payload: {
           results: dashboardData,
           totalVotes: voteData.votingResults.sumOfResultsBalance,
+          totalBribedVotes: dashboardData
+            .map((item) => item.voteTotal)
+            .reduce((prev, curr) => prev + curr, 0),
           totalBribeAmount: dashboardData
             .map((item) => item.LabelValue.value)
             .reduce((prev, curr) => prev + curr, 0),
