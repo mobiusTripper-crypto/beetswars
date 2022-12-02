@@ -1,6 +1,5 @@
 interface ResultsData {
   resultsByVoteBalance: any;
-  resultsByStrategyScore: any;
   sumOfResultsBalance: any;
 }
 
