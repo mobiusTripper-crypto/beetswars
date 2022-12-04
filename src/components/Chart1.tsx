@@ -6,9 +6,10 @@ import { useGlobalContext } from "contexts/GlobalContext";
 
 const Chart1 = React.memo(() => {
   const dataUrl = "https://data.beetswars.live/chart-data.json";
+  const apiUrl = "https://beetswars-backend.cyclic.app/API/v1/chartdata";
   const { setBribeFile, setShowChart } = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
-  const [chData, setData] = useState([]);
+  const [chData, setData] = useState<any[]>([]);
   var chartData = [];
   var rounds = [];
   var totalVotes = [];
@@ -29,7 +30,7 @@ const Chart1 = React.memo(() => {
   let areastyle = { opacity: opacity };
 
   const fetchData = async () => {
-    const res = await fetch(dataUrl);
+    const res = await fetch(apiUrl);
     const json = await res.json();
     setData(json);
     setLoaded(true);
@@ -48,43 +49,45 @@ const Chart1 = React.memo(() => {
   if (!isLoaded) {
     return <></>;
   } else {
-    chartData = JSON.parse(JSON.stringify(chData));
-    rounds = chartData.chartdata.map((round: any) => {
+
+    chartData = chData.sort(( a, b) => a.voteEnd > b.voteEnd ? 1 : -1);
+console.log(chartData)
+    rounds = chartData.map((round: any) => {
       return "Round " + round.round;
     });
-    bribedVotes = chartData.chartdata.map((round: any) => {
+    bribedVotes = chartData.map((round: any) => {
       return round.bribedVotes;
     });
-    bribedVotesRatio = chartData.chartdata.map((round: any) => {
+    bribedVotesRatio = chartData.map((round: any) => {
       return ((round.bribedVotes / round.totalVotes) * 100).toFixed(2);
     });
-    totalVotes = chartData.chartdata.map((round: any) => {
+    totalVotes = chartData.map((round: any) => {
       return round.totalVotes;
     });
-    totalVoter = chartData.chartdata.map((round: any) => {
+    totalVoter = chartData.map((round: any) => {
       return round.totalVoter;
     });
-    totalBribes = chartData.chartdata.map((round: any) => {
+    totalBribes = chartData.map((round: any) => {
       return round.totalBribes === "0" ? "NaN" : round.totalBribes
     });
-    totalOffers = chartData.chartdata.map((round: any) => {
+    totalOffers = chartData.map((round: any) => {
       return round.totalBriber;
     });
-    avgPer1000 = chartData.chartdata.map((round: any) => {
+    avgPer1000 = chartData.map((round: any) => {
       return ((round.totalBribes / round.bribedVotes) * 1000).toFixed(2);
     });
-    priceBeets = chartData.chartdata.map((round: any) => {
+    priceBeets = chartData.map((round: any) => {
       return parseFloat(round.priceBeets).toFixed(4);
     });
-    priceFbeets = chartData.chartdata.map((round: any) => {
+    priceFbeets = chartData.map((round: any) => {
       return round.priceFbeets;
     });
-    endTime = chartData.chartdata.map(function (round: any) {
+    endTime = chartData.map(function (round: any) {
       return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString(
         "en-US"
       );
     });
-    votingApr = chartData.chartdata.map((round: any) => {
+    votingApr = chartData.map((round: any) => {
       return (round.totalBribes / round.priceFbeets / round.bribedVotes) * 2600;
     });
     //numRounds = rounds.length;
