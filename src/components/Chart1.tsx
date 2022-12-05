@@ -5,12 +5,12 @@ import Typography from "@mui/material/Typography";
 import { useGlobalContext } from "contexts/GlobalContext";
 
 const Chart1 = React.memo(() => {
-  const dataUrl = "https://data.beetswars.live/chart-data.json";
-  const apiUrl = "https://beetswars-backend.cyclic.app/API/v1/chartdata";
+//  const dataUrl = "https://data.beetswars.live/chart-data.json";
+  const dataUrl = "https://beetswars-backend.cyclic.app/API/v1/chartdata";
   const { setBribeFile, setShowChart } = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
   const [chData, setData] = useState<any[]>([]);
-  var chartData = [];
+  var chartData:any = [];
   var rounds = [];
   var totalVotes = [];
   var bribedVotes = [];
@@ -30,7 +30,7 @@ const Chart1 = React.memo(() => {
   let areastyle = { opacity: opacity };
 
   const fetchData = async () => {
-    const res = await fetch(apiUrl);
+    const res = await fetch(dataUrl);
     const json = await res.json();
     setData(json);
     setLoaded(true);
@@ -50,44 +50,48 @@ const Chart1 = React.memo(() => {
     return <></>;
   } else {
 
-    chartData = chData.sort(( a, b) => a.voteEnd > b.voteEnd ? 1 : -1);
-console.log(chartData)
-    rounds = chartData.map((round: any) => {
+    console.log(chData)
+    //  chartData = chData.chartdata.sort(( a, b) => a.voteEnd > b.voteEnd ? 1 : -1);
+
+    chartData = JSON.parse(JSON.stringify(chData))
+    chartData.chartdata.sort(( a:any, b:any ) => a.voteEnd > b.voteEnd ? 1 : -1);
+
+    rounds = chartData.chartdata.map((round: any) => {
       return "Round " + round.round;
     });
-    bribedVotes = chartData.map((round: any) => {
+    bribedVotes = chartData.chartdata.map((round: any) => {
       return round.bribedVotes;
     });
-    bribedVotesRatio = chartData.map((round: any) => {
+    bribedVotesRatio = chartData.chartdata.map((round: any) => {
       return ((round.bribedVotes / round.totalVotes) * 100).toFixed(2);
     });
-    totalVotes = chartData.map((round: any) => {
+    totalVotes = chartData.chartdata.map((round: any) => {
       return round.totalVotes;
     });
-    totalVoter = chartData.map((round: any) => {
+    totalVoter = chartData.chartdata.map((round: any) => {
       return round.totalVoter;
     });
-    totalBribes = chartData.map((round: any) => {
-      return round.totalBribes === "0" ? "NaN" : round.totalBribes
+    totalBribes = chartData.chartdata.map((round: any) => {
+      return (round.totalBribes === 0 || round.totalBribes === "0") ? "NaN" : round.totalBribes
     });
-    totalOffers = chartData.map((round: any) => {
+    totalOffers = chartData.chartdata.map((round: any) => {
       return round.totalBriber;
     });
-    avgPer1000 = chartData.map((round: any) => {
+    avgPer1000 = chartData.chartdata.map((round: any) => {
       return ((round.totalBribes / round.bribedVotes) * 1000).toFixed(2);
     });
-    priceBeets = chartData.map((round: any) => {
+    priceBeets = chartData.chartdata.map((round: any) => {
       return parseFloat(round.priceBeets).toFixed(4);
     });
-    priceFbeets = chartData.map((round: any) => {
+    priceFbeets = chartData.chartdata.map((round: any) => {
       return round.priceFbeets;
     });
-    endTime = chartData.map(function (round: any) {
+    endTime = chartData.chartdata.map(function (round: any) {
       return new Date(parseInt(round.voteEnd) * 1000).toLocaleDateString(
         "en-US"
       );
     });
-    votingApr = chartData.map((round: any) => {
+    votingApr = chartData.chartdata.map((round: any) => {
       return (round.totalBribes / round.priceFbeets / round.bribedVotes) * 2600;
     });
     //numRounds = rounds.length;
