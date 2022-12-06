@@ -3,7 +3,7 @@ export interface ChartData {
 }
 
 interface ChartDataType {
-  round: number;
+  round: string;
   bribedVotes: number;
   voteEnd: number;
   totalBribes: number;

@@ -15,7 +15,7 @@ const Chart1 = React.memo(() => {
             : "https://data.beetswars.live/chart-data-from-api.json" 
   const { setBribeFile, setShowChart } = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
-  const [chartData, setData] = useState<ChartData | undefined>(undefined);
+  const [chartData, setData] = useState<ChartData>();
 
   const linewidth = "2";
   const opacity = "0.04";
@@ -23,7 +23,7 @@ const Chart1 = React.memo(() => {
 
   const fetchData = async () => {
     const res = await fetch(dataUrl);
-    const json = await res.json();
+    const json = await res.json() as ChartData;
     setData(json);
     setLoaded(true);
   };
@@ -38,7 +38,7 @@ const Chart1 = React.memo(() => {
     };
   }, []);
 
-  chartData?.chartdata.sort((a: any, b: any) =>
+  chartData?.chartdata.sort((a , b ) =>
     a.voteEnd > b.voteEnd ? 1 : -1
   );
 
@@ -505,6 +505,16 @@ const Chart1 = React.memo(() => {
   const onEvents = {
     click: onChartClick,
   };
+
+  if (!isLoaded) {
+    return (
+      <>
+        <Typography variant="body2" align="center">
+          Chart loading ... 
+        </Typography>
+      </>
+    )
+  }
 
   return (
     <>
