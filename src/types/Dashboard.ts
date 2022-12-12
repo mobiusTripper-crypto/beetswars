@@ -3,8 +3,8 @@ interface AdditionalRewards {
   factor: number;
 }
 
-export interface BribeFiles {
-  filename: string;
+export interface RoundList {
+  roundnumber: string;
 }
 
 interface LabelValuePair {
@@ -38,5 +38,5 @@ export interface DashboardReturn {
   proposalEnd: number;
   proposalTitle: string;
   proposalId: string;
-  bribeFiles: BribeFiles[];
+  roundList: RoundList[];
 }

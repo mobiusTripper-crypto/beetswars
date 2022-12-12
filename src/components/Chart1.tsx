@@ -5,15 +5,14 @@ import Typography from "@mui/material/Typography";
 import { useGlobalContext } from "contexts/GlobalContext";
 import { ChartData } from "types/ChartData";
 
-
-// set false for json files, set true for backend (TODO: add to GlobalContext)
-const USE_API = true
+// set false for json files, set true for backend
+const USE_API = true;
 
 const Chart1 = React.memo(() => {
-  const dataUrl = (USE_API) 
-            ? "https://beetswars-backend.cyclic.app/API/v1/chartdata"
-            : "https://data.beetswars.live/chart-data-from-api.json" 
-  const { setBribeFile, setShowChart } = useGlobalContext();
+  const dataUrl = USE_API
+    ? "https://beetswars-backend.cyclic.app/API/v1/chartdata"
+    : "https://data.beetswars.live/chart-data-from-api.json";
+  const { requestRound, setShowChart } = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
   const [chartData, setData] = useState<ChartData>();
 
@@ -23,7 +22,7 @@ const Chart1 = React.memo(() => {
 
   const fetchData = async () => {
     const res = await fetch(dataUrl);
-    const json = await res.json() as ChartData;
+    const json = (await res.json()) as ChartData;
     setData(json);
     setLoaded(true);
   };
@@ -36,13 +35,12 @@ const Chart1 = React.memo(() => {
     return () => {
       mountedRef.current = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  chartData?.chartdata.sort((a , b ) =>
-    a.voteEnd > b.voteEnd ? 1 : -1
-  );
+  chartData?.chartdata.sort((a, b) => (a.voteEnd > b.voteEnd ? 1 : -1));
 
-  console.log(chartData);
+  //  console.log(chartData);
 
   const rounds = chartData?.chartdata.map((round) => {
     return "Round " + round.round;
@@ -71,9 +69,11 @@ const Chart1 = React.memo(() => {
   const priceBeets = chartData?.chartdata.map((round) => {
     return round.priceBeets.toFixed(4);
   });
+  /*
   const priceFbeets = chartData?.chartdata.map((round) => {
     return round.priceFbeets;
   });
+*/
   const endTime = chartData?.chartdata.map((round) => {
     return new Date(round.voteEnd * 1000).toLocaleDateString("en-US");
   });
@@ -491,14 +491,9 @@ const Chart1 = React.memo(() => {
       let requestedRound = params.dataIndex + offset;
       requestedRound =
         requestedRound < 10 ? "0" + requestedRound : requestedRound;
-      setBribeFile("bribe-data-" + requestedRound + ".json");
+      requestRound(requestedRound);
       setShowChart(false);
-      console.log(
-        "click",
-        params.dataIndex,
-        "->",
-        "bribe-data-" + requestedRound + ".json"
-      );
+      console.log("click", params.dataIndex, "->", "request " + requestedRound);
     }
   };
 
@@ -510,10 +505,10 @@ const Chart1 = React.memo(() => {
     return (
       <>
         <Typography variant="body2" align="center">
-          Chart loading ... 
+          Chart loading ...
         </Typography>
       </>
-    )
+    );
   }
 
   return (

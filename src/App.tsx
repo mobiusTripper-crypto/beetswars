@@ -8,7 +8,7 @@ import Footer from "components/Footer";
 import { MyGlobalContext } from "contexts/GlobalContext";
 
 function App() {
-  const [bribeFile, setBribeFile] = useState<string>("bribe-data-latest.json");
+  const [requestedRound, requestRound] = useState<string>("latest");
   const [gVersion, setGVersion] = useState<string>("");
   const [gProposal, setGProposal] = useState<string>("");
   const [showChart, setShowChart] = useState<boolean>(false);
@@ -17,8 +17,8 @@ function App() {
     <div>
       <MyGlobalContext.Provider
         value={{
-          bribeFile,
-          setBribeFile,
+          requestedRound,
+          requestRound,
           showChart,
           setShowChart,
           gVersion,
