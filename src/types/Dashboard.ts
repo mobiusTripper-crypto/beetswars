@@ -29,6 +29,7 @@ export interface DashboardType {
 
 export interface DashboardReturn {
   results: DashboardType[];
+  totalVoter: number;
   totalVotes: number;
   totalBribedVotes: number;
   totalBribeAmount: number;

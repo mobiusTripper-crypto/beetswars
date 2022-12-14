@@ -88,6 +88,7 @@ const useGetData = (requestedRound: string) => {
         "state:",
         voteActive,
         voteData.proposal.state,
+        voteData.proposal.votes,
         refreshInterval,
         endTime,
         tokenPriceData
@@ -196,6 +197,7 @@ const useGetData = (requestedRound: string) => {
         status: "loaded",
         payload: {
           results: dashboardData,
+          totalVoter: voteData.proposal.votes,
           totalVotes: voteData.votingResults.sumOfResultsBalance,
           totalBribedVotes: dashboardData
             .map((item) => item.voteTotal)

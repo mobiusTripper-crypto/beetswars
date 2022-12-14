@@ -127,8 +127,8 @@ const Chart1 = React.memo(() => {
               item.value === "0"
                 ? "0"
                 : item.value.toLocaleString("en-US", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
                   })
             }</td></tr>`;
         });

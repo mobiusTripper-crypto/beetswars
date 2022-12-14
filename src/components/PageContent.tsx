@@ -39,6 +39,7 @@ const PageContent: FC = () => {
   var voteTitle: string = "";
   var voteState: string = "";
   var proposal: string = "";
+  var totalVoter: number = 0;
   var voteActive: boolean = false;
   var roundList: RoundList[] = [];
 
@@ -50,11 +51,9 @@ const PageContent: FC = () => {
     voteTitle = getData.payload.proposalTitle;
     proposal = getData.payload.proposalId;
     voteState = getData.payload.proposalState;
+    totalVoter = getData.payload.totalVoter;
     roundList = getData.payload.roundList;
-    //console.log(getData.payload.totalBribedVotes)
   }
-
-  //console.log(roundList)
 
   const tsNow = Math.floor(Date.now() / 1000);
   const dateStart = new Date(voteStart * 1000).toUTCString();
@@ -120,6 +119,11 @@ const PageContent: FC = () => {
                   }) +
                   " - on incentivised Pools: " +
                   getData.payload.totalBribedVotes.toLocaleString(undefined, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  }) +
+                  " - Voter: " +
+                  getData.payload.totalVoter.toLocaleString(undefined, {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
                   })}
