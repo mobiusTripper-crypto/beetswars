@@ -7,7 +7,7 @@ import {
 } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
-import { DashboardType, DashboardReturn, BribeFiles } from "types/Dashboard";
+import { DashboardType, DashboardReturn } from "types/Dashboard";
 import { getResults } from "hooks/voteSnapshot";
 import { request } from "graphql-request";
 import { BPT_ACT_QUERY } from "hooks/queries";
@@ -15,10 +15,9 @@ import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 import useTimer from "hooks/useTimer";
 
-const useGetData = (bribeFile: string) => {
-  const dataUrl = process.env.REACT_APP_BRIBE_DATA_URL + bribeFile;
-  const historyUrl =
-    "https://api.github.com/repos/mobiusTripper-crypto/beetswars-data/git/trees/main";
+const useGetData = (requestedRound: string) => {
+  const baseUrl = "https://beetswars-backend.cyclic.app/api/v1/bribedata/";
+  const dataUrl = baseUrl + requestedRound;
   const [voteActive, setActive] = useState(false);
   const refreshInterval: number | null = voteActive ? 60000 : null; // ms or null
   const refresh = useTimer(refreshInterval);
@@ -28,26 +27,20 @@ const useGetData = (bribeFile: string) => {
 
   var tokenPriceData: TokenPriceData[] = [];
   var tokenPrices: TokenPrice[] = [];
-  var bribeFiles: BribeFiles[] = [];
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      const historyData = await fetch(historyUrl || "")
+      const allRoundsIndex = await fetch(baseUrl || "")
         .then((response) => {
           return response.json();
         })
         .then((response) => {
-          //console.log("return dirlist");
-          return response;
+          var liste = response.map((item: any, i: any) => {
+            return item.key;
+          });
+          const list = liste.sort().reverse();
+          return list;
         });
-
-      const regex_bribefile = new RegExp("bribe-data-[0-9a]*.json");
-      historyData.tree.forEach((item: any) => {
-        if (regex_bribefile.test(item.path)) {
-          const entry = { filename: item.path };
-          bribeFiles.push(entry);
-        }
-      });
 
       const bribeData = await fetch(dataUrl || "")
         .then((response) => {
@@ -91,9 +84,11 @@ const useGetData = (bribeFile: string) => {
       }
 
       console.log(
+        "latest:", allRoundsIndex[0],
         "state:",
         voteActive,
         voteData.proposal.state,
+        voteData.proposal.votes,
         refreshInterval,
         endTime,
         tokenPriceData
@@ -140,7 +135,7 @@ const useGetData = (bribeFile: string) => {
                 const priceobj = await contract.calculateAssetPrice(
                   tkn.tokenaddress
                 );
-                const price = parseFloat(ethers.utils.formatEther(priceobj));
+                //const price = parseFloat(ethers.utils.formatEther(priceobj));
                 const data: TokenPrice = {
                   token: tkn.token,
                   price: parseFloat(ethers.utils.formatEther(priceobj)),
@@ -202,6 +197,7 @@ const useGetData = (bribeFile: string) => {
         status: "loaded",
         payload: {
           results: dashboardData,
+          totalVoter: voteData.proposal.votes,
           totalVotes: voteData.votingResults.sumOfResultsBalance,
           totalBribedVotes: dashboardData
             .map((item) => item.voteTotal)
@@ -215,7 +211,7 @@ const useGetData = (bribeFile: string) => {
           proposalTitle: voteData.proposal.title,
           proposalId: bribeData.snapshot,
           proposalState: voteData.proposal.state,
-          bribeFiles: bribeFiles,
+          roundList: allRoundsIndex,
         },
       });
     };
@@ -343,12 +339,10 @@ const useGetData = (bribeFile: string) => {
       return list;
     };
     fetchDashboardData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataUrl, refresh, setDashboardResult, refreshInterval, voteActive]);
 
   return dashboardResult;
 };
 
 export default useGetData;
-
-

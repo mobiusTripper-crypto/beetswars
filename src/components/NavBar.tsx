@@ -5,7 +5,8 @@ import Link from "@mui/material/Link";
 import { useGlobalContext } from "contexts/GlobalContext";
 
 const NavBar: FC = () => {
-  const { showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
+  const { requestedRound, showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
+  const apilink: string = "https://beetswars-backend.cyclic.app/api/v1/bribedata/" + requestedRound
   const plink: string =
     "https://snapshot.org/#/beets.eth/" +
     (showChart ? "" : "proposal/" + gProposal);
@@ -22,11 +23,12 @@ const NavBar: FC = () => {
           background: "black",
           color: "white",
           textDecoration: "none",
+          paddingRight: "10px"
         }}
       >
         <Typography variant="caption" align="right">
           <Link
-            style={{ fontSize: "0.9rem" }}
+            style={{ fontSize: "1rem" }}
             href="https://beets.fi/#/"
             target="_blank"
             color="white"
@@ -36,7 +38,7 @@ const NavBar: FC = () => {
           </Link>{" "}
           |&nbsp;
           <Link
-            style={{ fontSize: "0.9rem" }}
+            style={{ fontSize: "1rem" }}
             href={plink}
             target="_blank"
             color="white"
@@ -46,7 +48,7 @@ const NavBar: FC = () => {
           </Link>{" "}
           |&nbsp;
           <Link
-            style={{ fontSize: "0.9rem" }}
+            style={{ fontSize: "1rem" }}
             href="https://github.com/mobiusTripper-crypto/beetswars"
             target="_blank"
             color="white"
@@ -59,8 +61,9 @@ const NavBar: FC = () => {
               {" "}
               |&nbsp;
               <Link
-                style={{ fontSize: "0.9rem" }}
-                href="https://github.com/mobiusTripper-crypto/beetswars-data"
+                style={{ fontSize: "1rem" }}
+                // href="https://github.com/mobiusTripper-crypto/beetswars-data"
+                href={apilink}
                 target="_blank"
                 color="white"
                 underline="hover"
