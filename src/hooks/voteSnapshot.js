@@ -22,8 +22,9 @@ async function getProposal(id) {
 }
 
 async function getProposalVotes(
+  maxFirst,
   proposalId,
-  { first, voter, skip } = { first: 50000, voter: "", skip: 0 }
+  { first, voter, skip } = { first: maxFirst, voter: "", skip: 0 }
 ) {
   try {
     const response = await request(endpoint, VOTES_QUERY, {
@@ -44,13 +45,15 @@ async function getProposalVotes(
 }
 
 export async function getResults(snapshotId) {
-
   const proposal = await getProposal(snapshotId);
 
-//console.log(new Date(proposal.created * 1000),proposal.snapshot)
-//console.log(snapshotId, proposal.id, proposal.state)
+  //console.log(new Date(proposal.created * 1000),proposal.snapshot)
+  //console.log(snapshotId, proposal.id, proposal.state)
 
-  const votes = await getProposalVotes(proposal.id);
+  const maxFirst = 1000;
+  const votes = await getProposalVotes(maxFirst, proposal.id);
+
+  console.log(votes);
 
   const voters = votes.map((vote) => vote.voter);
 
