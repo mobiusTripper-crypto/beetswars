@@ -35,7 +35,6 @@ async function getProposalVotes(
       voter,
       skip,
     });
-
     const votesResClone = lodash.cloneDeep(response);
     return votesResClone.votes;
   } catch (e) {
@@ -44,16 +43,28 @@ async function getProposalVotes(
   }
 }
 
+async function getAllProposalVotes(proposalId: string) {
+  let votes: Vote[] = [];
+  let page = 0;
+  const pageSize = 1000;
+  while (votes.length === pageSize * page) {
+    const newVotes = await getProposalVotes(pageSize, proposalId, {
+      first: pageSize,
+      skip: page * pageSize,
+    });
+    votes = [...votes, ...newVotes];
+    page++;
+  }
+  return votes;
+}
+
 export async function getResults(snapshotId) {
   const proposal = await getProposal(snapshotId);
 
-  //console.log(new Date(proposal.created * 1000),proposal.snapshot)
-  //console.log(snapshotId, proposal.id, proposal.state)
-
-  const maxFirst = 1000;
-  const votes = await getProposalVotes(maxFirst, proposal.id);
-
-  console.log(votes);
+  console.time("get votes");
+  const votes = await getAllProposalVotes(proposal.id);
+  console.timeEnd("get votes");
+  console.log(votes.length,"votes found");
 
   const voters = votes.map((vote) => vote.voter);
 
