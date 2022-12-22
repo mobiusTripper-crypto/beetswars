@@ -60,12 +60,7 @@ async function getAllProposalVotes(proposalId: string) {
 
 export async function getResults(snapshotId) {
   const proposal = await getProposal(snapshotId);
-
-  console.time("get votes");
   const votes = await getAllProposalVotes(proposal.id);
-  console.timeEnd("get votes");
-  console.log(votes.length,"votes found");
-
   const voters = votes.map((vote) => vote.voter);
 
   const scores = await snapshot.utils.getScores(
