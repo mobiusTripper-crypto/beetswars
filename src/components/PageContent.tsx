@@ -12,7 +12,8 @@ import {
   GridColTypeDef,
 } from "@mui/x-data-grid";
 import LabeledListItem from "components/LabeledListItem";
-import useGetData from "hooks/useGetData";
+import { useGetData } from "hooks/useGetData";
+import { useGetRounds } from "hooks/useGetRounds";
 import TimeFormatter from "utils/TimeFormatter";
 import { RoundList } from "types/Dashboard";
 import MyBackdrop from "components/MyBackdrop";
@@ -31,6 +32,7 @@ const PageContent: FC = () => {
   const [tableCards, changeTableCards] = useState(true);
   const [oldproposal, setOldproposal] = useState("nix");
 
+  const getRoundList: RoundList[] = useGetRounds();
   const getData = useGetData(requestedRound);
   var rows: GridRowsProp = [];
   var version: string = "";
@@ -39,9 +41,7 @@ const PageContent: FC = () => {
   var voteTitle: string = "";
   var voteState: string = "";
   var proposal: string = "";
-  var totalVoter: number = 0;
   var voteActive: boolean = false;
-  var roundList: RoundList[] = [];
 
   if (getData.status === "loaded") {
     version = "v" + getData.payload.version;
@@ -51,8 +51,6 @@ const PageContent: FC = () => {
     voteTitle = getData.payload.proposalTitle;
     proposal = getData.payload.proposalId;
     voteState = getData.payload.proposalState;
-    totalVoter = getData.payload.totalVoter;
-    roundList = getData.payload.roundList;
   }
 
   const tsNow = Math.floor(Date.now() / 1000);
@@ -154,7 +152,7 @@ const PageContent: FC = () => {
               >
                 <div style={{ marginRight: "9px" }}>
                   <select onChange={handleChange} value={requestedRound}>
-                    {roundList.map((bf: any, index: number) => (
+                    {getRoundList.map((bf: any, index: number) => (
                       <option key={index} value={bf}>
                         Round {bf}
                       </option>

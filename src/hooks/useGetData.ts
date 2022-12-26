@@ -7,7 +7,7 @@ import {
 } from "types/BribeData";
 import { ServiceType } from "types/Service";
 import { VoteDataType } from "types/VoteData";
-import { RoundList, DashboardType, DashboardReturn } from "types/Dashboard";
+import { DashboardType, DashboardReturn } from "types/Dashboard";
 import { getResults } from "hooks/voteSnapshot";
 import { request } from "graphql-request";
 import { BPT_ACT_QUERY } from "hooks/queries";
@@ -15,11 +15,11 @@ import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 import useTimer from "hooks/useTimer";
 
-const useGetData = (requestedRound: string) => {
-  const baseUrl = "https://beetswars-backend.cyclic.app/api/v1/bribedata/";
+export const baseUrl = "https://beetswars-backend.cyclic.app/api/v1/bribedata/";
+
+export const useGetData = (requestedRound: string) => {
   const dataUrl = baseUrl + requestedRound;
   const [voteActive, setActive] = useState(false);
-  const [roundListCache, setRoundListCache] = useState<RoundList[]>([]);
   const refreshInterval: number | null = voteActive ? 60000 : null; // ms or null
   const refresh = useTimer(refreshInterval);
   const [dashboardResult, setDashboardResult] = useState<
@@ -31,22 +31,6 @@ const useGetData = (requestedRound: string) => {
 
   useEffect(() => {
     const fetchDashboardData = async () => {
-      if (roundListCache.length === 0) {
-        console.log("round list:", roundListCache.length);
-        const allRoundsIndex = await fetch(baseUrl || "")
-          .then((response) => {
-            return response.json();
-          })
-          .then((response) => {
-            var liste = response.map((item: any, i: any) => {
-              return item.key;
-            });
-            const list = liste.sort().reverse();
-            return list;
-          });
-        setRoundListCache(allRoundsIndex);
-      }
-
       const bribeData = await fetch(dataUrl || "")
         .then((response) => {
           return response.json();
@@ -89,8 +73,6 @@ const useGetData = (requestedRound: string) => {
       }
 
       console.log(
-        "latest:",
-        roundListCache[0],
         "state:",
         voteActive,
         voteData.proposal.state,
@@ -217,7 +199,6 @@ const useGetData = (requestedRound: string) => {
           proposalTitle: voteData.proposal.title,
           proposalId: bribeData.snapshot,
           proposalState: voteData.proposal.state,
-          roundList: roundListCache,
         },
       });
     };
@@ -350,5 +331,3 @@ const useGetData = (requestedRound: string) => {
 
   return dashboardResult;
 };
-
-export default useGetData;
