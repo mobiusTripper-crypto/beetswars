@@ -39,5 +39,4 @@ export interface DashboardReturn {
   proposalEnd: number;
   proposalTitle: string;
   proposalId: string;
-  roundList: RoundList[];
 }
