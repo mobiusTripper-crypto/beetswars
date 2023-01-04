@@ -10,7 +10,7 @@ const USE_API = true;
 
 const Chart1 = React.memo(() => {
   const dataUrl = USE_API
-    ? "https://v2.beetswars.live/api/v1/chartdata"
+    ? "https://beetswars-backend.cyclic.app/API/v1/chartdata"
     : "https://data.beetswars.live/chart-data-from-api.json";
   const { requestRound, setShowChart } = useGlobalContext();
   const [isLoaded, setLoaded] = useState(false);
