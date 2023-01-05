@@ -15,10 +15,11 @@ import { contract_abi, contract_address } from "contracts/priceoracleconfig";
 import { ethers } from "ethers";
 import useTimer from "hooks/useTimer";
 
-export const baseUrl = "https://beetswars-backend.cyclic.app/api/v1/bribedata/";
+//"https://beetswars-backend.cyclic.app/api/v1/bribedata/";
+export const baseUrl = "https://v2.beetswars.live/api/v1/bribedata"
 
 export const useGetData = (requestedRound: string) => {
-  const dataUrl = baseUrl + requestedRound;
+  const dataUrl = baseUrl + "/" + requestedRound;
   const [voteActive, setActive] = useState(false);
   const refreshInterval: number | null = voteActive ? 60000 : null; // ms or null
   const refresh = useTimer(refreshInterval);

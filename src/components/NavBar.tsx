@@ -6,7 +6,7 @@ import { useGlobalContext } from "contexts/GlobalContext";
 
 const NavBar: FC = () => {
   const { requestedRound, showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
-  const apilink: string = "https://beetswars-backend.cyclic.app/api/v1/bribedata/" + requestedRound
+  const apilink: string = "https://v2.beetswars.live/api/v1/bribedata/" + requestedRound
   const plink: string =
     "https://snapshot.org/#/beets.eth/" +
     (showChart ? "" : "proposal/" + gProposal);
