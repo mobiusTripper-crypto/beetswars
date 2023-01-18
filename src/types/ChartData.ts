@@ -12,4 +12,5 @@ interface ChartDataType {
   priceBeets: number;
   totalVoter: number;
   totalVotes: number;
+  bribersRoi: number;
 }
