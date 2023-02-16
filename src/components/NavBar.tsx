@@ -5,8 +5,10 @@ import Link from "@mui/material/Link";
 import { useGlobalContext } from "contexts/GlobalContext";
 
 const NavBar: FC = () => {
-  const { requestedRound, showChart, setShowChart, gProposal, gVersion } = useGlobalContext();
-  const apilink: string = "https://v2.beetswars.live/api/v1/bribedata/" + requestedRound
+  const { requestedRound, showChart, setShowChart, gProposal, gVersion } =
+    useGlobalContext();
+  const apilink: string =
+    "https://v2.beetswars.live/api/v1/bribedata/" + requestedRound;
   const plink: string =
     "https://snapshot.org/#/beets.eth/" +
     (showChart ? "" : "proposal/" + gProposal);
@@ -23,9 +25,20 @@ const NavBar: FC = () => {
           background: "black",
           color: "white",
           textDecoration: "none",
-          paddingRight: "10px"
+          paddingRight: "10px",
         }}
       >
+        <Link
+          style={{ fontSize: "1rem" }}
+          href="https://v2.beetswars.live"
+          target="_blank"
+          color="white"
+          underline="hover"
+          marginRight="3rem"
+          fontWeight="bold"
+        >
+          try <span style={{ color: "#4BE39C" }}>v2</span>
+        </Link>{" "}
         <Typography variant="caption" align="right">
           <Link
             style={{ fontSize: "1rem" }}
@@ -86,7 +99,7 @@ const NavBar: FC = () => {
       >
         <div style={{ marginRight: "9px" }}>
           <button onClick={() => setShowChart(!showChart)}>
-            {showChart ? "Dashboard ("+gVersion+")" : "Stats"}
+            {showChart ? "Dashboard (" + gVersion + ")" : "Stats"}
           </button>
         </div>
       </Box>
